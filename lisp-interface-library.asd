@@ -6,5 +6,5 @@ See http://fare.livejournal.com/155094.html regarding interface-passing-style."
   :depends-on (:interface :pure-data-structures))
 
 (defmethod perform ((op test-op) (system (eql (find-system :lisp-interface-library))))
-  (asdf:load-system :lisp-interface-library)
+  (asdf:load-system :lisp-interface-library-test)
   (funcall (read-from-string "lisp-interface-library-test:test-suite")))

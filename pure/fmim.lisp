@@ -32,7 +32,7 @@
 
 (defclass trie-node () ())
 
-(defclass trie-skip (trie-node box)
+(defclass trie-skip (trie-node simple-value-box)
   ((prefix-bits
     :type (integer 0 *)
     :initarg :prefix-bits
@@ -45,7 +45,7 @@
 (defclass trie-branch (trie-node binary-branch) ())
 
 (defclass full-trie-branch (trie-branch) ())
-;;; Not needed: position tells us! (defclass trie-leaf (trie-node box) ())
+;;; Not needed: position tells us! (defclass trie-leaf (trie-node simple-value-box) ())
 
 (defmethod check-invariant ((i <fmim>) (map trie-head) &key)
   (trie-check-invariant (box-ref map) (node-height map) 0))
@@ -123,13 +123,13 @@
       :prefix-length (+ length (node-prefix-length datum))
       :prefix-bits (dpb bits (byte length (node-prefix-length datum))
                         (node-prefix-bits datum))
-      :datum (box-ref datum)))
+      :value (box-ref datum)))
     (t
      (make-instance
       'trie-skip
       :prefix-length length
       :prefix-bits bits
-      :datum datum))))
+      :value datum))))
 
 (defun make-trie-branch (pos left right)
   (cond
@@ -157,9 +157,9 @@
             (datum (box-ref trie))
             (height (- height (- (node-prefix-length trie) plen)))
             (trie (make-trie-skip height plen (node-prefix-bits trie) datum)))
-       (make-instance 'trie-head :height height :datum trie)))
+       (make-instance 'trie-head :height height :value trie)))
     (t
-     (make-instance 'trie-head :height height :datum trie))))
+     (make-instance 'trie-head :height height :value trie))))
 
 (defmethod insert ((i <fmim>) map key value)
   (check-type map (or null trie-head))

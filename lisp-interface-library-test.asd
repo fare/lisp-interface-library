@@ -2,7 +2,9 @@
 
 (asdf:defsystem :lisp-interface-library-test
   :description "Testing lisp-interface-library"
-  :depends-on (:lisp-interface-library :hu.dwim.stefil)
+  :depends-on (:lisp-interface-library :hu.dwim.stefil :fare-utils :reader-interception)
   :components
-  ((:file "package")
-   (:file "functional-map" :depends-on ("package"))))
+  ((:module "test"
+	    :components
+	    ((:file "package")
+	     (:file "functional-map" :depends-on ("package"))))))
