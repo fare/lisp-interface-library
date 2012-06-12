@@ -4,10 +4,7 @@
 #+xcvb
 (module
  (:depends-on
-  ("package"
-   "base/strings"
-   "base/symbols"
-   "interface/interface"
+  ("interface/interface"
    "interface/eq")))
 
 (in-package :cl)

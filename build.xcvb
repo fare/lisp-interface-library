@@ -1,0 +1,24 @@
+#+xcvb
+(module
+ (:fullname "/lisp-interface-library"
+  :nicknames ("lil")
+  :build-depends-on ("/alexandria")
+  :depends-on
+  ("interface/box"      
+   "interface/eq"
+   "interface/interface"
+   "interface/order"
+   "pure/alist"
+   "pure/encoded-key-map"
+   "pure/fmim"
+   "pure/hash-table"
+   "pure/map"
+   "pure/package"
+   "pure/tree"
+   #|"test/functional-map" "test/package"|#
+   )
+  :supersedes-asdf
+  ("lisp-interface-library"
+   "interface"
+   "pure-interfaces"
+   "pure-data-structures")))

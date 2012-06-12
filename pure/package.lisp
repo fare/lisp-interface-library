@@ -4,7 +4,7 @@
 #+xcvb
 (module
  (:depends-on
-  ("package" "interface/interface" "interface/eq" "interface/order")))
+  ("interface/interface" "interface/eq" "interface/order")))
 
 (in-package :cl)
 

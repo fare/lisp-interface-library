@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Interfaces for Pure Functional Data-Structures
 
-#+xcvb (module (:depends-on ("package")))
+#+xcvb (module ())
 
 ;;; On this "Interface-Passing Style" of programming, see
 ;;;  http://fare.livejournal.com/155094.html

@@ -1,6 +1,6 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional mapping where key is encoded.
-#+xcvb (module (:depends-on ("pure/map" "base/macros")))
+#+xcvb (module (:depends-on ("pure/map")))
 
 (in-package :pure)
 
