@@ -2,7 +2,7 @@
 (defsystem :interface
   :description "LIL interface: abstract interfaces"
   :long-description "Basic support for generic data structure interfaces in Common Lisp"
-  :depends-on ((:version :asdf "2.019") :fare-memoization)
+  :depends-on (:fare-memoization :alexandria)
   :components
   (;;; Interface-Passing Style generic libraries
    (:module "interface"

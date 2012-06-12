@@ -10,7 +10,7 @@
 
 (defpackage :pure
   (:nicknames #:pure-functional)
-  (:use :cl :fare-utils :interface :order :eq)
+  (:use :cl :interface :order :eq :alexandria)
   (:export
 
    ;;; Trees

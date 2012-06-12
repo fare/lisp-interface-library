@@ -13,7 +13,7 @@
 (in-package :cl)
 
 (defpackage :order
-  (:use :interface :eq :cl :fare-utils)
+  (:use :interface :eq :cl :alexandria)
   (:export
    #:<order> #:<number> #:<string> #:<char>
    #:<order-from-lessp> #:<lessp>
@@ -82,7 +82,7 @@
              `(progn
                 ,@(loop :for (name suffix) :in names :collect
                     `(defmethod ,name ((i <lessp>) x y)
-                       (,(conc-symbol :call suffix) (lessp-function i)
+                       (,(symbolicate :call suffix) (lessp-function i)
                               (funcall (key-function i) x)
                               (funcall (key-function i) y)))))))
   (delegate (order< <) (order<= <=) (order> >) (order>= >=)
@@ -108,14 +108,14 @@
              `(progn
                 (define-interface ,name (<order>) () (:singleton))
                 ,@(loop :for n :in '(< <= > >=) :collect
-                    `(defmethod ,(conc-symbol :order n) ((i ,name) x y)
-                       (,(conc-symbol prefix n) x y)))
+                    `(defmethod ,(symbolicate :order n) ((i ,name) x y)
+                       (,(symbolicate prefix n) x y)))
                 (defmethod == ((i ,name) x y)
-                  (,(conc-symbol prefix '=) x y))
+                  (,(symbolicate prefix '=) x y))
                 (defmethod compare ((i ,name) x y)
                   (cond
-                    ((,(conc-symbol prefix '<) x y) -1)
-                    ((,(conc-symbol prefix '>) x y) 1)
+                    ((,(symbolicate prefix '<) x y) -1)
+                    ((,(symbolicate prefix '>) x y) 1)
                     (t 0))))))
   ;;(builtin function call)
   (builtin <number> "")

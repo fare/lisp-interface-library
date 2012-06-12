@@ -1,13 +1,12 @@
 #+xcvb (module ())
-(defpackage :fare-utils-test
-  (:use :fare-utils
-        :interface :eq :order :pure
+(defpackage :lisp-interface-library-test
+  (:use :interface :eq :order :pure
         :reader-interception
         :cl :hu.dwim.stefil)
   (:export #:test-suite))
 
-(in-package :fare-utils-test)
+(in-package :lisp-interface-library-test)
 
 (defsuite* (test-suite
             :in root-suite
-            :documentation "Testing fare-utils"))
+            :documentation "Testing lisp-interface-library"))

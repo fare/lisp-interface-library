@@ -9,7 +9,7 @@
 (in-package :cl)
 
 (defpackage :interface
-  (:use :cl :fare-utils)
+  (:use :cl)
   (:export
 
    ;;; Classes

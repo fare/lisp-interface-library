@@ -1,5 +1,5 @@
 #+xcvb (module (:depends-on ("package")))
-(in-package :fare-utils-test)
+(in-package :lisp-interface-library-test)
 
 (declaim (optimize (speed 1) (debug 3) (space 3)))
 
