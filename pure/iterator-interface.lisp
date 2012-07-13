@@ -1,0 +1,42 @@
+;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
+;;;;; Order
+
+#+xcvb
+(module
+ (:depends-on
+  ("pure/package")))
+
+(in-package :pure)
+
+(define-interface <fount> (<interface>) ())
+(define-interface <sink> (<interface>) ())
+
+(defgeneric iterator (<fount> fount)
+  (:documentation "Given a <FOUNT> interface and an object FOUNT, return
+an initial ITERATOR state with which to start iterating."))
+
+(defgeneric next (<fount> iterator)
+  (:documentation "Given a <FOUNT> interface and an ITERATOR state, return three values:
+1- a VALUE produced by this iteration step;
+2- the NEXT iterator state if any (can be NIL for some interfaces or if the end is reached);
+3- a boolean ENDP which is true iff the end was reached."))
+
+(defgeneric collector (<sink> sink)
+  (:documentation "Given a <SINK> interface and a SINK object, return
+an initial COLLECTOR state with which to start collecting."))
+
+(defgeneric collect (<sink> collector value)
+  (:documentation "Given a <SINK> interface, a COLLECTOR state and a VALUE, return
+a new COLLECTOR state to which the value was added"))
+
+(defgeneric result (<sink> collector)
+  (:documentation "Given a <SINK> interface and a COLLECTOR, return
+the final RESULT from the collecting process"))
+
+
+(defgeneric flow (<fount> <sink> fount sink)
+  (:documentation
+   "Given <FOUNT> and <SINK> interfaces and FOUNT and SINK objects,
+let data flow from the FOUNT to the SINK, and return the result"))
+
+(define-interface <for-each> (<sink>) () (:singleton))

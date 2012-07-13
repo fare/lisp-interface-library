@@ -4,21 +4,9 @@
 #+xcvb
 (module
  (:depends-on
-  ("interface/interface"
-   "interface/eq"
-   "pure/package"
-   "pure/map")))
+  ("pure/alist-interface")))
 
 (in-package :pure)
-
-(defclass <alist>
-    (<map>
-     map-simple-empty map-simple-decons map-simple-update-key map-simple-divide/list
-     map-simple-map/2 map-simple-join map-simple-join/list)
-  ((eq-interface
-    :initarg :eq
-    :initform eq:<eq>
-    :reader eq-interface)))
 
 (defmethod check-invariant ((i <alist>) map &key)
   (loop :for ((key . nil) . rest) :on map :do
@@ -26,11 +14,6 @@
                          :key 'car
                          :test (eq:test-function (eq-interface i))))
             () "Key ~S is present twice in alist ~S" key map)))
-
-(defun <alist> (&optional (eq eq:<eq>))
-  (fmemo:memoized-funcall 'make-instance '<alist> :eq eq))
-
-(defparameter <alist> (<alist>))
 
 (defmethod lookup ((i <alist>) map key)
   (if (null map)

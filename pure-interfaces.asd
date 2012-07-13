@@ -7,4 +7,10 @@
   ((:module "pure"
 	    :components
 	    ((:file "package")
-	     (:file "map" :depends-on ("package"))))))
+	     (:file "iterator-interface" :depends-on ("package"))
+	     (:file "map-interface" :depends-on ("package"))
+	     (:file "alist-interface" :depends-on ("package"))
+	     (:file "tree-interface" :depends-on ("package"))
+	     (:file "hash-table-interface" :depends-on ("tree-interface"))
+	     (:file "fmim-interface" :depends-on ("tree-interface"))
+	     (:file "encoded-key-map-interface" :depends-on ("package"))))))

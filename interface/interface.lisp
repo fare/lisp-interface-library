@@ -9,7 +9,7 @@
 (in-package :cl)
 
 (defpackage :interface
-  (:use :cl)
+  (:use :cl :fare-memoization)
   (:export
 
    ;;; Classes
@@ -48,18 +48,27 @@
 
 (defmacro define-interface (name super-interfaces slots &rest options)
   (let ((class-options
-         (remove-if #'(lambda (x) (member x '(:singleton :parametric))) options :key 'car)))
+         (remove-if #'(lambda (x) (member x '(:singleton :parametric))) options :key 'car))
+        (singleton (find :singleton options :key 'car))
+        (parametric (find :parametric options :key 'car)))
     `(progn
        (defclass ,name ,super-interfaces ,slots ,@class-options)
-       ,@(let ((singleton (find :singleton options :key 'car)))
-           (when singleton `((defvar ,name (fmemo:memoized-funcall 'make-instance ',name)))))
-       ,@(let ((parametric (find :parametric options :key 'car)))
-           (when parametric
-             (destructuring-bind (formals &body body) (cdr parametric)
-               `((defun ,name ,formals
-                   (flet ((make-interface (&rest r)
-                            (fmemo:memoized-apply 'make-instance ',name r)))
-                     ,@body))))))
+       ,@(when (or parametric singleton)
+           (destructuring-bind (formals &body body)
+               (or (cdr parametric)
+                   '(() (make-interface)))
+             `((define-memo-function
+                   (,name :normalization
+                          #'(lambda (make-interface &rest arguments)
+                              (flet ((make-interface (&rest arguments)
+                                       (apply make-interface arguments)))
+                                (apply #'(lambda ,formals
+                                           (block ,name
+                                             ,@body))
+                                       arguments))))
+                   (&rest arguments)
+                 (apply 'make-instance ',name arguments)))))
+       ,@(when singleton `((defvar ,name (,name))))
        ',name)))
 
 (define-interface <interface> ()
@@ -103,3 +112,9 @@ On success the OBJECT itself is returned. On failure an error is signalled."))
 
 (defmethod instantiate ((i <classy>) &rest keys &key &allow-other-keys)
   (apply 'make-instance (interface-class i) keys))
+
+
+;;; Conversion between interfaces.
+
+(defgeneric convert (<interface>2 <interface>1 object)
+  (:documentation "Convert an OBJECT from <INTERFACE>1 to <INTERFACE>2."))

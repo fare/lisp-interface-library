@@ -7,8 +7,10 @@
   (;;; IPS pure functional datastructures
    (:module "pure"
 	    :components
-	    ((:file "alist")
-	     (:file "tree" :depends-on ("alist"))
-	     (:file "hash-table" :depends-on ("tree"))
-	     (:file "fmim" :depends-on ("tree"))
+	    ((:file "iterator")
+             (:file "map")
+             (:file "alist")
+	     (:file "tree")
+	     (:file "hash-table")
+	     (:file "fmim")
 	     (:file "encoded-key-map")))))

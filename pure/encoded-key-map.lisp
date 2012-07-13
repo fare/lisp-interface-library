@@ -4,13 +4,6 @@
 
 (in-package :pure)
 
-(defclass <encoded-key-map>
-    (<map>)
-  ())
-
-(defgeneric encode-key (<interface> plain-key))
-(defgeneric decode-key (<interface> encoded-key))
-
 ;;; This ought to have been possible with some type-directed metaprogramming...
 
 (macrolet
@@ -75,19 +68,12 @@
                     (funcall fun (decode-key i k) v1 f1 v2 f2))
            map1 map2)))
 
-(defclass <parametric-encoded-key-map> (<encoded-key-map>)
-  ((base-interface :initarg :base-interface :reader base-interface)
-   (key-encoder :initarg :key-encoder :reader key-encoder)
-   (key-decoder :initarg :key-decoder :reader key-decoder)))
+(defun <encoded-key-map> (&key base-interface key-encoder key-decoder)
+  (<parametric-encoded-key-map>
+   :base-interface base-interface :key-encoder key-encoder :key-decoder key-decoder))
 
 (defmethod encode-key ((i <parametric-encoded-key-map>) k)
   (funcall (key-encoder i) k))
+
 (defmethod decode-key ((i <parametric-encoded-key-map>) k)
   (funcall (key-decoder i) k))
-
-(defun <encoded-key-map> (&key base-interface key-encoder key-decoder)
-  (fmemo:memoized-funcall
-   'make-instance '<parametric-encoded-key-map>
-   :base-interface base-interface
-   :key-encoder key-encoder
-   :key-decoder key-decoder))

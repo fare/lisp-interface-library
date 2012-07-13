@@ -13,6 +13,17 @@
   (:use :cl :interface :order :eq :alexandria)
   (:export
 
+   ;;; Iterators
+   #:<fount> #:<sink>
+   #:iterator #:next
+   #:collector #:collect #:result
+   #:flow
+   #:<devnull>
+   #:make-number-iterator
+   #:<for-each> #:for-each
+
+   ;; #:boolean-integer
+
    ;;; Trees
    #:<tree>
    #:node #:locate #:join
@@ -40,7 +51,6 @@
    #:decons
    #:fold-left
    #:fold-right
-   #:for-each
    #:join
    #:divide
    #:size
