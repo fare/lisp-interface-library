@@ -15,16 +15,16 @@
   nil)
 (defmethod next ((i <devnull>) x)
   (declare (ignorable i x))
-  (values nil nil t))
+  (values nil nil))
 (defmethod collector ((i <devnull>) x)
   (declare (ignorable i x))
   nil)
-(defmethod collect ((i <devnull>) x v)
-  (declare (ignorable i x v))
+(defmethod collect ((i <devnull>) x &rest values)
+  (declare (ignorable i x values))
   nil)
 (defmethod result ((i <devnull>) x)
   (declare (ignorable i x))
-  nil)
+  (values))
 
 (define-interface <decreasing-number-iterator> (<iterator>)
   ((start :initarg :start :reader iterator-start)
@@ -33,8 +33,8 @@
 
 (defmethod next ((i <decreasing-number-iterator>) n)
   (if (and n (< (iterator-end i) n))
-      (values n (- n (iterator-increment i)) nil)
-      (values nil nil t)))
+      (values t (- n (iterator-increment i)) n)
+      (values nil nil nil)))
 
 (define-interface <increasing-number-iterator> (<iterator>)
   ((start :initarg :start :initform 0 :reader iterator-start)
@@ -43,8 +43,8 @@
 
 (defmethod next ((i <increasing-number-iterator>) n)
   (if (and n (< n (iterator-end i)))
-      (values n (+ n (iterator-increment i)) nil)
-      (values nil nil t)))
+      (values t (+ n (iterator-increment i)) n)
+      (values nil nil nil)))
 
 (defun boolean-integer (bool)
   (if bool 1 0))
@@ -105,19 +105,21 @@
 
 (defmethod flow ((<fount> <fount>) (<sink> <sink>) fount sink)
   (labels ((r (iterator collector)
-             (multiple-value-bind (value next endp) (next <f> iterator)
-               (if endp
-                   (result <sink> collector)
-                   (r next (collect <sink> collector value))))))
+             (multiple-value-call
+                 #'(lambda (hasp next &rest values)
+                     (if hasp
+                         (r next (apply 'collect <sink> collector values))
+                         (result <sink> collector)))
+               (next <fount> iterator))))
     (r (iterator <fount> fount) (collector <sink> sink))))
 
 ;;; A sink that calls a function for side-effect on each collected value
 (defmethod collector ((<for-each> <for-each>) fun)
   (declare (ignorable <for-each>))
   fun)
-(defmethod collect ((<for-each> <for-each>) fun value)
+(defmethod collect ((<for-each> <for-each>) fun &rest values)
   (declare (ignorable <for-each>))
-  (funcall fun value)
+  (apply fun values)
   fun)
 (defmethod result ((<for-each> <for-each>) fun)
   (declare (ignorable <for-each> fun))

@@ -17,8 +17,8 @@
 (defmethod decons ((i map-simple-decons) map)
   (multiple-value-bind (k v f) (first-key-value i map)
     (if f
-        (values (drop i map k) k v f)
-        (values map nil nil nil))))
+        (values f (drop i map k) k v)
+        (values nil map nil nil))))
 
 (defmethod update-key ((i map-simple-update-key) map key fun)
   (multiple-value-bind (value foundp) (lookup i map key)
@@ -78,8 +78,34 @@
 (defmethod size ((i map-simple-size) map)
   (fold-left i map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0))
 
+
+;;; Functional maps as founts: trivial!
+
+(defmethod iterator ((<map> <map>) map)
+  (declare (ignorable <map>))
+  map)
+
+(defmethod next ((<map> <map>) map)
+  (decons <map> map))
+
+;;; Functional maps as sinks: trivial!
+
+(defmethod collector ((<map> <map>) map)
+  (declare (ignorable <map>))
+  map)
+
+(defmethod collect ((<map> <map>) map &rest values)
+  (destructuring-bind (key value) values
+    (insert <map> map key value)))
+
+(defmethod result ((<map> <map>) map)
+  (declare (ignorable <map>))
+  map)
+
+;;; Converting a map to another one...
 (defmethod convert ((i2 <map>) (i1 <map>) map1)
-  ;; (flow i1 i2 map1 (empty i2))
+  ;; Using iterators: (flow i1 i2 map1 (empty i2))
+  ;; Assuming fold-right preserves any insertion order:
   (fold-right
    i1 map1
    #'(lambda (k v map2) (insert i2 map2 k v))

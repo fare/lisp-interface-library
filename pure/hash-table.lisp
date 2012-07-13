@@ -54,15 +54,16 @@
   (multiple-value-bind (hash bucket hashfoundp)
       (first-key-value (hashmap-interface i) map)
     (if (null hashfoundp)
-        (values map nil nil nil)
-        (multiple-value-bind (new-bucket key value foundp)
+        (values nil map nil nil)
+        (multiple-value-bind (foundp new-bucket key value)
             (decons (bucketmap-interface i) bucket)
           (assert foundp)
           (values
+           t
            (if (empty-p (bucketmap-interface i) new-bucket)
-               (insert (hashmap-interface i) map hash new-bucket)
-               (drop (hashmap-interface i) map hash))
-           key value t)))))
+               (drop (hashmap-interface i) map hash)
+               (insert (hashmap-interface i) map hash new-bucket))
+           key value)))))
 
 (defmethod first-key-value ((i <hash-table>) map)
   (multiple-value-bind (hash bucket foundp)

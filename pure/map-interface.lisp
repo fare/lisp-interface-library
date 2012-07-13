@@ -5,7 +5,7 @@
 
 (in-package :pure)
 
-(defclass <map> () ())
+(defclass <map> (<fount> <sink>) ())
 
 #| ;; Already defined in interface for boxes.
 (defgeneric empty (<map>)
@@ -41,13 +41,14 @@ but generally means the element most easily accessible.
 "))
 
 (defgeneric decons (<map> map)
-  (:documentation "Drop the first association from a map,
+  (:documentation "Drop an association from a map,
 returning four values:
-a new map, a key, a value, and a boolean indicating
-whether the map was already empty.
-What first means here may depend on the particular map interface,
-but generally means the element most easily accessible.
-"))
+1- a boolean indicating whether the map was already empty.
+2- a new map
+3- a key
+4- a value.
+Which association is dropped may depend on the particular map interface,
+but generally means the element most easily accessible."))
 
 (defgeneric fold-left (<map> map f seed)
   (:documentation "Fold a map with a function,

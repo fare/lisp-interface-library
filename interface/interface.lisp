@@ -27,6 +27,7 @@
    #:update
    #:base-interface
    #:instantiate
+   #:convert
 
    ;;; Boxes!
    #:box #:box-ref #:box-set!

@@ -16,10 +16,10 @@
        (with-gensyms (k v f)
          `(multiple-value-bind (,k ,v ,f) ,form
             (if ,f (values (decode-key i ,k) ,v t) (values nil nil nil)))))
-     (mkvf (form)
-       (with-gensyms (m k v f)
-         `(multiple-value-bind (,m ,k ,v ,f) ,form
-            (if ,f (values ,m (decode-key i ,k) ,v t) (values ,m nil nil nil)))))
+     (fmkv (form)
+       (with-gensyms (f m k v)
+         `(multiple-value-bind (,f ,m ,k ,v) ,form
+            (if ,f (values t ,m (decode-key i ,k) ,v) (values nil ,m nil nil)))))
      (ki ()
        '(key-interface i))
      ;; (mki ()
@@ -44,7 +44,7 @@
   (defmethod first-key-value ((i <encoded-key-map>) map)
     (kvf (first-key-value (bi) map)))
   (defmethod decons ((i <encoded-key-map>) map)
-    (mkvf (decons (bi) map)))
+    (fmkv (decons (bi) map)))
   (defmethod fold-left ((i <encoded-key-map>) map f seed)
     (fold-left (bi) map #'(lambda (acc k v) (funcall f acc (decode-key i k) v)) seed))
   (defmethod fold-right ((i <encoded-key-map>) map f seed)

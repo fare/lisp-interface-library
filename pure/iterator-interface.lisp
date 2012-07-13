@@ -16,18 +16,18 @@
 an initial ITERATOR state with which to start iterating."))
 
 (defgeneric next (<fount> iterator)
-  (:documentation "Given a <FOUNT> interface and an ITERATOR state, return three values:
-1- a VALUE produced by this iteration step;
+  (:documentation "Given a <FOUNT> interface and an ITERATOR state, return two or more values:
+1- a boolean DATAP which is true if there is data, false if the end was reached;
 2- the NEXT iterator state if any (can be NIL for some interfaces or if the end is reached);
-3- a boolean ENDP which is true iff the end was reached."))
+3- zero, one or more VALUES produced by this iteration step."))
 
 (defgeneric collector (<sink> sink)
   (:documentation "Given a <SINK> interface and a SINK object, return
 an initial COLLECTOR state with which to start collecting."))
 
-(defgeneric collect (<sink> collector value)
-  (:documentation "Given a <SINK> interface, a COLLECTOR state and a VALUE, return
-a new COLLECTOR state to which the value was added"))
+(defgeneric collect (<sink> collector &rest values)
+  (:documentation "Given a <SINK> interface, a COLLECTOR state some VALUES, return
+a new COLLECTOR state to which the values were added"))
 
 (defgeneric result (<sink> collector)
   (:documentation "Given a <SINK> interface and a COLLECTOR, return

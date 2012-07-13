@@ -1,7 +1,7 @@
 #+xcvb (module ())
 (defpackage :lisp-interface-library-test
   (:use :interface :eq :order :pure :asdf
-        :reader-interception
+        :reader-interception :fare-utils
         :cl :hu.dwim.stefil)
   (:export #:test-suite))
 
