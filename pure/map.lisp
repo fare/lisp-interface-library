@@ -5,21 +5,22 @@
 
 (in-package :pure)
 
+;; map-simple-empty
 (defmethod check-invariant ((i map-simple-empty) (m null) &key)
   m)
-
 (defmethod empty ((i map-simple-empty))
   '())
-
 (defmethod empty-p ((i map-simple-empty) map)
   (null map))
 
+;; map-simple-decons
 (defmethod decons ((i map-simple-decons) map)
   (multiple-value-bind (k v f) (first-key-value i map)
     (if f
         (values f (drop i map k) k v)
         (values nil map nil nil))))
 
+;; map-simple-update-key
 (defmethod update-key ((i map-simple-update-key) map key fun)
   (multiple-value-bind (value foundp) (lookup i map key)
    (multiple-value-bind (new-value new-foundp) (funcall fun value foundp)
@@ -31,18 +32,22 @@
        (t
         map)))))
 
+;; map-simple-join
 (defmethod join ((i map-simple-join) map1 map2)
   (fold-left i map1 #'(lambda (m k v) (insert i m k v)) map2))
 
+;; map-simple-join/list
 (defmethod join/list ((i map-simple-join/list) maplist)
   (reduce #'join maplist :from-end t))
 
+;; map-simple-divide/list
 (defmethod divide/list ((i map-simple-divide/list) map)
   (cond
     ((null map) '())
-    ((null (cdr map)) (list map))
+    ((empty-p (nth-value 1 (decons i map))) (list map))
     (t (multiple-value-list (divide i map)))))
 
+;; map-simple-map/2
 (defmethod map/2 ((i map-simple-map/2) fun map1 map2)
   (labels ((join1 (a k v1)
              (let ((mm (car a))
@@ -59,45 +64,20 @@
         (fold-left i map1 #'join1 (cons (empty i) map2))
       (fold-left i m2 #'join2 mm))))
 
-(defmethod fold-right ((i map-simple-fold-right) map fun seed)
-  (funcall
-   (fold-left
-    i map
-    #'(lambda (f k v) #'(lambda (acc) (funcall f (funcall fun k v acc))))
-    #'identity)
-   seed))
-
-
-(defmethod for-each ((i map-simple-for-each) map fun)
-  (fold-left
-   i map
-   #'(lambda (s k v) (declare (ignore s)) (funcall fun k v))
-   nil)
-  (values))
-
-(defmethod size ((i map-simple-size) map)
-  (fold-left i map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0))
-
-
 ;;; Functional maps as founts: trivial!
-
 (defmethod iterator ((<map> <map>) map)
   (declare (ignorable <map>))
   map)
-
 (defmethod next ((<map> <map>) map)
   (decons <map> map))
 
 ;;; Functional maps as sinks: trivial!
-
 (defmethod collector ((<map> <map>) map)
   (declare (ignorable <map>))
   map)
-
 (defmethod collect ((<map> <map>) map &rest values)
   (destructuring-bind (key value) values
     (insert <map> map key value)))
-
 (defmethod result ((<map> <map>) map)
   (declare (ignorable <map>))
   map)
@@ -110,3 +90,10 @@
    i1 map1
    #'(lambda (k v map2) (insert i2 map2 k v))
    (empty i2)))
+
+(defmethod size<=n-p ((i map-size<=n-p-from-decons) map n)
+  (check-type n (integer 0 *))
+  (cond
+    ((empty-p map) t)
+    ((zerop n) nil)
+    (t (size<=n-p i (nth-value 1 (decons i map)) (1- n)))))

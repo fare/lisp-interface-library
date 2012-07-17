@@ -17,7 +17,7 @@
 ;;; A box: you can make it, or get something out of it
 (define-interface <box> (<interface>) ())
 
-(defgeneric make-box (<box> generator &key &allow-other-keys)
+(defgeneric make-box (<box> generator &key #+sbcl &allow-other-keys)
   (:documentation "Make a box from a generator for the value inside the box"))
 
 (defgeneric unbox (<box> box)
@@ -27,7 +27,7 @@
 ;;; Classy box: same, based on a class
 (define-interface <classy-box> (<box> <classy>) ())
 
-(defmethod make-box ((i <classy-box>) generator &rest keys &key &allow-other-keys)
+(defmethod make-box ((i <classy-box>) generator &rest keys &key #+sbcl &allow-other-keys)
   (apply 'instantiate i :generator generator keys))
 
 (defmethod unbox ((i <classy-box>) box)
@@ -124,12 +124,6 @@
 ;;; Some boxes can be empty
 (define-interface <emptyable-box> (<box>) ())
 
-(defgeneric empty (<emptyable-box>)
-  (:documentation "Return an empty box"))
-
-(defgeneric empty-p (<emptyable-box> box)
-  (:documentation "Return a boolean indicating whether the box was empty"))
-
 ;;; Some boxes can be refilled
 
 (defclass mutable-box (box) ())
@@ -138,11 +132,16 @@
 (define-interface <mutable-box> (<box>) ())
 
 (defgeneric box-set! (box value)
-  (:documentation "set the contents of a box (if applicable)"))
+  (:documentation "set the contents of a BOX (if applicable). Return VALUE."))
 
 (defmethod box-set! ((box immutable-box) value)
   (declare (ignorable box value))
   (error "Trying to set an immutable box"))
+
+(defgeneric (setf box-ref) (value box))
+
+(defmethod (setf box-ref) (value box)
+  (box-set! box value))
 
 (defgeneric set-box! (<box> box value))
 

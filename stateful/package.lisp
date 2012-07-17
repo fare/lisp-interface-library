@@ -1,5 +1,5 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Interfaces for Pure Functional Data-Structures
+;;;;; Interfaces for Stateful Datastructures
 
 #+xcvb
 (module
@@ -8,8 +8,7 @@
 
 (in-package :cl)
 
-(defpackage :pure
-  (:nicknames #:pure-functional)
+(defpackage :stateful
   (:use :cl :interface :order :eq :alexandria)
   (:export
 
@@ -24,31 +23,30 @@
 
    ;; #:boolean-integer
 
-   ;;; Emptyable
-   #:<emptyable> #:empty #:empty-p
-
-   ;;; Functional Maps and Containers: classes
-   #:<map> #:<alist>
-   #:<binary-tree> #:<avl-tree>
-   #:<number-map> #:<nm>
-   #:<hash-table>
-   #:<fmim> #:<encoded-key-map>
-   #:map-simple-empty #:map-simple-decons
-   #:map-simple-update-key #:map-simple-join
-   #:map-simple-join/list #:map-simple-divide/list
-   #:map-simple-map/2
-   #:map-fold-right-from-fold-left
-   #:map-for-each-from-fold-left #:map-size-from-fold-left
-   #:map-size<=n-p-from-decons
-
    ;;; Trees
    #:<tree>
    #:node #:locate #:join
    #:left #:right #:leftmost #:rightmost
-   ;;#:trie-lookup #:trie-fold-left #:trie-fold-right #:trie-leftmost #:trie-rightmost
-   #:make-trie-leaf #:make-trie-skip #:make-trie-branch #:make-trie-head
 
-   ;;; Functional Maps and Containers: Generic Functions
+   ;;; Stateful Maps and Containers: classes
+   #:<map>
+   #:<binary-tree> #:<avl-tree>
+   #:<number-map> #:<nm>
+   #:<hash-table>
+   #:<encoded-key-map>
+   #:map-simple-empty #:empty-object
+   #:map-simple-decons
+   #:map-simple-update-key #:map-simple-join
+   #:map-simple-join/list #:map-simple-divide/list
+   #:map-simple-map/2 #:map-fold-right-from-fold-left
+   #:map-for-each-from-fold-left #:map-size-from-fold-left
+   #:map-divide-from-for-each
+   #:map-fold-left-from-for-each #:map-first-key-value-from-for-each
+
+   ;;; Stateful Maps and Containers: Generic Functions
+   #:empty
+   #:empty!
+   #:empty-p
    #:lookup
    #:insert
    #:drop

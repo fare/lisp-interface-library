@@ -13,10 +13,11 @@
 (in-package :pure)
 
 (define-interface <fmim>
-    (<map> <tree>
+    (<tree> <map>
      map-simple-empty map-simple-decons map-simple-update-key
-     map-simple-map/2 map-simple-join/list map-simple-size
-     map-simple-for-each map-simple-divide/list)
+     map-simple-map/2 map-simple-join/list
+     map-size-from-fold-left map-for-each-from-fold-left
+     map-simple-divide/list)
   ()
   (:singleton)
   (:documentation "Fast Merge Integer Maps"))
@@ -41,7 +42,7 @@
     :initarg :prefix-length
     :reader node-prefix-length)))
 
-(defclass trie-branch (trie-node binary-branch) ())
+(defclass trie-branch (trie-node interface::binary-branch) ())
 
 (defclass full-trie-branch (trie-branch) ())
 ;;; Not needed: position tells us! (defclass trie-leaf (trie-node simple-value-box) ())

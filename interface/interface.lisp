@@ -3,13 +3,12 @@
 
 #+xcvb (module ())
 
-;;; On this "Interface-Passing Style" of programming, see
-;;;  http://fare.livejournal.com/155094.html
+;; TODO: split into more files.
 
 (in-package :cl)
 
 (defpackage :interface
-  (:use :cl :fare-memoization)
+  (:use :closer-common-lisp :fare-memoization :closer-mop)
   (:export
 
    ;;; Classes
@@ -28,6 +27,11 @@
    #:base-interface
    #:instantiate
    #:convert
+   #:size #:size<=n-p
+   #:for-each
+
+   ;;; Empty?
+   #:<emptyable> #:empty #:empty-p
 
    ;;; Boxes!
    #:box #:box-ref #:box-set!
@@ -43,9 +47,34 @@
    #:<emptyable-box> #:empty #:empty-p
    #:<mutable-box> #:mutable-box #:immutable-box #:set-box!
    #:<box!> #:box!
+
+   ;;; Maps, trees, etc.
+   ;; Do NOT export these interfaces, because pure and stateful branch them.
+   ;; #:<map> #:<alist> #:<tree> #:<binary-tree> #:<avl-tree> #:<number-map> #:<nm> #:<fmim>
+   ;; DO export the accessors, because pure and stateful use them.
+   #:lookup #:first-key-value #:fold-left #:fold-right #:map-alist #:alist-map
+   #:node #:node-key #:node-value #:left #:right #:node-height #:node-balance
+   #:locate #:leftmost #:rightmost
+
+   ;; number iterators
+   #:make-number-iterator
+   #:<number-iterator> #:<decreasing-number-iterator> #:<increasing-number-iterator>
+   ;; TODO: move this somewhere else
+   #:boolean-integer
+
+   ;; simple mixins
+   #:map-cheap-size #:map-for-each-from-fold-left
+   #:map-fold-right-from-fold-left #:map-size-from-fold-left
    ))
 
 (in-package :interface)
+
+;;;TODO: use MOP for an interface class,
+;;; store list of gf signatures that go with the interface in class object
+#|
+(defclass interface (class)
+  xxx)
+|#
 
 (defmacro define-interface (name super-interfaces slots &rest options)
   (let ((class-options
@@ -83,6 +112,7 @@
   (:documentation "Given a <type>, create an object conforming to the interface
 based on provided initarg keywords, returning the object."))
 
+;;; This one is only colloquial for use in pure datastructure. TODO: Move it to pure-?
 (defgeneric update (<type> object &key)
   (:documentation "Update OBJECT by overriding some of its slots
 with those specified as initarg keywords, returning a new object."))
@@ -109,13 +139,37 @@ On success the OBJECT itself is returned. On failure an error is signalled."))
 (define-interface <classy> (<interface>)
   ((class :reader interface-class :allocation :class)))
 
-(defgeneric instantiate (<interface> &key &allow-other-keys))
+(defgeneric instantiate (<interface> &key #+sbcl &allow-other-keys))
 
-(defmethod instantiate ((i <classy>) &rest keys &key &allow-other-keys)
+(defmethod instantiate ((i <classy>) &rest keys &key #+sbcl &allow-other-keys)
   (apply 'make-instance (interface-class i) keys))
 
 
 ;;; Conversion between interfaces.
+(defgeneric convert (<destination> <origin> object)
+  (:documentation "Convert an OBJECT from interface <ORIGIN> to interface <DESTINATION>."))
 
-(defgeneric convert (<interface>2 <interface>1 object)
-  (:documentation "Convert an OBJECT from <INTERFACE>1 to <INTERFACE>2."))
+;;; Size
+(defgeneric size (<interface> object)
+  (:documentation "Size the object, e.g. number of elements in a map"))
+
+(defgeneric size<=n-p (<interface> object n)
+  (:documentation "Is the size of the object less or equal to integer n?"))
+
+;;; Emptyable
+(define-interface <emptyable> (<type>) ())
+
+(defgeneric empty (<emptyable>)
+  (:documentation "Return an empty object of the emptyable type.
+A constant one is pure, a new one if stateful."))
+
+(defgeneric empty-p (<emptyable> box)
+  (:documentation "Return a boolean indicating whether the object is empty"))
+
+;;; Iteration
+(defgeneric for-each (<interface> iterator f)
+  (:documentation "For every step in iterator, apply f to values"))
+
+;;; TODO: move this somewhere else!
+(defun boolean-integer (bool)
+  (if bool 1 0))

@@ -18,7 +18,7 @@
    #|"test/functional-map" "test/package"|#
    )
   :supersedes-asdf
-  ("lisp-interface-library"
+  ("lisp-interface-library" "lil"
    "interface"
-   "pure-interfaces"
-   "pure-data-structures")))
+   "pure-interfaces" "pure-datastructures"
+   "stateful-interfaces" "stateful-datastructures")))

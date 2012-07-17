@@ -1,68 +1,84 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure trees
 
-#+xcvb (module (:depends-on ("pure/tree-interface")))
+#+xcvb (module (:depends-on ("stateful/tree-interface")))
 
-(in-package :pure)
+(in-package :stateful)
 
 (defmethod node ((i <binary-tree>) &key left right key value)
   (make-instance 'binary-tree-node
                  :key key :value value :left left :right right))
 
 (defmethod insert ((i <binary-tree>) node key value)
-  (if (null node)
-      (node i :key key :value value)
-      (ecase (order:compare i key (node-key node))
-        (0 (node i :key key :value value ;; (update-node i node :key key :value value)
-                 :left (left node) :right (right node)))
-        (-1 (node i :key (node-key node) :value (node-value node)
-                  :left (insert i (left node) key value) :right (right node)))
-        (1 (node i :key (node-key node) :value (node-value node)
-                 :left (left node) :right (insert i (right node) key value))))))
+  (cond
+    ((empty-p i node)
+     (change-class node '<binary-tree> :key key :value value)
+     (values))
+    (t
+     (ecase (order:compare i key (node-key node))
+       (0 (setf (node-value node) value) (values))
+       (-1 (insert i (left node) key value))
+       (1 (insert i (right node) key value))))))
+
+(defgeneric copy-node (destination-node origin-node))
+
+(defmethod copy-node ((destination-node binary-tree-node) (origin-node binary-tree-node))
+  (setf (node-left  destination-node) (node-left  origin-node)
+        (node-right destination-node) (node-right origin-node)
+        (node-key   destination-node) (node-key   origin-node)
+        (node-value destination-node) (node-value origin-node))
+  (values))
 
 (defmethod drop ((i <binary-tree>) node key)
-  (if (null node)
-      (values nil nil nil)
+  (if (empty-p node)
+      (values nil nil)
       (let ((k (node-key node))
             (v (node-value node)))
         (ecase (order:compare i key k)
-          (0 (values
-              (cond
-                ((null (left node)) (right node))
-                ((null (right node)) (left node))
-                (t
-                 (multiple-value-bind (kk vv)
-                     (leftmost i (right node))
-                   (node i :key kk :value vv
-                         :left (left node) :right (drop i (right node) kk)))))
-              v t))
+          (0 (cond
+               ((empty-p (left node))
+                (if (empty-p (right node))
+                    (empty! node)
+                    (copy-node node (right node))))
+               ((empty-p (right node))
+                (copy-node node (left node)))
+               (t
+                (multiple-value-bind (kk vv)
+                    (leftmost i (right node))
+                  (drop i (right node) kk)
+                  (setf (node-key node) kk
+                        (node-value node) vv))))
+             (values v t))
           (-1
-           (multiple-value-bind (left value foundp) (drop i (left node) key)
-                (values (node i :key k :value v
-                              :left left :right (right node))
-                    value foundp)))
+           (drop i (left node) key))
           (1
-           (multiple-value-bind (right value foundp) (drop i (right node) key)
-               (values (node i :key k :value v
-                             :left (left node) :right right)
-                       value foundp)))))))
+           (drop i (right node) key))))))
 
 (defmethod divide ((i <binary-tree>) node)
   (cond
-    ((null node)
-     (values nil nil))
-    ((null (left node))
-     (values (node i :key (node-key node) :value (node-value node))
-             (right node)))
+    ((empty-p i node)
+     (values (empty i) node))
+    ((empty-p (left node))
+     (let ((right (right node)))
+       (setf (right node) (empty i))
+       (values right node)))
     (t
-     (values (left node) (insert i (right node) (node-key node) (node-value node))))))
+     (let ((left (left node)))
+       (setf (left node) (empty i))
+       (values left node)))))
 
 (defmethod divide/list ((i <binary-tree>) node)
-  (if (null node) '()
-      (let* ((rlist (cons (node i :key (node-key node) :value (node-value node))
-                          (if (null (right node)) '() (list (right node))))))
-        (if (null (left node)) rlist (cons (left node) rlist)))))
+  (if (empty-p i node)
+      '()
+      (let ((left (left node))
+            (right (right node)))
+        (setf (left node) (empty i)
+              (right node) (empty i))
+        (append (list node)
+                (unless (empty-p i left) (list left))
+                (unless (empty-p i right) (list right))))))
 
+;;; TODO: implement proper balancing for insert and drop
 (defmethod node ((i <avl-tree>) &key left right key value)
   (flet ((mk (&key left right key value)
            (let ((lh (node-height left))

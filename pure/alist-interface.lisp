@@ -18,6 +18,5 @@
     :initarg :eq
     :initform eq:<eq>
     :reader eq-interface))
-  (:parametric (&optional (eq eq:<eq>)) (make-interface :eq eq)))
-
-(defparameter <alist> (<alist>))
+  (:parametric (&optional (eq eq:<eq>)) (make-interface :eq eq))
+  (:singleton))

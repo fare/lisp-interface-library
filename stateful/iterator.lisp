@@ -1,9 +1,9 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Order
 
-#+xcvb (module (:depends-on ("pure/iterator-interface" "interface/iterator")))
+#+xcvb (module (:depends-on ("stateful/iterator-interface")))
 
-(in-package :pure)
+(in-package :stateful)
 
 ;;; Trivial stream: devnull
 (define-interface <devnull> (<fount> <sink>) ())
@@ -12,30 +12,35 @@
   nil)
 (defmethod next ((i <devnull>) x)
   (declare (ignorable i x))
-  (values nil nil))
+  (values))
 (defmethod collector ((i <devnull>) x)
   (declare (ignorable i x))
   nil)
 (defmethod collect ((i <devnull>) x &rest values)
   (declare (ignorable i x values))
-  nil)
+  (values))
 (defmethod result ((i <devnull>) x)
   (declare (ignorable i x))
   (values))
 
-
-;;; Number iterators
-(defmethod iterator ((i <number-iterator>) x)
-  (declare (ignorable i))
-  (iterator-start x))
-(defmethod next ((i <decreasing-number-iterator>) n)
-  (if (and n (< (iterator-end i) n))
-      (values t (- n (iterator-increment i)) n)
-      (values nil nil nil)))
+(defmethod iterator (<number-iterator> iterator)
+  (make-box '<box!> :value (iterator-start iterator)))
+(defmethod next ((i <decreasing-number-iterator>) counter-box)
+  (with-slots (end increment) i
+    (let ((counter (box-ref counter-box)))
+      (cond
+        ((and counter (< end counter))
+         (setf (box-ref counter-box) (- counter increment))
+         (values t counter))
+        (values nil nil)))))
 (defmethod next ((i <increasing-number-iterator>) n)
-  (if (and n (< n (iterator-end i)))
-      (values t (+ n (iterator-increment i)) n)
-      (values nil nil nil)))
+  (with-slots (end increment) i
+    (let ((counter (box-ref counter-box)))
+      (cond
+        ((and counter (< counter end))
+         (setf (box-ref counter-box) (+ counter increment))
+         (values t counter))
+        (values nil nil)))))
 
 (defmethod flow ((<fount> <fount>) (<sink> <sink>) fount sink)
   (labels ((r (iterator collector)

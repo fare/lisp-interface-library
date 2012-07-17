@@ -418,29 +418,3 @@
                     (if (zerop ah)
                         (make-trie-branch position a1 b1)
                         (make-trie-branch position b1 a1)))))))))))
-
-(defmethod print-object ((object trie-head) stream)
-  (format stream "#<fmim ~S>" (convert <alist> <fmim> object)))
-
-(defmethod print-object ((trie trie-branch) stream)
-  (format stream "#<tb ~S ~S>" (left trie) (right trie)))
-
-(defmethod print-object ((trie trie-skip) stream)
-  (format stream "#<ts ~S ~S ~S>"
-          (node-prefix-bits trie)
-          (node-prefix-length trie)
-          (box-ref trie)))
-
-#|
-You could implement sets of integers as bitmaps,
-as a list of integers, as a binary tree,
-or as big-endian patricia tries mapping integers to the unit type.
-In the latter case, using multiple dispatch for sub-operations
-instead of the typecases I used above would allow to easily add an
-optimization to my patricia trie implementation in the case the
-target type is the unit type (eql t), by i.e. short-circuiting
-data representation and membership test on full subtrees.
-
-See also
-http://paste.lisp.org/display/95321
-|#

@@ -1,10 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; Trivial functional map implementation: alists.
 
-#+xcvb
-(module
- (:depends-on
-  ("pure/alist-interface")))
+#+xcvb (module (:depends-on ("pure/alist-interface")))
 
 (in-package :pure)
 
@@ -56,3 +53,12 @@
 
 (defmethod size ((i <alist>) map)
   (length map))
+
+(defmethod map-alist ((i interface::<map>) map)
+  (fold-right i map #'(lambda (k v acc) (acons k v acc))))
+
+(defmethod convert ((i interface::<map>) <alist> map)
+  (map-alist map))
+
+(defmethod alist-map ((<map> pure:<map>) map)
+  (convert <alist> <map> map))

@@ -17,8 +17,7 @@
 
 (in-package :eq)
 
-(define-interface <eq> () ())
-(defparameter <eq> (fmemo:memoized-funcall 'make-instance '<eq>))
+(define-interface <eq> () () (:singleton))
 (defgeneric == (i x y))
 (defgeneric test-function (i)
   (:documentation "test function for <eq> interface"))
@@ -28,12 +27,13 @@
 (defmethod test-function ((i <eq>))
   #'eql)
 
-(define-interface <eq-simple> (<eq>) ())
+(define-interface <eq-simple> (<eq>) () (:singleton))
 (defmethod test-function ((i <eq-simple>))
   #'(lambda (x y) (== i x y)))
 
 (define-interface <eq-slot> (<eq>)
-  ((test :initform #'eql :initarg :test :reader test-function)))
+  ((test :initform #'eql :initarg :test :reader test-function))
+  (:parametric (&key test) (make-interface :test test)))
 (defmethod == ((i <eq-slot>) x y)
   (funcall (test-function i) x y))
 

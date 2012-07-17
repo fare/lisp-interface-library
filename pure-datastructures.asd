@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-(defsystem :pure-data-structures
-  :description "Pure data structures using Interface-passing style"
-  :long-description "Pure data structures using Interface-passing style"
+(defsystem :pure-datastructures
+  :description "Pure datastructures using Interface-passing style"
+  :long-description "Puredata structures using Interface-passing style"
   :depends-on (:pure-interfaces)
   :components
   (;;; IPS pure functional datastructures

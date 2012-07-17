@@ -24,13 +24,13 @@
                         (eq:hash (key-interface i) key))))
     (lookup (bucketmap-interface i) bucket key)))
 
-(defmethod insert ((i <hash-table>) node key value)
+(defmethod insert ((i <hash-table>) map key value)
   (let ((hash (eq:hash (key-interface i) key)))
     (insert
-     (hashmap-interface i) node hash
+     (hashmap-interface i) map hash
      (insert (bucketmap-interface i)
              (multiple-value-bind (bucket foundp)
-                 (lookup (hashmap-interface i) node hash)
+                 (lookup (hashmap-interface i) map hash)
                (if foundp bucket (empty (bucketmap-interface i))))
              key value))))
 
@@ -73,15 +73,15 @@
         (first-key-value (bucketmap-interface i) bucket)
         (values nil nil nil))))
 
-(defmethod fold-left ((i <hash-table>) node f seed)
-  (fold-left (hashmap-interface i) node
+(defmethod fold-left ((i <hash-table>) map f seed)
+  (fold-left (hashmap-interface i) map
              #'(lambda (a h bucket)
                  (declare (ignore h))
                  (fold-left (bucketmap-interface i) bucket f a))
              seed))
 
-(defmethod fold-right ((i <hash-table>) node f seed)
-  (fold-right (hashmap-interface i) node
+(defmethod fold-right ((i <hash-table>) map f seed)
+  (fold-right (hashmap-interface i) map
               #'(lambda (h bucket a)
                   (declare (ignore h))
                   (fold-right (bucketmap-interface i) bucket f a))
@@ -108,11 +108,11 @@
                             (insert (hashmap-interface i) b hash y)))))
             (values a b)))))
 
-(defmethod divide/list ((i <hash-table>) node)
-  (let ((list (divide/list (hashmap-interface i) node)))
+(defmethod divide/list ((i <hash-table>) map)
+  (let ((list (divide/list (hashmap-interface i) map)))
     (if (cdr list)
         list
-        (multiple-value-bind (a b) (divide i node)
+        (multiple-value-bind (a b) (divide i map)
           (cond
             ((empty-p (hashmap-interface i) a)
              nil)

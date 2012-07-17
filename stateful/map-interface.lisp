@@ -1,49 +1,55 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Functional mapping of keys to values
+;;;;; Stateful mapping of keys to values
 
-#+xcvb (module (:depends-on ("pure/iterator-interface")))
+#+xcvb (module (:depends-on ("interface/interface" "stateful/package")))
 
-(in-package :pure)
+(in-package :stateful)
 
-(define-interface <map> (interface::<map> <fount> <sink>) ())
+(define-interface <map> (<fount> <sink>) ())
+
+(defgeneric empty! (<map> map)
+  (:documentation "Clear the map and make it empty. Return no value."))
 
 (defgeneric insert (<map> map key value)
-  (:documentation "Add a key-value pair to a map,
-replacing any previous association for this key,
-return a new map."))
+  (:documentation "Modify the map to add a key-value pair,
+replacing any previous association for this key.
+Return no value."))
 
 (defgeneric drop (<map> map key)
-  (:documentation "Drop from a map the association corresponding to given key,
-returning three values:
-a new map without that association,
-the value from the dropped association,
-and a boolean that is true iff an association was found."))
+  (:documentation "Modify the map to drop the association corresponding to given key,
+returning two values:
+1- the value from the dropped association, and
+2- a boolean that is true iff an association was found."))
 
 (defgeneric decons (<map> map)
-  (:documentation "Drop an association from a map,
-returning four values:
+  (:documentation "Modify a map to drop its first association,
+returning three values:
 1- a boolean indicating whether the map was already empty.
-2- a new map
-3- a key
-4- a value.
+2- a key
+3- a value.
 Which association is dropped is the same as per first-key-value."))
 
 (defgeneric join (<map> map1 map2)
-  (:documentation "Join two maps, returning a new joined map.
-Mappings from MAP1 override those from MAP2."))
+  (:documentation "Join two maps into the first one.
+Mappings from MAP1 override those from MAP2.
+The state of MAP2 after the join is not specified (see method documentation).
+Return MAP1."))
 
 (defgeneric divide (<map> map)
-  (:documentation "Divide a map in two,
-returning two maps MAP1 and MAP2 that each have strictly
-fewer associations than MAP unless MAP is of size zero or one.
-If MAP is of size one, then MAP1 is MAP and MAP2 is empty.
-If MAP is of size zero, then both MAP1 and MAP2 are empty.
+  (:documentation "Divide a MAP in two,
+returning two maps MAP2 and MAP (eq to the MAP argument)
+that each have strictly fewer associations than MAP originally had,
+unless MAP is of size zero or one, at which point MAP2 is empty.
 "))
 
 (defgeneric join/list (<map> list)
   (:documentation "Join a list of maps,
-returning a new joined map where mappings from
-earlier mappings override those from latter mappings."))
+returning a joined map where mappings from
+later mappings override those from earlier mappings.
+If the list is empty, a new empty map is returned;
+otherwise, the first list is returned,
+that has been updated with any additional mappings,
+whereas the state of other maps is not specified (see method documentation)."))
 
 (defgeneric divide/list (<map> map)
   (:documentation "Divide a map in a list of several submaps and return that list,
@@ -51,19 +57,20 @@ such that merging those maps with join/list
 will return a map similar to the original one,
 that the returned list is empty iff the initial map is empty,
 that the returned list is of length one iff the initial map is a singleton,
-and that otherwise, each element of the list is non-empty."))
+and that otherwise, each element of the list is non-empty
+and the first one is EQ to the original map."))
 
 (defgeneric update-key (<map> map key fun)
-  (:documentation "Update the association of a map for a given key and
-return a new updated map
+  (:documentation "Update the association of a map for a given key
 calling fun with the previous associated value and T if found, with NIL and NIL otherwise,
+and return no values,
 where fun will return two values,
 the new value and a boolean,
 the association being dropped if the boolean is NIL,
 otherwise a new association being setup with the new value."))
 
 (defgeneric map/2 (<map> fun map1 map2)
-  (:documentation "Join two maps, returning a joined map.
+  (:documentation "Join two maps, returning MAP1 after merging elements from MAP2.
 For each key K present in either MAP1 or MAP2,
 the function FUN is called with arguments K V1 F1 V2 F2 where
 V1 and F1 are the value and found flag for MAP1, and
@@ -85,4 +92,6 @@ we could have a
 (defclass map-simple-join/list () ())
 (defclass map-simple-divide/list () ())
 (defclass map-simple-map/2 () ())
-(defclass map-size<=n-p-from-decons () ())
+(defclass map-divide-from-for-each () ())
+(defclass map-fold-left-from-for-each () ())
+(defclass map-first-key-value-from-for-each () ())
