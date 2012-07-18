@@ -52,7 +52,7 @@
       (reduce #'join maplist)
       (empty i)))
 
-(defmethod divide/list ((i map-simple-divide/list) map)
+(defmethod divide/list ((i map-divide/list-from-divide) map)
   (cond
     ((empty-p i map) '())
     ((size<=n-p i map 1) (list map))

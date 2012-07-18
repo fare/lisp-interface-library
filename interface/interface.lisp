@@ -59,6 +59,7 @@
    ;; number iterators
    #:make-number-iterator
    #:<number-iterator> #:<decreasing-number-iterator> #:<increasing-number-iterator>
+   #:iterator-start #:iterator-end #:iterator-increment
    ;; TODO: move this somewhere else
    #:boolean-integer
 

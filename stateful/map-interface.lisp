@@ -90,7 +90,7 @@ we could have a
 (defclass map-simple-update-key () ())
 (defclass map-simple-join () ())
 (defclass map-simple-join/list () ())
-(defclass map-simple-divide/list () ())
+(defclass map-divide/list-from-divide () ())
 (defclass map-simple-map/2 () ())
 (defclass map-divide-from-for-each () ())
 (defclass map-fold-left-from-for-each () ())

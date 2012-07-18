@@ -40,11 +40,11 @@
 (defmethod join/list ((i map-simple-join/list) maplist)
   (reduce #'join maplist :from-end t))
 
-;; map-simple-divide/list
-(defmethod divide/list ((i map-simple-divide/list) map)
+;; map-divide/list-from-divide
+(defmethod divide/list ((i map-divide/list-from-divide) map)
   (cond
     ((null map) '())
-    ((empty-p (nth-value 1 (decons i map))) (list map))
+    ((empty-p i (nth-value 1 (decons i map))) (list map))
     (t (multiple-value-list (divide i map)))))
 
 ;; map-simple-map/2
@@ -94,6 +94,6 @@
 (defmethod size<=n-p ((i map-size<=n-p-from-decons) map n)
   (check-type n (integer 0 *))
   (cond
-    ((empty-p map) t)
+    ((empty-p i map) t)
     ((zerop n) nil)
     (t (size<=n-p i (nth-value 1 (decons i map)) (1- n)))))

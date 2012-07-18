@@ -24,23 +24,27 @@
   (values))
 
 (defmethod iterator (<number-iterator> iterator)
-  (make-box '<box!> :value (iterator-start iterator)))
+  (make-box '<box!> (iterator-start iterator)))
 (defmethod next ((i <decreasing-number-iterator>) counter-box)
-  (with-slots (end increment) i
-    (let ((counter (box-ref counter-box)))
-      (cond
-        ((and counter (< end counter))
-         (setf (box-ref counter-box) (- counter increment))
-         (values t counter))
-        (values nil nil)))))
-(defmethod next ((i <increasing-number-iterator>) n)
-  (with-slots (end increment) i
-    (let ((counter (box-ref counter-box)))
-      (cond
-        ((and counter (< counter end))
-         (setf (box-ref counter-box) (+ counter increment))
-         (values t counter))
-        (values nil nil)))))
+  (let ((counter (box-ref counter-box))
+	(end (iterator-end i))
+	(increment (iterator-increment i)))
+    (cond
+      ((and counter (< end counter))
+       (setf (box-ref counter-box) (- counter increment))
+       (values t counter))
+      (t
+       (values nil nil)))))
+(defmethod next ((i <increasing-number-iterator>) counter-box)
+  (let ((counter (box-ref counter-box))
+	(end (iterator-end i))
+	(increment (iterator-increment i)))
+    (cond
+      ((and counter (< counter end))
+       (setf (box-ref counter-box) (+ counter increment))
+       (values t counter))
+      (t
+       (values nil nil)))))
 
 (defmethod flow ((<fount> <fount>) (<sink> <sink>) fount sink)
   (labels ((r (iterator collector)

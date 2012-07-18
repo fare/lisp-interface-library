@@ -37,7 +37,7 @@
    #:map-simple-empty #:empty-object
    #:map-simple-decons
    #:map-simple-update-key #:map-simple-join
-   #:map-simple-join/list #:map-simple-divide/list
+   #:map-simple-join/list #:map-divide/list-from-divide
    #:map-simple-map/2 #:map-fold-right-from-fold-left
    #:map-for-each-from-fold-left #:map-size-from-fold-left
    #:map-divide-from-for-each

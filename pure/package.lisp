@@ -35,8 +35,9 @@
    #:<fmim> #:<encoded-key-map>
    #:map-simple-empty #:map-simple-decons
    #:map-simple-update-key #:map-simple-join
-   #:map-simple-join/list #:map-simple-divide/list
+   #:map-simple-join/list
    #:map-simple-map/2
+   #:map-divide/list-from-divide
    #:map-fold-right-from-fold-left
    #:map-for-each-from-fold-left #:map-size-from-fold-left
    #:map-size<=n-p-from-decons

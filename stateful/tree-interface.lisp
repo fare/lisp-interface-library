@@ -21,12 +21,15 @@
   ()
   (:documentation "Keys in binary trees increase from left to right"))
 
-(defclass association-pair (interface::association-pair)
-  ((value :accessor node-value))) ;; writable value, not writable key.
+(defclass binary-branch (interface::binary-branch)
+  ((left :accessor left :initform (make-empty-object))
+   (right :accessor right :initform (make-empty-object))))
 
-(defclass binary-tree-node (interface::binary-branch association-pair)
-  ((left :initform (make-empty-object))
-   (right :initform (make-empty-object))))
+(defclass association-pair (interface::association-pair)
+  ((key :accessor node-key) ;; only write the key when copying a key-value pair.
+   (value :accessor node-value))) ;; writable value, not writable key.
+
+(defclass binary-tree-node (binary-branch association-pair) ())
 
 ;;; pure AVL-tree
 

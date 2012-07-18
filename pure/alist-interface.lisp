@@ -12,7 +12,8 @@
 
 (define-interface <alist>
     (<map>
-     map-simple-empty map-simple-decons map-simple-update-key map-simple-divide/list
+     map-simple-empty map-simple-decons map-simple-update-key
+     map-divide/list-from-divide
      map-simple-map/2 map-simple-join map-simple-join/list)
   ((eq-interface
     :initarg :eq

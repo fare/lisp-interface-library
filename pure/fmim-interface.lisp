@@ -17,7 +17,7 @@
      map-simple-empty map-simple-decons map-simple-update-key
      map-simple-map/2 map-simple-join/list
      map-size-from-fold-left map-for-each-from-fold-left
-     map-simple-divide/list)
+     map-divide/list-from-divide)
   ()
   (:singleton)
   (:documentation "Fast Merge Integer Maps"))
