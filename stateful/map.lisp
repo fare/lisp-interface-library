@@ -18,6 +18,8 @@
 (defmethod empty! ((i map-simple-empty) map)
   (change-class map 'empty-object)
   (values))
+(defmethod node-key-value ((i map-simple-empty) (m empty-object))
+  (values nil nil nil))
 
 ;;; map-simple-decons
 (defmethod decons ((i map-simple-decons) map)

@@ -54,7 +54,7 @@
    ;; DO export the accessors, because pure and stateful use them.
    #:lookup #:first-key-value #:fold-left #:fold-right #:map-alist #:alist-map
    #:node #:node-key #:node-value #:left #:right #:node-height #:node-balance
-   #:locate #:leftmost #:rightmost
+   #:locate #:node-key-value #:leftmost-node #:rightmost-node #:leftmost #:rightmost
 
    ;; number iterators
    #:make-number-iterator

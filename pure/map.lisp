@@ -12,6 +12,8 @@
   '())
 (defmethod empty-p ((i map-simple-empty) map)
   (null map))
+(defmethod node-key-value ((i map-simple-empty) (m null))
+  (values nil nil nil))
 
 ;; map-simple-decons
 (defmethod decons ((i map-simple-decons) map)

@@ -22,6 +22,10 @@
 
 (defgeneric copy-node (destination-node origin-node))
 
+(defmethod copy-node ((destination-node binary-tree-node) (origin-node empty-object))
+  (change-class destination-node 'empty-object)
+  (values))
+
 (defmethod copy-node ((destination-node binary-tree-node) (origin-node binary-tree-node))
   (setf (left       destination-node) (left       origin-node)
         (right      destination-node) (right      origin-node)
@@ -37,9 +41,7 @@
         (ecase (order:compare i key k)
           (0 (cond
                ((empty-p i (left node))
-                (if (empty-p i (right node))
-                    (empty! i node)
-                    (copy-node node (right node))))
+                (copy-node node (right node)))
                ((empty-p i (right node))
                 (copy-node node (left node)))
                (t
@@ -78,61 +80,64 @@
                 (unless (empty-p i left) (list left))
                 (unless (empty-p i right) (list right))))))
 
-;;; TODO: implement proper balancing for insert and drop
+(defmethod drop :after ((i <post-self-balanced-binary-tree>) node key)
+  (declare (ignore key))
+  (balance-node i node))
+
+(defmethod insert :after ((i <post-self-balanced-binary-tree>) node key value)
+  (declare (ignore key))
+  (balance-node i node))
+
 (defmethod copy-node ((destination-node avl-tree-node) (origin-node avl-tree-node))
   (setf (node-height destination-node) (node-height origin-node))
   (values))
 
-(defmethod node ((i <avl-tree>) &key left right key value)
-  (flet ((mk (&key left right key value)
-           (let ((lh (node-height left))
-                 (rh (node-height right)))
-             (assert (member (- rh lh) '(-1 0 1)))
-             (make-instance 'avl-tree-node
-                            :key key :value value
-                            :left left :right right
-                            :height (1+ (max lh rh))))))
-    (ecase (- (node-height right) (node-height left))
-      ((-1 0 1) (mk :key key :value value :left left :right right))
-      ((-2)
-       (ecase (node-balance left)
-         ((-1 0)
-          ;; -1: LL rebalance:
-          ;; (LL2 KL LR1) K R1 ==> (LL2 KL (LR1 K R1))
-          ;; 0: left rebalance during deletion
-          ;; (LL2 KL LR2) K R1 ==> (LL2 KL (LR2 K R1))
-          (mk :left (left left)
-              :key (node-key left) :value (node-value left)
-              :right (mk :key key :value value :left (right left) :right right)))
-         ((1)
-          ;; LR rebalance:
-          ;; (LL1 KL (LRL21 KLR LRR21)) K R1 ==> (LL1 KL LRL21) KLR (LRR21 K R1)
-          (mk :left (mk :left (left left)
-                        :key (node-key left) :value (node-value left)
-                        :right (left (right left)))
-              :key (node-key (right left)) :value (node-value (right left))
-              :right (mk :left (right (right left))
-                         :key key :value value
-                         :right right)))))
-      ((2)
-       (ecase (node-balance right)
-         ((-1)
-          ;; RL rebalance:
-          ;; L1 K ((RLL21 KRL RLR21) KR RR1) ==> (L1 K RLL21) KRL (RLR21 KR RR1)
-          (mk :left (mk :left left
-                        :key key :value value
-                        :right (left (left right)))
-              :key (node-key (left right)) :value (node-value (left right))
-              :right (mk :left (right (left right))
-                         :key (node-key right) :value (node-value right)
-                         :right (right right))))
-         ((0 1)
-          ;; -1: RR rebalance:
-          ;; L1 K (RL1 KR RR2) ==> (L1 K RL1) KR RR2
-          ;; 0: right rebalance during deletion
-          ;; L1 K (RL2 KR RR2) ==> (L1 K RL2) KR RR2
-          (mk :left (mk :left left
-                        :key key :value value
-                        :right (left right))
-              :key (node-key right) :value (node-value right)
-              :right (right right))))))))
+(defmethod balance-node ((i <avl-tree>) (node empty-object))
+  (values))
+
+(defmethod update-height ((node avl-tree-node))
+  (setf (node-height node)
+        (1+ (max (node-height (left node))
+                 (node-height (right node))))))
+
+(defmethod rotate-node-right ((node binary-tree-node))
+  ;; (LL2 C:KL LR2) N:K R1 ==> (LL2 N:KL (LR2 C:K R1))
+  (let ((child (left node)))
+    (rotatef (node-key child) (node-key node))
+    (rotatef (node-value child) (node-value node))
+    (rotatef (left node) (left child) (right child) (right node)))
+  (values))
+
+(defmethod rotate-node-right :after ((node avl-tree-node))
+  (update-height (right node))
+  (update-height node))
+
+(defmethod rotate-node-left ((node avl-tree-node))
+  ;; L1 N:K (RL2 C:KR RR2) ==> (L1 C:K RL2) N:KR RR2
+  (let ((child (right node)))
+    (rotatef (node-key child) (node-key node))
+    (rotatef (node-value child) (node-value node))
+    (rotatef (right node) (right child) (left child) (left node)))
+  (values))
+
+(defmethod rotate-node-left :after ((node avl-tree-node))
+  (update-height (left node))
+  (update-height node))
+
+(defmethod balance-node ((i <avl-tree>) (node avl-tree-node))
+  (ecase (node-balance node)
+    ((-1 0 1) (values)) ;; already balanced
+    ((-2)
+     (ecase (node-balance (left node))
+       ((-1 0)
+        (rotate-node-right node))
+       ((1)
+        (rotate-node-right node)
+        (rotate-node-left node))))
+    ((2)
+     (ecase (node-balance (right node))
+       ((-1)
+        (rotate-node-left node)
+        (rotate-node-right node))
+       ((0 1)
+        (rotate-node-left node))))))

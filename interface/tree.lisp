@@ -24,9 +24,9 @@
 
 (defmethod locate ((i <binary-tree>) node key path)
   (ecase (order:compare i key (node-key node)) ;; (compare-key i key (node-key node))
-        (0 (values node path))
-        (-1 (locate i (left node) key (cons 'left path)))
-        (1 (locate i (right node) key (cons 'right path)))))
+    (0 (values node path))
+    (-1 (locate i (left node) key (cons 'left path)))
+    (1 (locate i (right node) key (cons 'right path)))))
 
 (defmethod lookup ((i <binary-tree>) node key)
   (if (null node)
@@ -57,23 +57,32 @@
                                 (fold-right i (right node) f seed)))))
 
 (defmethod for-each ((i <binary-tree>) node f)
-  (when node
+  (unless (empty-p i node)
     (for-each i (left node) f)
     (funcall f (node-key node) (node-value node))
     (for-each i (right node) f))
   (values))
 
-(defmethod leftmost ((i <binary-tree>) node)
+(defmethod node-key-value ((i <binary-tree>) (node binary-tree-node))
+   (values (node-key node) (node-value node) t))
+
+(defmethod leftmost-node ((i <binary-tree>) node)
   (cond
-    ((null node) (values nil nil nil))
-    ((null (left node)) (values (node-key node) (node-value node) t))
-    (t (leftmost i (left node)))))
+    ((empty-p i node) node)
+    ((empty-p i (left node)) node)
+    (t (leftmost-node i (left node)))))
+
+(defmethod leftmost ((i <binary-tree>) node)
+  (node-key-value i (leftmost-node i node)))
+
+(defmethod rightmost-node ((i <binary-tree>) node)
+  (cond
+    ((empty-p i node) node)
+    ((empty-p i (right node)) node)
+    (t (rightmost-node i (right node)))))
 
 (defmethod rightmost ((i <binary-tree>) node)
-  (cond
-    ((null node) (values nil nil nil))
-    ((null (right node)) (values (node-key node) (node-value node) t))
-    (t (rightmost i (right node)))))
+  (node-key-value i (rightmost-node i node)))
 
 (defmethod node-height ((node null))
   0)
