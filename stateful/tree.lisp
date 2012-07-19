@@ -79,6 +79,10 @@
                 (unless (empty-p i right) (list right))))))
 
 ;;; TODO: implement proper balancing for insert and drop
+(defmethod copy-node ((destination-node avl-tree-node) (origin-node avl-tree-node))
+  (setf (node-height destination-node) (node-height origin-node))
+  (values))
+
 (defmethod node ((i <avl-tree>) &key left right key value)
   (flet ((mk (&key left right key value)
            (let ((lh (node-height left))
