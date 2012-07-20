@@ -3,6 +3,7 @@
 oconnore:
 ** migrate ds.scrbl from exscribe to racket's scribble with acm alternate style (ask jonrafkind on #racket)
 ** review abstract
+** implement Red-Black trees?
 ** implement arrays -- use RRB-trees? http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
 ** [[adopt same names as cl-containers?]]
 

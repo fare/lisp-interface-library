@@ -1,12 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; Trivial functional map interface: alists.
 
-#+xcvb
-(module
- (:depends-on
-  ("interface/interface"
-   "interface/eq"
-   "pure/map-interface")))
+#+xcvb (module (:depends-on ("interface/eq" "pure/map-interface")))
 
 (in-package :pure)
 

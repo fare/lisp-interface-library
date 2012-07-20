@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful mapping of keys to values
 
-#+xcvb (module (:depends-on ("interface/interface" "stateful/package")))
+#+xcvb (module (:depends-on ("interface/map-interface" "stateful/iterator-interface")))
 
 (in-package :stateful)
 

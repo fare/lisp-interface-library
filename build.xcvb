@@ -1,21 +1,42 @@
-#+xcvb
+;; -*- Lisp -*-
 (module
  (:fullname "/lisp-interface-library"
   :nicknames ("lil")
-  :build-depends-on ("/alexandria" "/fare-memoization")
+  :build-depends-on ("/alexandria" "/fare-memoization" "/fare-utils" "/closer-mop")
   :depends-on
-  ("interface/box"      
+  ("interface/interface"
+   "interface/box"
    "interface/eq"
-   "interface/interface"
    "interface/order"
+   "interface/iterator"
+   "interface/map-interface"
+   "interface/tree-interface"
+   "interface/implicit"
+   "pure/package"
+   "pure/iterator"
+   "pure/map-interface"
+   "pure/tree-interface"
+   "pure/alist-interface"
+   "pure/encoded-key-map-interface"
+   "pure/fmim-interface"
+   "pure/hash-table-interface"
+   "pure/map"
+   "pure/tree"
    "pure/alist"
    "pure/encoded-key-map"
    "pure/fmim"
    "pure/hash-table"
-   "pure/map"
-   "pure/package"
-   "pure/tree"
-   #|"test/functional-map" "test/package"|#
+   "stateful/package"
+   "stateful/iterator"
+   "stateful/map-interface"
+   "stateful/tree-interface"
+   "stateful/encoded-key-map-interface"
+   "stateful/hash-table-interface"
+   "stateful/map"
+   "stateful/tree"
+   "stateful/encoded-key-map"
+   "stateful/hash-table"
+   #|"test/pure-map" "test/stateful-map"|#
    )
   :supersedes-asdf
   ("lisp-interface-library" "lil"

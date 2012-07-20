@@ -1,6 +1,6 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; stateful mapping where key is encoded.
-#+xcvb (module (:depends-on ("pure/map")))
+#+xcvb (module (:depends-on ("stateful/map-interface")))
 
 (in-package :stateful)
 

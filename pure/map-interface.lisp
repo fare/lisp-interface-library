@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional mapping of keys to values
 
-#+xcvb (module (:depends-on ("pure/iterator-interface")))
+#+xcvb (module (:depends-on ("interface/map-interface" "pure/iterator-interface")))
 
 (in-package :pure)
 

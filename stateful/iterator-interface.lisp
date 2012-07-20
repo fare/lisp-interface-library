@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; stateful iterator
 
-#+xcvb (module (:depends-on ("stateful/package")))
+#+xcvb (module (:depends-on ("interface/iterator" "stateful/package")))
 
 (in-package :stateful)
 

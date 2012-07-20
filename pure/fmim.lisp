@@ -5,10 +5,7 @@
 ;;; Under the hood: Big Endian Patricia Trees (Tries).
 ;;; Note however that in our API, what they call "merge" is called "join".
 
-#+xcvb
-(module
- (:depends-on
-  ("interface/interface" "pure/package" "pure/map" "pure/alist" "pure/tree")))
+#+xcvb (module (:depends-on ("pure/fmim-interface")))
 
 (in-package :pure)
 

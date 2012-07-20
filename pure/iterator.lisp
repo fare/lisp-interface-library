@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Order
 
-#+xcvb (module (:depends-on ("pure/iterator-interface" "interface/iterator")))
+#+xcvb (module (:depends-on ("pure/iterator-interface")))
 
 (in-package :pure)
 
