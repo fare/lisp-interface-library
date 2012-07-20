@@ -6,9 +6,6 @@
 (in-package :stateful)
 
 ;;; map-simple-empty
-(defclass empty-object () ())
-(defun make-empty-object ()
-  (make-instance 'empty-object))
 (defmethod check-invariant ((i map-simple-empty) (m empty-object) &key)
   m)
 (defmethod empty ((i map-simple-empty))
@@ -100,9 +97,9 @@
   map)
 
 ;;; Converting a map to another one... may destroy the original one
-(defmethod convert ((i2 <map>) (i1 <map>) map1)
+(defmethod convert ((i2 <map>) (i1 interface::<map>) map1)
   (let ((map2 (empty i2)))
-    (flow i1 i2 map1 map2)
+    (for-each i1 map1 (lambda (k v) (insert i2 map2 k v)))
     map2))
 
 (defmethod fold-left ((i map-fold-left-from-for-each) map f seed)

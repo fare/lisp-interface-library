@@ -67,11 +67,5 @@
 
    #:encode-key #:decode-key
 
-   ;; updatef
-   #:updatef
-   #:define-updatef-expander
-   #:defupdatef
-   #:define-updatef-function
-   #:get-updatef-expansion
-   #:updatef-function
+   #:balance-node #:rotate-node-left #:rotate-node-right
    ))

@@ -1,5 +1,5 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Order
+;;;;; Stateful Iterator
 
 #+xcvb (module (:depends-on ("stateful/iterator-interface")))
 
@@ -47,14 +47,11 @@
        (values nil nil)))))
 
 (defmethod flow ((<fount> <fount>) (<sink> <sink>) fount sink)
-  (labels ((r (iterator collector)
-             (multiple-value-call
-                 #'(lambda (hasp next &rest values)
-                     (if hasp
-                         (r next (apply 'collect <sink> collector values))
-                         (result <sink> collector)))
-               (next <fount> iterator))))
-    (r (iterator <fount> fount) (collector <sink> sink))))
+  (loop :with iterator = (iterator <fount> fount)
+    :with collector = (collector <sink> sink)
+    :for values = (handler-case (multiple-value-list (next <fount> iterator))
+                    (end-of-iteration () (return (result <sink> collector))))
+    :do (apply 'collect <sink> collector values)))
 
 ;;; A sink that calls a function for side-effect on each collected value
 (defmethod collector ((<for-each> <for-each>) fun)

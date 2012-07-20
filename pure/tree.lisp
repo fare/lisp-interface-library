@@ -5,8 +5,11 @@
 
 (in-package :pure)
 
+(defmethod node-class ((i <binary-tree>))
+  'binary-tree-node)
+
 (defmethod node ((i <binary-tree>) &key left right key value)
-  (make-instance 'binary-tree-node
+  (make-instance (node-class i)
                  :key key :value value :left left :right right))
 
 (defmethod insert ((i <binary-tree>) node key value)
@@ -63,12 +66,15 @@
                           (if (null (right node)) '() (list (right node))))))
         (if (null (left node)) rlist (cons (left node) rlist)))))
 
+(defmethod node-class ((i <avl-tree>))
+  'avl-tree-node)
+
 (defmethod node ((i <avl-tree>) &key left right key value)
   (flet ((mk (&key left right key value)
            (let ((lh (node-height left))
                  (rh (node-height right)))
              (assert (member (- rh lh) '(-1 0 1)))
-             (make-instance 'avl-tree-node
+             (make-instance (node-class i)
                             :key key :value value
                             :left left :right right
                             :height (1+ (max lh rh))))))

@@ -19,11 +19,24 @@
   (:documentation "returns the interface for keys of given tree interface"))
 |#
 
+;; We should probably be using a node interface instead, but this will do for now
+(defgeneric node-class (<interface>)
+  (:documentation "return the node class associated with an interface."))
+
+(defgeneric node-key-value (<tree> tree)
+  (:documentation "key and value associated with a node in a TREE"))
+
+(defgeneric leftmost-node (<tree> tree)
+  (:documentation "the leftmost node in TREE"))
+
 (defgeneric leftmost (<tree> tree)
   (:documentation "key, value and foundp from the leftmost node in TREE"))
 
+(defgeneric rightmost-node (<tree> tree)
+  (:documentation "the rightmost node in TREE"))
+
 (defgeneric rightmost (<tree> tree)
-  (:documentation "key, value and foundp from rightmost node in TREE"))
+  (:documentation "key, value and foundp from the rightmost node in TREE"))
 
 (defgeneric locate (<tree> tree key path)
   (:documentation "lookup a tree for a key, return a path to the proper node."))

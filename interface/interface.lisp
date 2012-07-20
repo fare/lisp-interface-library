@@ -63,6 +63,9 @@
    ;; TODO: move this somewhere else
    #:boolean-integer
 
+   #:node-class
+   #:empty-object #:make-empty-object #:empty-object-p
+
    ;; simple mixins
    #:map-cheap-size #:map-for-each-from-fold-left
    #:map-fold-right-from-fold-left #:map-size-from-fold-left
@@ -174,3 +177,9 @@ A constant one is pure, a new one if stateful."))
 ;;; TODO: move this somewhere else!
 (defun boolean-integer (bool)
   (if bool 1 0))
+
+(defclass empty-object () ())
+(defun make-empty-object ()
+  (make-instance 'empty-object))
+(defun empty-object-p (x)
+  (typep x 'empty-object))

@@ -26,8 +26,8 @@
    (right :accessor right :initform (make-empty-object))))
 
 (defclass association-pair (interface::association-pair)
-  ((key :accessor node-key) ;; only write the key when copying a key-value pair.
-   (value :accessor node-value))) ;; writable value, not writable key.
+  ((interface::key :accessor node-key) ;; only write the key when copying a key-value pair.
+   (interface::value :accessor node-value))) ;; writable value, not writable key.
 
 (defclass binary-tree-node (binary-branch association-pair) ())
 
@@ -37,7 +37,7 @@
 (define-interface <avl-tree> (<post-self-balanced-binary-tree> interface::<avl-tree>) ())
 
 (defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
-  ((height :accessor node-height))) ;; make it writable.
+  ((interface::height :accessor node-height))) ;; make it writable.
 
 ;; We really ought to either do *everything* in detached interface-passing style,
 ;; *or* keep it in subject-oriented code but split it in a different package,

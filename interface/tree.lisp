@@ -5,8 +5,12 @@
 
 (in-package :interface)
 
+(defmethod node-class ((i <binary-tree>))
+  'binary-tree-node)
+
 (defmethod check-invariant ((i <binary-tree>) (node binary-branch) &key
                             lower (lowerp lower) upper (upperp upper))
+  (typep node (node-class i))
   (let ((key (node-key node)))
     (when lowerp
       (assert (order:order< i lower key)))
@@ -29,7 +33,7 @@
     (1 (locate i (right node) key (cons 'right path)))))
 
 (defmethod lookup ((i <binary-tree>) node key)
-  (if (null node)
+  (if (empty-p i node)
       (values nil nil)
       (ecase (order:compare i key (node-key node)) ;; (compare-key i key (node-key node))
         (0 (values (node-value node) t))
@@ -41,7 +45,7 @@
   (leftmost i map))
 
 (defmethod fold-left ((i <binary-tree>) node f seed)
-  (if (null node)
+  (if (empty-p i node)
       seed
       (fold-left i (right node) f
                       (funcall f
@@ -49,7 +53,7 @@
                                (node-key node) (node-value node)))))
 
 (defmethod fold-right ((i <binary-tree>) node f seed)
-  (if (null node)
+  (if (empty-p i node)
       seed
       (fold-right i (left node) f
                        (funcall f
@@ -84,10 +88,19 @@
 (defmethod rightmost ((i <binary-tree>) node)
   (node-key-value i (rightmost-node i node)))
 
+(defmethod node-class ((i <avl-tree>))
+  'avl-tree-node)
+
 (defmethod node-height ((node null))
   0)
 
 (defmethod node-balance ((node null))
+  0)
+
+(defmethod node-height ((node empty-object))
+  0)
+
+(defmethod node-balance ((node empty-object))
   0)
 
 (defmethod node-balance ((node avl-tree-node))
@@ -121,7 +134,7 @@ node is always called with branches that are of comparable height...
            (let ((lh (node-height left))
                  (rh (node-height right)))
              (assert (member (- rh lh) '(-1 0 1)))
-             (make-instance 'avl-tree-node
+             (make-instance (node-class i)
                             :key key :value value
                             :left left :right right
                             :height (1+ (max lh rh))))))
@@ -176,6 +189,7 @@ node is always called with branches that are of comparable height...
 (defun binary-tree-sexp (tree)
   (etypecase tree
     (null nil)
+    (empty-object nil)
     (binary-tree-node
      (list (binary-tree-sexp (left tree))
            (cons (node-key tree) (node-value tree))

@@ -5,7 +5,7 @@
 
 (in-package :stateful)
 
-(define-interface <map> (<fount> <sink>) ())
+(define-interface <map> (interface::<map> <fount> <sink>) ())
 
 (defgeneric empty! (<map> map)
   (:documentation "Clear the map and make it empty. Return no value."))
@@ -95,3 +95,6 @@ we could have a
 (defclass map-divide-from-for-each () ())
 (defclass map-fold-left-from-for-each () ())
 (defclass map-first-key-value-from-for-each () ())
+
+(defgeneric balance-node (<tree> node)
+  (:documentation "balance a node in a tree"))

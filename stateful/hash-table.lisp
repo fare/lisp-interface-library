@@ -20,14 +20,14 @@
 
 (defmethod check-invariant ((i <hash-table>) map &key)
   (check-type map hash-table)
-  (assert (normalize-test-function (test-function i)))
-  (assert (same-test-function-p (test-function i) (hash-table-test map))))
+  (assert (normalize-test-function (test-function (key-interface i))))
+  (assert (same-test-function-p (test-function (key-interface i)) (hash-table-test map))))
 
 (defmethod empty ((i <hash-table>))
-  (make-hash-table :test (normalize-test-function (test-function i))))
+  (make-hash-table :test (normalize-test-function (test-function (key-interface i)))))
 
 (defmethod empty-p ((i <hash-table>) map)
-  (= 0 (hash-table-count i)))
+  (= 0 (hash-table-count map)))
 
 (defmethod lookup ((i <hash-table>) map key)
   (gethash key map))

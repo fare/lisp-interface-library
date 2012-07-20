@@ -7,4 +7,6 @@
   ((:module "test"
 	    :components
 	    ((:file "package")
-	     (:file "functional-map" :depends-on ("package"))))))
+	     (:file "utilities" :depends-on ("package"))
+	     (:file "pure-map" :depends-on ("utilities"))
+	     (:file "stateful-map" :depends-on ("utilities"))))))

@@ -5,14 +5,17 @@
 
 (in-package :stateful)
 
+(defmethod node-class ((i <binary-tree>))
+  'binary-tree-node)
+
 (defmethod node ((i <binary-tree>) &key left right key value)
-  (make-instance 'binary-tree-node
+  (make-instance (node-class i)
                  :key key :value value :left left :right right))
 
 (defmethod insert ((i <binary-tree>) node key value)
   (cond
     ((empty-p i node)
-     (change-class node '<binary-tree> :key key :value value)
+     (change-class node (node-class i) :key key :value value)
      (values))
     (t
      (ecase (order:compare i key (node-key node))
@@ -88,7 +91,10 @@
   (declare (ignore key))
   (balance-node i node))
 
-(defmethod copy-node ((destination-node avl-tree-node) (origin-node avl-tree-node))
+(defmethod node-class ((i <avl-tree>))
+  'avl-tree-node)
+
+(defmethod copy-node :after ((destination-node avl-tree-node) (origin-node avl-tree-node))
   (setf (node-height destination-node) (node-height origin-node))
   (values))
 
@@ -126,18 +132,19 @@
 
 (defmethod balance-node ((i <avl-tree>) (node avl-tree-node))
   (ecase (node-balance node)
-    ((-1 0 1) (values)) ;; already balanced
+    ((-1 0 1) ;; already balanced, just update height
+     (update-height node))
     ((-2)
      (ecase (node-balance (left node))
        ((-1 0)
         (rotate-node-right node))
        ((1)
-        (rotate-node-right node)
-        (rotate-node-left node))))
+        (rotate-node-left (left node))
+        (rotate-node-right node))))
     ((2)
      (ecase (node-balance (right node))
        ((-1)
-        (rotate-node-left node)
-        (rotate-node-right node))
+        (rotate-node-right (right node))
+        (rotate-node-left node))
        ((0 1)
         (rotate-node-left node))))))

@@ -1,12 +1,35 @@
 #+xcvb (module ())
 (defpackage :lisp-interface-library-test
-  (:use :interface :eq :order :pure :asdf
+  (:use :interface :eq :order :asdf
         :reader-interception :fare-utils
         :cl :hu.dwim.stefil)
-  (:export #:test-suite))
+  (:export
+   #:test-suite
+   #:sort-alist
+   #:shuffle-list
+   #:make-alist
+   #:equal-alist
+   #:interface-test
+   #:alist-map*
+   #:*verbose* #:x
+   #:*alist-10-latin*
+   #:*alist-100-decimal*
+   #:*alist-100-latin*
+   #:*alist-100-english*
+   #:*al-1*
+   #:*al-2*
+   #:*al-3*
+   #:*al-5*))
 
-(in-package :lisp-interface-library-test)
+(defpackage :lisp-pure-datastructure-test
+  (:use :pure :lisp-interface-library-test
+        :interface :eq :order :asdf
+        :reader-interception :fare-utils
+        :cl :hu.dwim.stefil))
 
-(defsuite* (test-suite
-            :in root-suite
-            :documentation "Testing lisp-interface-library"))
+(defpackage :lisp-stateful-datastructure-test
+  (:use :stateful :lisp-interface-library-test
+        :interface :eq :order :asdf
+        :reader-interception :fare-utils
+        :cl :hu.dwim.stefil)
+  (:import-from :pure #:<alist>))

@@ -52,13 +52,15 @@
     (values (subseq map 0 l1) (nthcdr l1 map))))
 
 (defmethod size ((i <alist>) map)
+  (declare (ignorable i))
   (length map))
 
 (defmethod map-alist ((i interface::<map>) map)
   (fold-right i map #'(lambda (k v acc) (acons k v acc)) '()))
 
-(defmethod convert ((i interface::<map>) <alist> map)
-  (map-alist i map))
+(defmethod convert ((to <alist>) (from interface::<map>) map)
+  (declare (ignorable to))
+  (map-alist from map))
 
-(defmethod alist-map ((<map> pure:<map>) map)
-  (convert <alist> <map> map))
+(defmethod alist-map ((<map> interface::<map>) map)
+  (convert <map> <alist> map))
