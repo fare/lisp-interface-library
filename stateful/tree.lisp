@@ -83,6 +83,28 @@
                 (unless (empty-p i left) (list left))
                 (unless (empty-p i right) (list right))))))
 
+
+;;; Methods used for balancing trees
+
+(defmethod rotate-node-right ((node binary-tree-node))
+  ;; (LL2 C:KL LR2) N:K R1 ==> (LL2 N:KL (LR2 C:K R1))
+  (let ((child (left node)))
+    (rotatef (node-key child) (node-key node))
+    (rotatef (node-value child) (node-value node))
+    (rotatef (left node) (left child) (right child) (right node)))
+  (values))
+
+(defmethod rotate-node-left ((node binary-tree-node))
+  ;; L1 N:K (RL2 C:KR RR2) ==> (L1 C:K RL2) N:KR RR2
+  (let ((child (right node)))
+    (rotatef (node-key child) (node-key node))
+    (rotatef (node-value child) (node-value node))
+    (rotatef (right node) (right child) (left child) (left node)))
+  (values))
+
+
+;;; Self-balanced trees
+
 (defmethod drop :after ((i <post-self-balanced-binary-tree>) node key)
   (declare (ignore key))
   (balance-node i node))
@@ -90,6 +112,9 @@
 (defmethod insert :after ((i <post-self-balanced-binary-tree>) node key value)
   (declare (ignore key))
   (balance-node i node))
+
+
+;;; AVL trees
 
 (defmethod node-class ((i <avl-tree>))
   'avl-tree-node)
@@ -106,25 +131,9 @@
         (1+ (max (node-height (left node))
                  (node-height (right node))))))
 
-(defmethod rotate-node-right ((node binary-tree-node))
-  ;; (LL2 C:KL LR2) N:K R1 ==> (LL2 N:KL (LR2 C:K R1))
-  (let ((child (left node)))
-    (rotatef (node-key child) (node-key node))
-    (rotatef (node-value child) (node-value node))
-    (rotatef (left node) (left child) (right child) (right node)))
-  (values))
-
 (defmethod rotate-node-right :after ((node avl-tree-node))
   (update-height (right node))
   (update-height node))
-
-(defmethod rotate-node-left ((node avl-tree-node))
-  ;; L1 N:K (RL2 C:KR RR2) ==> (L1 C:K RL2) N:KR RR2
-  (let ((child (right node)))
-    (rotatef (node-key child) (node-key node))
-    (rotatef (node-value child) (node-value node))
-    (rotatef (right node) (right child) (left child) (left node)))
-  (values))
 
 (defmethod rotate-node-left :after ((node avl-tree-node))
   (update-height (left node))
