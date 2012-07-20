@@ -31,7 +31,18 @@
 
 (defclass binary-tree-node (binary-branch association-pair) ())
 
+;;; Balancing trees
+(defgeneric balance-node (<tree> node)
+  (:documentation "balance a node in a tree"))
+
+;; We really ought to either do *everything* in detached interface-passing style,
+;; *or* keep it in subject-oriented code but split it in a different package,
+;; and provide some hooks between the two.
+(defgeneric rotate-node-right (node))
+(defgeneric rotate-node-left (node))
+
 ;;; pure AVL-tree
+
 (define-interface <post-self-balanced-binary-tree> (<binary-tree>) ())
 
 (define-interface <avl-tree> (<post-self-balanced-binary-tree> interface::<avl-tree>) ())
@@ -39,12 +50,7 @@
 (defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
   ((interface::height :accessor node-height))) ;; make it writable.
 
-;; We really ought to either do *everything* in detached interface-passing style,
-;; *or* keep it in subject-oriented code but split it in a different package,
-;; and provide some hooks between the two.
 (defgeneric update-height (node))
-(defgeneric rotate-node-right (node))
-(defgeneric rotate-node-left (node))
 
 
 ;;; Common special case: when keys are (real) numbers
