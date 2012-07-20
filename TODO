@@ -1,0 +1,56 @@
+;;;;-*- Lisp -*-
+#|
+oconnore:
+** migrate ds.scrbl from exscribe to racket's scribble with acm alternate style (ask jonrafkind on #racket)
+** review abstract
+** implement arrays -- use RRB-trees? http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
+** [[adopt same names as cl-containers?]]
+
+fare:
+** write implicit <-> explicit adapters
+*** Local bindings with
+  (with-interface-methods (interface &key methods prefix) &body body).
+*** Global definitions with
+  (define-interface-methods interface &key methods prefix package).
+*** Write macro to make interface implicit with explicit list of methods.
+*** Extend define-interface to register signature methods at the metalevel.
+*** write a macro to make interface implicit with implicit list of methods
+  implicitly extracted from define-interface declarations.
+
+** write pure <-> impure adapters
+  Provide wrappers for all relevant methods via macros.
+  Also need to identify for every method
+  which position in argument and/or return values
+  holds the object or datum to wrap/unwrap.
+  mutating
+  linearized
+
+** write detached <-> subjective adapters
+*** subjective interfaces (=regular OO) vs separate interfaces.
+
+** update abstract
+** look at how scala does these things http://www.scala-lang.org/
+
+** Develop example of multiply-indexed-organized tuple store.
+  Each node is simultaneously node of multiple trees.
+  Depending on which index you're using,
+  they have to be viewed as a tree in the according way,
+  and appropriate accessors have to be chosen for say subtree access.
+  The same tree-manipulation routines can be used on the same tree nodes
+  with completely different results depending on which interface you use.
+
+
+#|
+(defmethod pure:empty-table ((i linearized-table))
+  nil)
+
+(defmethod pure:convert ((i linear
+
+  (instantiate i :value (instantiate (linearized-state i))))
+
+(symbol-macrolet
+   ((s (stateful-interface i))
+    (p (pure-interface i)))
+  (
+pure:empty-table p
+|#
