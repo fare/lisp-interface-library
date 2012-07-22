@@ -32,6 +32,16 @@ fare:
 ** update abstract
 ** look at how scala does these things http://www.scala-lang.org/
 
+** Move the payload of a tree out of the basic tree structure (i.e. (key, value))
+** Add drop and insert side chooser as a method
+** Add value merging as a method
+** Get something like cl-container's find-or-create-class, combined with memoization,
+  for generating classes that match some specification of an interface.
+** Note that a single interface may have many classes and sub-interfaces,
+  sometimes with mutual recursion in classes pointing to each other
+  through methods and/or :class allocated slots.
+
+
 ** Develop example of multiply-indexed-organized tuple store.
   Each node is simultaneously node of multiple trees.
   Depending on which index you're using,
