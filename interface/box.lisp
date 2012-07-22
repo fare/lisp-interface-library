@@ -107,7 +107,7 @@
   ((class :initform 'one-use-thunk-box)))
 
 (defun make-one-use-function (function &optional name)
-  (let ((usedp t))
+  (let ((usedp nil))
     (lambda (&rest args)
       (cond
         ((not usedp)
@@ -123,6 +123,7 @@
 
 ;;; Some boxes can be empty
 (define-interface <emptyable-box> (<box>) ())
+(defclass emptyable-box (box) ())
 
 ;;; Some boxes can be refilled
 
@@ -149,13 +150,14 @@
   (declare (ignorable i))
   (box-set! box value))
 
-(defclass box! (mutable-box emptyable-box value-box) ())
+(defclass box! (mutable-box emptyable-box value-box)
+  ((value :writer set-box-value)))
 
 (define-interface <box!> (<mutable-box> <classy-box> <emptyable-box>)
   ((class :initform 'box!)))
 
 (defmethod box-set! ((box box!) value)
-  (setf (slot-value box 'value) value))
+  (set-box-value value box))
 
 (defmethod empty-p ((i <box!>) box)
   (declare (ignorable i))

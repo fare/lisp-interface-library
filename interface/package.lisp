@@ -10,6 +10,7 @@
   (:export
 
    ;;; Classes
+   #:interface-class
    #:<interface>
    #:<type>
    #:<classy>

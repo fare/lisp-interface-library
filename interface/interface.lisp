@@ -7,48 +7,70 @@
 
 (in-package :interface)
 
-;;;TODO: use MOP for an interface class,
-;;; store list of gf signatures that go with the interface in class object
-#|
-(defclass interface (class)
-  xxx)
-|#
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
-(defmacro define-interface (name super-interfaces slots &rest options)
+  (defclass interface-class (standard-class)
+    ((generics :initform (make-hash-table :test 'eql) :accessor interface-generics)))
+
+  (defmethod closer-mop:validate-superclass
+      ((class interface-class) (super-class standard-class))
+    t)
+
+  (defun register-interface-generic
+      (class name &optional lambda-list (interface-in 0) interface-out)
+    (setf (gethash name (interface-generics (find-class class)))
+          (list name lambda-list interface-in interface-out))
+    (values)))
+
+(defmacro define-interface (interface super-interfaces slots &rest options)
   (let ((class-options
-         (remove-if #'(lambda (x) (member x '(:singleton :parametric))) options :key 'car))
+         (remove '(:default-initargs :documentation :metaclass)
+                 options :key 'car :test-not #'(lambda (x y) (member y x))))
+        (metaclass (find :metaclass options :key 'car))
+        (generics (remove :generic options :key 'car :test-not 'eq))
         (singleton (find :singleton options :key 'car))
         (parametric (find :parametric options :key 'car)))
     `(progn
-       (defclass ,name ,super-interfaces ,slots ,@class-options)
+       (defclass ,interface ,super-interfaces ,slots
+         ,@(unless metaclass `((:metaclass interface-class)))
+         ,@class-options)
        ,@(when (or parametric singleton)
            (destructuring-bind (formals &body body)
                (or (cdr parametric)
                    '(() (make-interface)))
              `((define-memo-function
-                   (,name :normalization
-                          #'(lambda (make-interface &rest arguments)
-                              (flet ((make-interface (&rest arguments)
-                                       (apply make-interface arguments)))
-                                (apply #'(lambda ,formals
-                                           (block ,name
-                                             ,@body))
-                                       arguments))))
+                   (,interface
+                    :normalization
+                    #'(lambda (make-interface &rest arguments)
+                        (flet ((make-interface (&rest arguments)
+                                 (apply make-interface arguments)))
+                          (apply #'(lambda ,formals
+                                     (block ,interface
+                                       ,@body))
+                                 arguments))))
                    (&rest arguments)
-                 (apply 'make-instance ',name arguments)))))
-       ,@(when singleton `((defvar ,name (,name))))
-       ',name)))
+                 (apply 'make-instance ',interface arguments)))))
+       ,@(when singleton `((defvar ,interface (,interface))))
+       ,@(when generics
+           (loop :for (nil . generic) :in generics :append
+             (destructuring-bind (name &optional interface-options lambda-list
+                                       &rest generic-options)
+                 generic
+               `(,@(when lambda-list `((defgeneric ,name ,lambda-list ,@generic-options)))
+                 (register-interface-generic
+                  ',interface ',name ',lambda-list ,@interface-options)))))
+       ',interface)))
 
 (define-interface <interface> ()
   ()
   (:documentation "An interface, encapsulating an algorithm"))
 
 (define-interface <type> (<interface>) ()
-  (:documentation "An interface encapsulating a particular type of objects"))
-
-(defgeneric make (<type> &key)
-  (:documentation "Given a <type>, create an object conforming to the interface
-based on provided initarg keywords, returning the object."))
+  (:documentation "An interface encapsulating a particular type of objects")
+  (:generic
+   make () (<type> &key)
+   (:documentation "Given a <type>, create an object conforming to the interface
+based on provided initarg keywords, returning the object.")))
 
 ;;; This one is only colloquial for use in pure datastructure. TODO: Move it to pure-?
 (defgeneric update (<type> object &key)
