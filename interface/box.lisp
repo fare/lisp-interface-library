@@ -15,20 +15,21 @@
 ;;; An interface for boxes
 
 ;;; A box: you can make it, or get something out of it
-(define-interface <box> (<interface>) ())
-
-(defgeneric make-box (<box> generator &key #+sbcl &allow-other-keys)
-  (:documentation "Make a box from a generator for the value inside the box"))
-
-(defgeneric unbox (<box> box)
-  (:documentation "Return the value inside the box"))
+(define-interface <box> (<interface>)
+  ()
+  (:generic
+   make-box (:out 0) (<box> generator &key #+sbcl &allow-other-keys)
+   (:documentation "Make a box from a generator for the value inside the box"))
+  (:generic
+   unbox (:in 1) (<box> box)
+   (:documentation "Return the value inside the box")))
 
 
 ;;; Classy box: same, based on a class
 (define-interface <classy-box> (<box> <classy>) ())
 
 (defmethod make-box ((i <classy-box>) generator &rest keys &key #+sbcl &allow-other-keys)
-  (apply 'instantiate i :generator generator keys))
+  (apply 'make i :generator generator keys))
 
 (defmethod unbox ((i <classy-box>) box)
   (declare (ignorable i))

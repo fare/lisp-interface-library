@@ -17,10 +17,13 @@
 
 (in-package :eq)
 
-(define-interface <eq> () () (:singleton))
-(defgeneric == (i x y))
-(defgeneric test-function (i)
-  (:documentation "test function for <eq> interface"))
+(define-interface <eq> (<type>)
+  ()
+  (:singleton)
+  (:generic == (:in (1 2)) (i x y))
+  (:generic
+   test-function () (i)
+   (:documentation "test function for <eq> interface")))
 
 (defmethod == ((i <eq>) x y)
   (eql x y))
@@ -37,10 +40,12 @@
 (defmethod == ((i <eq-slot>) x y)
   (funcall (test-function i) x y))
 
-(define-interface <hashable> (<eq>) ())
-(defgeneric hash (i x))
+(define-interface <hashable> (<eq>)
+  ()
+  (:generic hash (:in 1) (i x)))
+
 (defmethod hash ((i <hashable>) x)
-  (sxhash x))
+  (sxhash x)) ; Note: matches equal, not eql
 
 (define-interface <equal> (<hashable>) () (:singleton))
 (defmethod == ((i <equal>) x y)

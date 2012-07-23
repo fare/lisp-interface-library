@@ -48,6 +48,9 @@
                ((empty-p i (right node))
                 (copy-node node (left node)))
                (t
+                ;; TODO: have a way to pick (based on balance information?)
+                ;; which of "leftmost of the right side"
+                ;; and "rightmost of the left side" to pick
                 (multiple-value-bind (kk vv)
                     (leftmost i (right node))
                   (drop i (right node) kk)
