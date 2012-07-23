@@ -7,16 +7,16 @@
 
 ;;; map-simple-empty
 (define-interface-methods (i map-simple-empty)
-  (defmethod* check-invariant ((m empty-object) &key &allow-other-keys)
+  (:method check-invariant ((m empty-object) &key &allow-other-keys)
     t)
-  (defmethod* empty ()
+  (:method empty ()
     (make-empty-object))
-  (defmethod* empty-p (map)
+  (:method empty-p (map)
     (typep map 'empty-object))
-  (defmethod* empty! (map)
+  (:method empty! (map)
     (change-class map 'empty-object)
     (values))
-  (defmethod* node-key-value ((m empty-object))
+  (:method node-key-value ((m empty-object))
     (values nil nil nil)))
 
 ;;; map-simple-decons

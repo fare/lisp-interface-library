@@ -5,13 +5,13 @@
   :build-depends-on ("/alexandria" "/fare-memoization" "/fare-utils" "/closer-mop")
   :depends-on
   ("interface/interface"
+   "interface/base"
    "interface/box"
    "interface/eq"
    "interface/order"
    "interface/iterator"
    "interface/map-interface"
    "interface/tree-interface"
-   "interface/implicit"
    "pure/package"
    "pure/iterator"
    "pure/map-interface"

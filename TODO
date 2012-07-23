@@ -1,22 +1,16 @@
 ;;;;-*- Lisp -*-
 #|
-oconnore:
+* oconnore:
 ** migrate ds.scrbl from exscribe to racket's scribble with acm alternate style (ask jonrafkind on #racket)
 ** review abstract
 ** implement Red-Black trees?
 ** implement arrays -- use RRB-trees? http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
 ** [[adopt same names as cl-containers?]]
 
-fare:
-** write implicit <-> explicit adapters
-*** Local bindings with
-  (with-interface-methods (interface &key methods prefix) &body body).
-*** Global definitions with
-  (define-interface-methods interface &key methods prefix package).
-*** Write macro to make interface implicit with explicit list of methods.
-*** Extend define-interface to register signature methods at the metalevel.
-*** write a macro to make interface implicit with implicit list of methods
-  implicitly extracted from define-interface declarations.
+* fare:
+** test explicit -> explicit adapters
+*** Remember functions that were built with explicit->implicit adapter,
+  and optimize away indirection through interface in any implicit->explicit transformation back.
 
 ** write pure <-> impure adapters
   Provide wrappers for all relevant methods via macros.
@@ -33,7 +27,7 @@ fare:
 ** look at how scala does these things http://www.scala-lang.org/
 
 ** Move the payload of a tree out of the basic tree structure (i.e. (key, value))
-** Add drop and insert side chooser as a method
+** Add drop and insert side chooser as a method.
 ** Add value merging as a method
 ** Get something like cl-container's find-or-create-class, combined with memoization,
   for generating classes that match some specification of an interface.
