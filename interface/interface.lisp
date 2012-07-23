@@ -22,6 +22,19 @@
     (setf (gethash name (interface-generics (find-class class))) keys)
     (values)))
 
+  (defun interface-direct-generics (interface)
+    (loop :for name :being :the :hash-key :of (interface-generics interface)
+      :collect name))
+
+  (defgeneric interface-all-generics (interface)
+    (:method ((symbol symbol))
+      (interface-all-generics (find-class symbol)))
+    (:method ((class interface-class))
+      (remove-duplicates
+       (loop :for class :in (closer-mop:class-precedence-list class)
+         :when (typep class 'interface-class)
+         :append (interface-direct-generics class)))))
+
 (defmacro define-interface (interface super-interfaces slots &rest options)
   (let ((class-options
          (remove '(:default-initargs :documentation :metaclass)
