@@ -113,7 +113,7 @@
   (balance-node i node))
 
 (defmethod insert :after ((i <post-self-balanced-binary-tree>) node key value)
-  (declare (ignore key))
+  (declare (ignore key value))
   (balance-node i node))
 
 

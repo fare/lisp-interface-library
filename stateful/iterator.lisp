@@ -23,7 +23,7 @@
   (declare (ignorable i x))
   (values))
 
-(defmethod iterator (<number-iterator> iterator)
+(defmethod iterator ((i <number-iterator>) iterator)
   (make-box '<box!> (iterator-start iterator)))
 (defmethod next ((i <decreasing-number-iterator>) counter-box)
   (let ((counter (box-ref counter-box))

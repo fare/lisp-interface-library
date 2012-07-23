@@ -74,7 +74,7 @@
 
 (defclass promise-box (value-box simple-thunk-box immutable-box) ())
 
-(define-interface <promise-box> (<value-box> <simple-thunk-box>)
+(define-interface <promise-box> (<value-box> <thunk-box>)
   ((class :initform 'promise-box)))
 
 (defmacro delay (&body body)

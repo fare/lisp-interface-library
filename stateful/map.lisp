@@ -1,22 +1,23 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful mapping of keys to values
 
-#+xcvb (module (:depends-on ("stateful/map-interface")))
+#+xcvb (module (:depends-on ("stateful/map-interface" "interface/implicit")))
 
 (in-package :stateful)
 
 ;;; map-simple-empty
-(defmethod check-invariant ((i map-simple-empty) (m empty-object) &key)
-  m)
-(defmethod empty ((i map-simple-empty))
-  (make-empty-object))
-(defmethod empty-p ((i map-simple-empty) map)
-  (typep map 'empty-object))
-(defmethod empty! ((i map-simple-empty) map)
-  (change-class map 'empty-object)
-  (values))
-(defmethod node-key-value ((i map-simple-empty) (m empty-object))
-  (values nil nil nil))
+(define-interface-methods (i map-simple-empty)
+  (defmethod* check-invariant ((m empty-object) &key &allow-other-keys)
+    t)
+  (defmethod* empty ()
+    (make-empty-object))
+  (defmethod* empty-p (map)
+    (typep map 'empty-object))
+  (defmethod* empty! (map)
+    (change-class map 'empty-object)
+    (values))
+  (defmethod* node-key-value ((m empty-object))
+    (values nil nil nil)))
 
 ;;; map-simple-decons
 (defmethod decons ((i map-simple-decons) map)

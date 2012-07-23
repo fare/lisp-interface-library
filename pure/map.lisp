@@ -6,7 +6,7 @@
 (in-package :pure)
 
 ;; map-simple-empty
-(defmethod check-invariant ((i map-simple-empty) (m null) &key)
+(defmethod check-invariant ((i map-simple-empty) (m null) &key &allow-other-keys)
   m)
 (defmethod empty ((i map-simple-empty))
   '())

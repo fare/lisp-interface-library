@@ -18,6 +18,10 @@
    ;;; Macros
    #:define-interface
    #:make-interface
+   #:with-interface
+   #:define-interface-specialized-functions
+   #:define-interface-methods
+   #:defmethod*
 
    ;;; General purpose gfs
    #:check-invariant
