@@ -44,18 +44,47 @@
   The same tree-manipulation routines can be used on the same tree nodes
   with completely different results depending on which interface you use.
 
+|#
 
-#|
-(defmethod pure:empty-table ((i linearized-table))
-  nil)
+(in-package :pure)
 
-(defmethod pure:convert ((i linear
+(define-interface <linearized> ()
+  ((stateful-interface
+    :reader stateful-interface
+    :initarg :stateful-interface)
+   (box-interface
+    :reader box-interface
+    :initarg :box-interface :initform <one-use-value-box>))
+  (:parametric (interface &optional unsafe)
+    (make-interface :stateful-interface interface
+                    :box-interface (if unsafe <value-box> <one-use-value-box>))))
 
-  (instantiate i :value (instantiate (linearized-state i))))
+(define-interface linearized-map (<map> <linearized>)
+  ()
+  (:parametric (interface &optional unsafe)
+    (make-interface :stateful-interface interface
+                    :box-interface (if unsafe <value-box> <one-use-value-box>))))
+
+(defmethod lookup ((i linearized-map) map key)
+  (lookup (stateful-interface i) (box-value map) key))
+
+(defmethod insert ((i linearized-map) map key value)
+  (let ((map-object (unbox (box-interface i) map)))
+    (multiple-value-bind ()
+        (stateful:insert (stateful-interface i) map-object key value)
+      (values (make-box (box-interface i) :value map-object)))))
+
+(defun linearize-map-interface (stateful-map-interface &optional unsafe)
+  (<linearize>
+    method pure:convert ((l linearized-map) (s stateful-map) m)
+  (make-box (box-interface l) :value m))
+
+
+(in-package :stateful)
 
 (symbol-macrolet
    ((s (stateful-interface i))
     (p (pure-interface i)))
-  (
+
 pure:empty-table p
-|#
+

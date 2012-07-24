@@ -15,23 +15,42 @@
     t)
 
   (defun register-interface-generic
-      (class name &rest keys &key lambda-list in out)
-    (declare (ignore lambda-list in out))
+      (class name &rest keys &key in out)
+    (declare (ignore in out))
     (setf (gethash name (interface-generics (find-class class))) keys)
-    (values)))
+    (values))
 
   (defun interface-direct-generics (interface)
     (loop :for name :being :the :hash-key :of (interface-generics interface)
       :collect name))
 
-  (defgeneric interface-all-generics (interface)
+  (defgeneric all-superclasses (classes)
     (:method ((symbol symbol))
-      (interface-all-generics (find-class symbol)))
-    (:method ((class interface-class))
+      (all-superclasses (find-class symbol)))
+    (:method ((class class))
+      (closer-mop:class-precedence-list class))
+    (:method ((classes cons))
       (remove-duplicates
-       (loop :for class :in (closer-mop:class-precedence-list class)
-         :when (typep class 'interface-class)
-         :append (interface-direct-generics class)))))
+       (mapcan #'closer-mop:class-precedence-list classes)
+       :from-end t)))
+
+  (defun all-interface-generics (interfaces)
+    (remove-duplicates
+     (loop :for class :in (all-superclasses interfaces)
+       :when (typep class 'interface-class)
+       :append (interface-direct-generics class))))
+
+  (defun search-gf-options (classes gf)
+    (loop :for class :in classes
+      :when (typep class 'interface-class) :do
+      (multiple-value-bind (options foundp)
+          (gethash gf (interface-generics class))
+        (when foundp
+          (return (values options t))))
+      :finally (return (values nil nil))))
+
+  (defun interface-gf-options (interface gf)
+    (search-gf-options (all-superclasses interface) gf)))
 
 (defmacro define-interface (interface super-interfaces slots &rest options)
   (let ((class-options
@@ -71,8 +90,7 @@
              `(,@(when lambda-list `((defgeneric ,name ,lambda-list ,@generic-options)))
                  (eval-when (:compile-toplevel :load-toplevel :execute)
                    (apply 'register-interface-generic
-                          ',interface ',name :lambda-list ',lambda-list
-                          ',interface-options)))))
+                          ',interface ',name ',interface-options)))))
        ,@(when methods
            (with-gensyms (ivar)
              `((define-interface-methods (,ivar ,interface) ,@methods))))
@@ -88,7 +106,7 @@
        :append
        (etypecase spec
          (list spec)
-         (symbol (interface-all-generics spec)))))))
+         (symbol (all-interface-generics spec)))))))
 
 (defmacro with-interface ((interface-sexp functions-spec &key prefix package) &body body)
   (with-gensyms (arguments)

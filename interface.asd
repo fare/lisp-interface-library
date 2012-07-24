@@ -11,6 +11,7 @@
      (:file "interface" :depends-on ("package"))
      (:file "base" :depends-on ("interface"))
      (:file "box" :depends-on ("base"))
+     (:file "purify" :depends-on ("box"))
      (:file "eq" :depends-on ("base"))
      (:file "order" :depends-on ("eq"))
      (:file "iterator" :depends-on ("base"))

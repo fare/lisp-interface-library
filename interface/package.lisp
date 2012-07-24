@@ -39,7 +39,7 @@
    #:box #:box-ref #:box-set!
    #:<box> #:make-box #:unbox
    #:<classy-box>
-   #:<value-box> #:value-box #:simple-value-box
+   #:<value-box> #:value-box #:simple-value-box ;;#:peek
    #:<thunk-box> #:thunk-box #:simple-thunk-box
    #:<promise-box> #:promise-box #:delay #:force
    #:<one-use-box> #:one-use-box

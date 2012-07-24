@@ -46,6 +46,9 @@
     (box-value box)
     (call-next-method)))
 
+;;(defgeneric peek (<box> box reader))
+;;(defmethod peek ((i value-box) box reader) (funcall reader (box-value box)))
+
 (defclass simple-value-box (value-box)
   ((value :initarg :generator)))
 
@@ -53,7 +56,8 @@
   (box-value box))
 
 (define-interface <value-box> (<classy-box>)
-  ((class :initform 'simple-value-box)))
+  ((class :initform 'simple-value-box))
+  (:singleton))
 
 ;;;; Boxes that hold a computation
 
@@ -101,7 +105,8 @@
 ;;; Some concrete classes following that pattern.
 (defclass one-use-value-box (one-use-box value-box) ())
 (define-interface <one-use-value-box> (<one-use-box> <value-box>)
-  ((class :initform 'one-use-value-box)))
+  ((class :initform 'one-use-value-box))
+  (:singleton))
 
 (defclass one-use-thunk-box (one-use-box thunk-box) ())
 (define-interface <one-use-thunk-box> (<one-use-box> <thunk-box>)

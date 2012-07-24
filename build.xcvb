@@ -12,6 +12,7 @@
    "interface/iterator"
    "interface/map-interface"
    "interface/tree-interface"
+   "interface/purify"
    "pure/package"
    "pure/iterator"
    "pure/map-interface"
