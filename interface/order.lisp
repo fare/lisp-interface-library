@@ -1,16 +1,14 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Order
 
-#+xcvb
-(module
- (:depends-on
-  ("interface/interface"
-   "interface/eq")))
+#+xcvb (module (:depends-on ("interface/base" "interface/eq")))
 
 (in-package :cl)
 
 (defpackage :order
-  (:use :interface :eq :cl :alexandria)
+  (:use :interface :eq :cl :alexandria :asdf)
+  (:shadowing-import-from :asdf
+   #:appendf #:ends-with #:featurep) ;; also in alexandria
   (:export
    #:<order> #:<number> #:<string> #:<char>
    #:<order-from-lessp> #:<lessp>
