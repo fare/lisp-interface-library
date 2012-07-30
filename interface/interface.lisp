@@ -116,6 +116,7 @@
                 :collect
                 `(,local-name (&rest ,arguments)
                               (apply ',function-name ,interface-sexp ,arguments)))
+       (declare (ignorable ,@(mapcar (lambda (x) `#',x) function-names)))
        (declare (inline ,@function-names))
        ,@body))))
 

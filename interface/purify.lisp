@@ -14,6 +14,15 @@
            (options (search-gf-options pure-name superclasses)))
       (NIY pure-name options in out))))
 
+(defun %define-linearized-method
+    (linearized-interface
+     pure-method pure-lambda-list pure-values pure-effects
+     stateful-method stateful-lambda-list stateful-values stateful-effects)
+  (let ((i-var (first pure-lambda-list)))
+  `(defmethod ,pure-method ((,i-var ,linearized-interface) ,@(rest pure-lambda-list))
+     ,(NIY pure-values pure-effects
+           stateful-method stateful-lambda-list stateful-values stateful-effects))))
+
 (defmacro define-linearized-interface
     (names superclasses &rest options)
   (destructuring-bind (stateful-name
