@@ -2,7 +2,7 @@
 (module
  (:fullname "/lisp-interface-library"
   :nicknames ("lil")
-  :build-depends-on ("/alexandria" "/fare-memoization" "/fare-utils" "/closer-mop")
+  :build-depends-on ("/alexandria" "/fare-memoization" "/xcvb/xcvb-utils" "/closer-mop")
   :depends-on
   ("interface/interface"
    "interface/base"
