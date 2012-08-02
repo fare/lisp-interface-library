@@ -6,7 +6,7 @@
 (in-package :cl)
 
 (defpackage :order
-  (:use :interface :eq :cl :alexandria :asdf)
+  (:use :interface :eq :cl :xcvb-utils)
   (:shadowing-import-from :asdf
    #:appendf #:ends-with #:featurep) ;; also in alexandria
   (:export

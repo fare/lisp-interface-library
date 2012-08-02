@@ -6,7 +6,7 @@
 (in-package :cl)
 
 (defpackage :interface
-  (:use :closer-common-lisp :fare-memoization :fare-utils :closer-mop :alexandria :asdf)
+  (:use :closer-common-lisp :fare-memoization :xcvb-utils :closer-mop)
   (:shadowing-import-from :asdf
    #:appendf #:ends-with #:featurep) ;; also in alexandria
   (:export
