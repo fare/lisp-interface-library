@@ -20,6 +20,10 @@
      pure-lambda-list pure-values pure-effects pure-gf-options
      stateful-lambda-list stateful-values stateful-effects stateful-gf-options)
   (nest
+   (let ((linearized-interface* (find-class linearized-interface))
+         (stateful-interface* (find-class stateful-interface)))
+     (finalize-inheritance linearized-interface*)
+     (finalize-inheritance stateful-interface*))
    (let* ((pure-gf-options
            (or pure-gf-options
                (interface-gf-options linearized-interface pure-gf)))
@@ -181,7 +185,7 @@
      (declare (ignore ,@pure-mimic-ignorables))
      (let* (,@stateful-argument-bindings)
        (multiple-value-bind (,@stateful-results-lambda-list)
-           (,stateful-mimic-invoker ',stateful-gf ,@stateful-mimic-arguments)
+           (,stateful-mimic-invoker ',stateful-gf ,si-var ,@(rest stateful-mimic-arguments))
          (declare (ignore ,@stateful-results-ignorables))
          (let* (,@pure-results-bindings)
            (,pure-results-invoker #'values ,@pure-results-arguments)))))))

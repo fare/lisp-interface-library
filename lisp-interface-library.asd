@@ -5,7 +5,9 @@
 See http://fare.livejournal.com/155094.html regarding interface-passing-style,
 or our upcoming ILC'2012 article http://github.com/fare/lil-ilc2012/
 "
-  :depends-on (:interface :pure-datastructures :stateful-datastructures))
+  :depends-on (:interface
+               :pure-datastructures :stateful-datastructures
+               :linearize-interface))
 
 (defmethod perform ((op test-op) (system (eql (find-system :lisp-interface-library))))
   (asdf:load-system :lisp-interface-library-test)

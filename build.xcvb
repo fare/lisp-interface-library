@@ -12,7 +12,6 @@
    "interface/iterator"
    "interface/map-interface"
    "interface/tree-interface"
-   "interface/purify"
    "pure/package"
    "pure/iterator"
    "pure/map-interface"
@@ -37,6 +36,8 @@
    "stateful/tree"
    "stateful/encoded-key-map"
    "stateful/hash-table"
+   "linearize/linearize"
+   "linearize/map"
    #|"test/pure-map" "test/stateful-map"|#
    )
   :supersedes-asdf

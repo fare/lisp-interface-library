@@ -50,7 +50,7 @@
   (defun register-interface-generic
       (class name &rest keys &key lambda-list values in out)
     (setf (gethash name (interface-generics (find-class class)))
-          (acons :effects (normalize-gf-io lambda-list values in out) keys))
+          (list* :effects (normalize-gf-io lambda-list values in out) keys))
     (values))
 
   (defun interface-direct-generics (interface)
@@ -124,7 +124,7 @@
           '(:generic :method :singleton :parametric) options))
         (metaclass (find-unique-clos-option :metaclass options))
         (gfs (find-multiple-clos-options :generic options))
-        (methods (find-multiple-clos-option :method options))
+        (methods (find-multiple-clos-options :method options))
         (parametric (find-unique-clos-option :parametric options))
         (singleton (find-unique-clos-option :singleton options)))
     `(progn
@@ -236,7 +236,7 @@
         ;; mimic-invoker
         (if (or optionals rest) 'apply 'funcall)
         ;; mimic-arguments
-        (append required
+        (append mrequired
                 (reduce
                  #'(lambda (moptional acc)
                      (destructuring-bind (movar default mopvar) moptional
