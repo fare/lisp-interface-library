@@ -20,9 +20,9 @@
 (define-interface <eq> (<type>)
   ()
   (:singleton)
-  (:generic == (:in (1 2)) (i x y))
+  (:generic == (i x y) (:in 1 2) (:values bool))
   (:generic
-   test-function () (i)
+   test-function (i) (:values fun)
    (:documentation "test function for <eq> interface")))
 
 (defmethod == ((i <eq>) x y)
@@ -42,7 +42,7 @@
 
 (define-interface <hashable> (<eq>)
   ()
-  (:generic hash (:in 1) (i x)))
+  (:generic hash (i x) (:in 1) (:values bool)))
 
 (defmethod hash ((i <hashable>) x)
   (sxhash x)) ; Note: matches equal, not eql

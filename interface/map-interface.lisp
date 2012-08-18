@@ -7,12 +7,12 @@
 
 (define-interface <map> (<emptyable>)
   ()
-  (:generic lookup (:in 1) (<map> map key)
+  (:generic lookup (<map> map key) (:in 1) (:values value foundp)
    (:documentation "Lookup what map associates to a key,
 return two values, the associated value and
 a boolean that is true iff an association was found"))
   (:generic
-   first-key-value (:in 1) (<map> map)
+   first-key-value (<map> map) (:in 1) (:values key value foundp)
    (:documentation "Return three values:
 1- a key,
 2- a value, and
@@ -21,7 +21,7 @@ What first means here may depend on the particular map interface,
 but generally means the element most easily accessible;
 it is also the first (leftmost) key and value as used by fold-left and fold-right."))
   (:generic
-   fold-left (:in 1) (<map> map f seed)
+   fold-left (<map> map f seed) (:in 1) (:values value)
    (:documentation "Fold a map with a function,
 by repeatedly deconstructing it as by decons (pure),
 or as by repeatedly deconstructing it as by decons
@@ -29,16 +29,16 @@ except without actually modifying the map (stateful),
 yielding association k_1 v_1 .. k_n v_n, and computing
   (f (f ... (f (f seed k_1 v_1) k2 v_2) ... k_n-1 v_n-1) k_n v_n)"))
   (:generic
-   fold-right (:in 1) (<map> map f seed)
+   fold-right (<map> map f seed) (:in 1) (:values value)
    (:documentation "Fold a map with a function,
 by repeatedly deconstructing it as by decons (pure),
 or as by repeatedly deconstructing it as by decons
 except without actually modifying the map (stateful),
 yielding association k_1 v_1 .. k_n v_n, and computing
   (f k_1 v_1 (f k2 v_2 (f ... (f k_n-1 v_n-1 (f k_n v_n seed))...)))"))
-  (:generic map-alist (:in 1) (<map> map)
+  (:generic map-alist (<map> map) (:in 1) (:values alist)
    (:documentation "Convert a map of given interface to an alist"))
-  (:generic alist-map (:in 1) (<map> map)
+  (:generic alist-map (<map> alist) (:values map) (:out 0)
    (:documentation "Convert an alist to a map of given interface")))
 
 

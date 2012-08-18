@@ -18,10 +18,12 @@
 (define-interface <box> (<interface>)
   ()
   (:generic
-   make-box (:out 0) (<box> generator &key #+sbcl &allow-other-keys)
+   make-box (<box> generator &key #+sbcl &allow-other-keys)
+   (:out 0) (:values box)
    (:documentation "Make a box from a generator for the value inside the box"))
   (:generic
-   unbox (:in 1) (<box> box)
+   unbox (<box> box)
+   (:in 1) (:values value)
    (:documentation "Return the value inside the box")))
 
 

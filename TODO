@@ -44,6 +44,9 @@
   The same tree-manipulation routines can be used on the same tree nodes
   with completely different results depending on which interface you use.
 
+objectification can be done in a generic way with a parameterized class
+objectify-interface with two slots: the interface and the object.
+
 |#
 
 (in-package :pure)

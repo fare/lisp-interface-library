@@ -5,6 +5,7 @@
 
 (in-package :interface)
 
+;; Definitions used by define-interface and its clients.
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
   (defclass interface-class (standard-class)
@@ -14,10 +15,42 @@
       ((class interface-class) (super-class standard-class))
     t)
 
+  (defun memberp (list &rest keys &key test test-not key)
+    (declare (ignore test test-not key))
+    (lambda (x) (apply 'member x list keys)))
+
+  (defun number-of-required-arguments (lambda-list)
+    (or (position-if (memberp '(&optional &rest &key &environment &aux)) lambda-list)
+        (length lambda-list)))
+
+  (defun normalize-gf-io (lambda-list values in out)
+    (let ((in (ensure-list in))
+          (out (ensure-list out))
+          (maxin (number-of-required-arguments lambda-list))
+          (maxout (number-of-required-arguments values))
+          (lin (length in))
+          (lout (length out)))
+      (assert (<= 1 maxin))
+      (cond
+        ((< lin lout) (appendf in (make-list (- lout lin))))
+        ((< lout lin) (appendf out (make-list (- lin lout)))))
+      (loop :for i :in in :for o :in out :collect
+        (let ((i (etypecase i
+                   (null (assert (integerp o)) i)
+                   (integer (assert (< 0 i maxin)) i)
+                   (symbol (or (position i lambda-list :end maxin)
+                               (error "~S not found in required arguments of lambda-list ~S" i lambda-list)))))
+              (o (etypecase o
+                   (boolean o)
+                   (integer (assert (< -1 o maxout)) o)
+                   (symbol (or (position o values :end maxout)
+                               (error "~S not found in required arguments of values ~S" i values))))))
+            (list i o)))))
+
   (defun register-interface-generic
-      (class name &rest keys &key in out)
-    (declare (ignore in out))
-    (setf (gethash name (interface-generics (find-class class))) keys)
+      (class name &rest keys &key lambda-list values in out)
+    (setf (gethash name (interface-generics (find-class class)))
+          (acons :effects (normalize-gf-io lambda-list values in out) keys))
     (values))
 
   (defun interface-direct-generics (interface)
@@ -50,17 +83,50 @@
       :finally (return (values nil nil))))
 
   (defun interface-gf-options (interface gf)
-    (search-gf-options (all-superclasses interface) gf)))
+    (search-gf-options (all-superclasses interface) gf))
+
+  (defun keep-keyed-clos-options (keys options)
+    (remove-if-not (memberp keys) options :key 'car))
+
+  (defun remove-keyed-clos-options (keys options)
+    (remove-if (memberp keys) options :key 'car))
+
+  (defun find-unique-clos-option (key options)
+    (let* ((found (member key options :key 'car))
+           (again (member key (rest found) :key 'car)))
+      (when again (error "option ~S appears more than once in ~S" key options))
+      (car found)))
+
+  (defun find-multiple-clos-options (key options)
+    (remove key options :key 'car :test-not 'eq)))
+
+(defmacro define-interface-generic (interface name lambda-list &rest options)
+  (let ((generic-options
+         ;;(keep-keyed-clos-options '(declare :documentation :method-combination :generic-function-class :method-class :argument-precedence-order) options)
+         (remove-keyed-clos-options '(:in :out :values) options))
+        (in (find-unique-clos-option :in options))
+        (out (find-unique-clos-option :out options))
+        (values (find-unique-clos-option :values options)))
+    `(progn
+       (defgeneric ,name ,lambda-list ,@generic-options)
+       (eval-when (:compile-toplevel :load-toplevel :execute)
+         (register-interface-generic
+          ',interface ',name
+          :lambda-list ',lambda-list
+          ,@(when in `(:in ',(cdr in)))
+          ,@(when out `(:out ',(cdr out)))
+          ,@(when values `(:values ',(cdr values))))))))
 
 (defmacro define-interface (interface super-interfaces slots &rest options)
   (let ((class-options
-         (remove '(:default-initargs :documentation :metaclass)
-                 options :key 'car :test-not #'(lambda (x y) (member y x))))
-        (metaclass (find :metaclass options :key 'car))
-        (generics (remove :generic options :key 'car :test-not 'eq))
-        (methods (remove :method options :key 'car :test-not 'eq))
-        (singleton (find :singleton options :key 'car))
-        (parametric (find :parametric options :key 'car)))
+         ;;(keep-keyed-clos-options '(:default-initargs :documentation :metaclass) options)
+         (remove-keyed-clos-options
+          '(:generic :method :singleton :parametric) options))
+        (metaclass (find-unique-clos-option :metaclass options))
+        (gfs (find-multiple-clos-options :generic options))
+        (methods (find-multiple-clos-option :method options))
+        (parametric (find-unique-clos-option :parametric options))
+        (singleton (find-unique-clos-option :singleton options)))
     `(progn
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (defclass ,interface ,super-interfaces ,slots
@@ -83,14 +149,8 @@
                    (&rest arguments)
                  (apply 'make-instance ',interface arguments)))))
        ,@(when singleton `((defvar ,interface (,interface))))
-       ,@(loop :for (nil . generic) :in generics :append
-           (destructuring-bind (name &optional interface-options lambda-list
-                                     &rest generic-options)
-               generic
-             `(,@(when lambda-list `((defgeneric ,name ,lambda-list ,@generic-options)))
-                 (eval-when (:compile-toplevel :load-toplevel :execute)
-                   (apply 'register-interface-generic
-                          ',interface ',name ',interface-options)))))
+       ,@(loop :for (() . gf) :in gfs :collect
+           `(define-interface-generic ,interface ,@gf))
        ,@(when methods
            (with-gensyms (ivar)
              `((define-interface-methods (,ivar ,interface) ,@methods))))
@@ -133,53 +193,92 @@
          (declaim (inline ,@function-names))))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun lambda-list-mimicker (lambda-list)
+  (defun lambda-list-mimicker (lambda-list &optional gensym-all)
     (nest
-     (multiple-value-bind (required optionals rest keywords allow-other-keys aux)
+     (multiple-value-bind (required optionals rest keys allow-other-keys aux)
          (alexandria:parse-ordinary-lambda-list lambda-list)
        (declare (ignore aux)))
-     (let* ((keyp (member '&key lambda-list)))
-       (when (and keyp (not rest))
-         (setf rest (gensym "KEYS")))
+     (let ((keyp (and (or keys (member '&key lambda-list)) t))
+           (mappings ())))
+     (labels ((g (&rest rest) (gensym (format nil "~{~A~}" rest)))
+              (m (s) (if gensym-all (g s) s))
+              (p (x y) (push (cons x y) mappings))))
+     (let ((mrequired (loop :for rvar :in required
+                        :for mrvar = (m rvar)
+                        :do (p rvar mrvar)
+                        :collect mrvar))
+           (moptionals (loop :for (ovar #|defaults:|#() opvar) :in optionals
+                         :for movar = (m ovar)
+                         :for mopvar = (if opvar (m opvar) (g ovar :p))
+                         :do (p ovar movar) (when opvar (p opvar mopvar))
+                         :collect (list movar () mopvar)))
+           (mrest (cond
+                    (rest
+                     (let ((mrest (m rest)))
+                       (p rest mrest)
+                       mrest))
+                    (keyp
+                     (g 'keys))))
+           (mkeys (loop :for (kv def kp) :in keys
+                    :for (kw kvar) = kv
+                    :for mkvar = (m kvar)
+                    :do (p kvar mkvar)
+                    :collect `((,kw ,mkvar)))))
        (values
         ;; mimic-lambda-list
-        (append required
-                (when optionals (cons '&optional optionals))
-                (when rest (list '&rest rest))
-                (when keywords (cons '&key keywords))
+        (append mrequired
+                (when moptionals (cons '&optional moptionals))
+                (when mrest (list '&rest mrest))
+                (when mkeys (cons '&key mkeys))
                 (when allow-other-keys '(&allow-other-keys)))
         ;; mimic-ignorables
-        (remove-if #'null
-                   (append
-                    (mapcar #'caddr optionals)
-                    (mapcar #'cadar keywords)
-                    (mapcar #'caddr keywords)))
+        (mapcar 'cadar mkeys)
         ;; mimic-invoker
-        (if rest 'apply 'funcall)
+        (if (or optionals rest) 'apply 'funcall)
         ;; mimic-arguments
-        (append required (mapcar #'car optionals) (when rest (list rest))))))))
+        (append required
+                (reduce
+                 #'(lambda (moptional acc)
+                     (destructuring-bind (movar default mopvar) moptional
+                       (declare (ignore default))
+                       `(if ,mopvar (cons ,movar ,acc) '())))
+                 moptionals
+                 :initial-value mrest
+                 :from-end t))
+        (reverse mappings))))))
 
-(defmacro define-interface-methods ((interface-var interface-class) &body body)
-  `(macrolet ((:method (name &rest rest)
-                (finalize-inheritance (find-class ',interface-class))
-                (if (length=n-p rest 1)
-                    ;; One-argument: simply map a method to an interface-less function
-                    (let* ((lambda-list (closer-mop:generic-function-lambda-list name)))
-                      (multiple-value-bind (mimic-lambda-list mimic-ignorables
-                                                              mimic-invoker mimic-arguments)
-                          (lambda-list-mimicker lambda-list)
-                        (let ((i-var (first mimic-lambda-list)))
-                          `(defmethod ,name ((,i-var ,',interface-class) ,@(rest mimic-lambda-list))
-                             (declare (ignorable ,i-var ,@mimic-ignorables))
-                             (,mimic-invoker ,@rest ,@(rest mimic-arguments))))))
-                    ;; More than one argument: a method that uses current interface
-                    (destructuring-bind (lambda-list &rest body) rest
-                      (multiple-value-bind (remaining-forms declarations doc-string)
-                          (alexandria:parse-body body :documentation t)
-                        `(defmethod ,name ((,',interface-var ,',interface-class) ,@lambda-list)
-                           ,@doc-string ,@declarations (declare (ignorable ,',interface-var))
-                           (with-interface (,',interface-var ,',interface-class)
-                             ,@remaining-forms)))))))
+(defmacro define-interface-method (interface gf &rest rest)
+  (multiple-value-bind (interface-var interface-class)
+      (etypecase interface
+        (cons (values (first interface) (second interface)))
+        (symbol (values interface interface)))
+    (finalize-inheritance (find-class interface-class))
+    (if (length=n-p rest 1)
+        ;; One-argument: simply map a method to an interface-less function
+        (nest
+         (let ((lambda-list (closer-mop:generic-function-lambda-list gf))
+               (function (first rest))))
+         (multiple-value-bind (mimic-lambda-list
+                               mimic-ignorables
+                               mimic-invoker mimic-arguments #|mappings|#)
+             (lambda-list-mimicker lambda-list))
+         (let ((i-var (first mimic-lambda-list))))
+         `(defmethod ,gf ((,i-var ,interface-class) ,@(rest mimic-lambda-list))
+            (declare (ignorable ,i-var ,@mimic-ignorables))
+            (,mimic-invoker ,function ,@(rest mimic-arguments))))
+        ;; More than one argument: a method that uses current interface
+        (nest
+         (destructuring-bind (lambda-list &rest body) rest)
+         (multiple-value-bind (remaining-forms declarations doc-string)
+             (alexandria:parse-body body :documentation t))
+         `(defmethod ,gf ((,interface-var ,interface-class) ,@lambda-list)
+            ,@doc-string ,@declarations (declare (ignorable ,interface-var))
+            (with-interface (,interface-var ,interface-class)
+              ,@remaining-forms))))))
+
+(defmacro define-interface-methods (interface &body body)
+  `(macrolet ((:method (gf &rest rest)
+                `(define-interface-method ,',interface ,gf ,@rest)))
      ,@body))
 
 (define-interface <interface> ()

@@ -21,11 +21,11 @@
 
 (define-interface <order> (<eq>)
   ()
-  (:generic order< (:in (1 2)) (i x y))
-  (:generic order<= (:in (1 2)) (i x y))
-  (:generic order> (:in (1 2)) (i x y))
-  (:generic order>= (:in (1 2)) (i x y))
-  (:generic compare (:in (1 2)) (i x y)))
+  (:generic order< (i x y) (:in 1 2))
+  (:generic order<= (i x y) (:in 1 2))
+  (:generic order> (i x y) (:in 1 2))
+  (:generic order>= (i x y) (:in 1 2))
+  (:generic compare (i x y) (:in 1 2)))
 
 (define-interface <order-from-lessp> (<order>)
   ()
