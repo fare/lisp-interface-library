@@ -21,7 +21,6 @@
      pure-gf stateful-gf &key
      pure-lambda-list pure-values pure-effects pure-gf-options
      stateful-lambda-list stateful-values stateful-effects stateful-gf-options)
-  (declare (optimize (speed 1) (safety 3) (debug 3)))
   (nest
    (let* ((pure-gf-options
            (or pure-gf-options
@@ -139,12 +138,12 @@
                             ((eql t) (nth esi stateful-required)))))))
           (ineffective-pure-inputs
            (loop :for i :from 1 :below lpin
-             :for v :in pure-required
+             :for v :in (rest pure-required)
              :unless (find i effective-inputs :key 'first)
              :collect v))
           (ineffective-stateful-inputs
            (loop :for i :from 1 :below lsin
-             :for v :in stateful-required
+             :for v :in (rest stateful-required)
              :unless (find i effective-inputs :key 'third)
              :collect v))
           (ineffective-pure-outputs
@@ -191,7 +190,6 @@
 
 (defmacro define-linearized-interface
     (name pure-interfaces stateful-interfaces &rest options)
-  (declare (optimize (speed 1) (safety 3) (debug 3)))
   (let* ((all-pure-interfaces (all-super-interfaces pure-interfaces))
          (pure-gfs (all-interface-generics all-pure-interfaces))
          (all-stateful-interfaces (all-super-interfaces stateful-interfaces))

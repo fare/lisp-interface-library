@@ -45,7 +45,7 @@
 ;;; map-simple-join
 (defmethod join ((i map-simple-join) map1 map2)
   (for-each i map2 #'(lambda (k v) (unless (lookup i map1 k) (insert i map1 k v))))
-  map1)
+  (values))
 
 (defmethod join/list ((i map-simple-join/list) maplist)
   (if maplist

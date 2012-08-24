@@ -25,11 +25,11 @@ returning three values:
 2- a key
 3- a value.
 Which association is dropped is the same as per first-key-value."))
-  (:generic join (<map> map1 map2) (:in 1 2) (:values map1) (:out t t)
+  (:generic join (<map> map1 map2) (:in 1 2) (:values) (:out t t)
    (:documentation "Join two maps into the first one.
 Mappings from MAP1 override those from MAP2.
 The state of MAP2 after the join is not specified (see method documentation).
-Return MAP1."))
+Return no values."))
   (:generic divide (<map> map) (:in 1) (:values map2 map) (:out 1 0)
    (:documentation "Divide a MAP in two,
 returning two maps MAP2 and MAP (eq to the MAP argument)
