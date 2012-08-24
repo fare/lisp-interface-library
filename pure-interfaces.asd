@@ -8,11 +8,9 @@
 	    :components
 	    ((:file "package")
 	     (:file "iterator-interface" :depends-on ("package"))
-	     (:file "map-interface" :depends-on ("package"
-						 "iterator-interface"))
-	     (:file "alist-interface" :depends-on ("package"))
-	     (:file "tree-interface" :depends-on ("package"
-						  "map-interface"))
+	     (:file "map-interface" :depends-on ("iterator-interface"))
+	     (:file "alist-interface" :depends-on ("map-interface"))
+	     (:file "tree-interface" :depends-on ("map-interface"))
 	     (:file "hash-table-interface" :depends-on ("tree-interface"))
 	     (:file "fmim-interface" :depends-on ("tree-interface"))
-	     (:file "encoded-key-map-interface" :depends-on ("package"))))))
+	     (:file "encoded-key-map-interface" :depends-on ("map-interface"))))))

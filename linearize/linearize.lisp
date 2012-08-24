@@ -15,20 +15,17 @@
           string))))
 
 (defmacro define-linearized-method
-    (linearized-interface pure-classes stateful-classes
+    (linearized-interface pure-interfaces stateful-interfaces
      pure-gf stateful-gf &key
      pure-lambda-list pure-values pure-effects pure-gf-options
      stateful-lambda-list stateful-values stateful-effects stateful-gf-options)
   (nest
-   (progn
-     (dolist (class (append pure-classes stateful-classes))
-       (finalize-inheritance class)))
    (let* ((pure-gf-options
            (or pure-gf-options
-               (interface-gf-options pure-classes pure-gf)))
+               (interface-gf-options pure-interfaces pure-gf)))
           (stateful-gf-options
            (or stateful-gf-options
-               (interface-gf-options stateful-classes stateful-gf)))
+               (interface-gf-options stateful-interfaces stateful-gf)))
           (pure-gf* (symbol-function pure-gf))
           (stateful-gf* (symbol-function stateful-gf))
           (pure-lambda-list
@@ -190,11 +187,11 @@
            (,pure-results-invoker #'values ,@pure-results-arguments)))))))
 
 (defmacro define-linearized-interface
-    (name pure-classes stateful-classes &rest options)
-    (let* ((all-pure-classes (all-superclasses pure-classes))
-           (pure-gfs (all-interface-generics all-pure-classes))
-           (all-stateful-classes (all-superclasses stateful-classes))
-           (stateful-gfs (all-interface-generics all-stateful-classes))
+    (name pure-interfaces stateful-interfaces &rest options)
+    (let* ((all-pure-interfaces (all-super-interfaces pure-interfaces))
+           (pure-gfs (all-interface-generics all-pure-interfaces))
+           (all-stateful-interfaces (all-super-interfaces stateful-interfaces))
+           (stateful-gfs (all-interface-generics all-stateful-interfaces))
            (stateful-gfs-hash
             (alexandria:alist-hash-table
              (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test 'equal))
@@ -203,19 +200,19 @@
             (alexandria:alist-hash-table
              (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
       `(progn
-         (define-interface ,name (<linearized> ,@pure-classes)
+         (define-interface ,name (pure::<linearized> ,@pure-interfaces)
            ()
            ,@options)
          ,@(loop :for pure-gf :in pure-gfs
              :unless (gethash pure-gf overridden-gfs-hash) :append
              (nest
-              (let ((pure-effects (getf (search-gf-options all-pure-classes pure-gf) :effects))))
+              (let ((pure-effects (getf (search-gf-options all-pure-interfaces pure-gf) :effects))))
                ;; methods that have registered effects as expressible and expressed in our trivial language
               (when pure-effects)
               (let* ((stateful-gf (gethash (symbol-name pure-gf) stateful-gfs-hash))
-                     (stateful-effects (getf (search-gf-options all-stateful-classes stateful-gf) :effects)))
+                     (stateful-effects (getf (search-gf-options all-stateful-interfaces stateful-gf) :effects)))
                 (assert stateful-effects))
-              `((define-linearized-method ,name ,pure-classes ,stateful-classes
+              `((define-linearized-method ,name ,pure-interfaces ,stateful-interfaces
                                           ,pure-gf ,stateful-gf)))))))
 
 (in-package :pure)

@@ -6,10 +6,9 @@
 (in-package :pure)
 
 (define-interface <alist>
-    (<map>
-     map-simple-empty map-simple-decons map-simple-update-key
+    (map-simple-empty map-simple-decons map-simple-update-key
      map-divide/list-from-divide
-     map-simple-map/2 map-simple-join map-simple-join/list)
+     map-simple-map/2 map-simple-join map-simple-join/list <map>)
   ((eq-interface
     :initarg :eq
     :initform eq:<eq>

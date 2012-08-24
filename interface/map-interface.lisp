@@ -43,31 +43,27 @@ yielding association k_1 v_1 .. k_n v_n, and computing
 
 
 ;;; Simple Mixins
-(defclass map-fold-right-from-fold-left () ())
+(define-interface map-fold-right-from-fold-left (<map>) ()
+  (:method fold-right (map fun seed)
+    (funcall
+     (fold-left
+      map
+      #'(lambda (f k v) #'(lambda (acc) (funcall f (funcall fun k v acc))))
+      #'identity)
+     seed)))
 
-(defmethod fold-right ((i map-fold-right-from-fold-left) map fun seed)
-  (funcall
-   (fold-left
-    i map
-    #'(lambda (f k v) #'(lambda (acc) (funcall f (funcall fun k v acc))))
-    #'identity)
-   seed))
+(define-interface map-for-each-from-fold-left (<map>) ()
+  (:method for-each (map fun)
+    (fold-left
+     map
+     #'(lambda (s k v) (declare (ignore s)) (funcall fun k v))
+     nil)
+    (values)))
 
-(defclass map-for-each-from-fold-left () ())
+(define-interface map-size-from-fold-left (<map>) ()
+  (:method size (map)
+    (fold-left map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0)))
 
-(defmethod for-each ((i map-for-each-from-fold-left) map fun)
-  (fold-left
-   i map
-   #'(lambda (s k v) (declare (ignore s)) (funcall fun k v))
-   nil)
-  (values))
-
-(defclass map-size-from-fold-left () ())
-
-(defmethod size ((i map-size-from-fold-left) map)
-  (fold-left i map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0))
-
-(define-interface map-cheap-size (<interface>) ())
-
-(defmethod size<=n-p ((i map-cheap-size) map n)
-  (<= (size i map) n))
+(define-interface map-cheap-size (<interface>) ()
+  (:method size<=n-p (map n)
+    (<= (size map) n)))

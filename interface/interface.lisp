@@ -9,11 +9,22 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
   (defclass interface-class (standard-class)
-    ((generics :initform (make-hash-table :test 'eql) :accessor interface-generics)))
+    ((generics :initform (make-hash-table :test 'eql) :accessor interface-generics)
+     ;;(%direct-super-interfaces :accessor %direct-super-interfaces)
+     (%all-super-interfaces :accessor %all-super-interfaces)))
+
+  (defun interface-class-p (class)
+    (typep class 'interface-class))
 
   (defmethod closer-mop:validate-superclass
       ((class interface-class) (super-class standard-class))
-    t)
+    (or (eq (class-name class) '<interface>)
+        (interface-class-p super-class)
+        (member super-class (class-direct-superclasses (find-class '<interface>)))))
+
+  (defgeneric direct-super-interfaces (interface)
+    (:method ((i interface-class))
+      (remove-if-not 'interface-class-p (class-direct-superclasses i))))
 
   (defun memberp (list &rest keys &key test test-not key)
     (declare (ignore test test-not key))
@@ -57,19 +68,56 @@
     (loop :for name :being :the :hash-key :of (interface-generics interface)
       :collect name))
 
-  (defgeneric all-superclasses (classes)
+  (defun call-with-unique-collector (fun &key test)
+    (let ((already-seen (make-hash-table :test (or test 'eql)))
+          (accumulator '()))
+      (funcall fun
+               #'(lambda (x) (unless (gethash x already-seen)
+                               (setf (gethash x already-seen) t)
+                               (push x accumulator)
+                               t)))
+      (nreverse accumulator)))
+
+  (defmacro with-unique-collector ((collector &key test) &body body)
+    `(call-with-unique-collector
+      #'(lambda (,collector) ,@body) :test ,test))
+
+  (defgeneric all-super-interfaces (interfaces)
     (:method ((symbol symbol))
-      (all-superclasses (find-class symbol)))
-    (:method ((class class))
-      (closer-mop:class-precedence-list class))
-    (:method ((classes cons))
-      (remove-duplicates
-       (mapcan #'all-superclasses classes)
-       :from-end t)))
+      (when symbol
+        (all-super-interfaces (find-class symbol))))
+    (:method ((interface interface-class))
+      (cond
+        ((slot-boundp interface '%all-super-interfaces)
+         (%all-super-interfaces interface))
+        (t
+         (let ((asi (with-unique-collector (c)
+                      (collect-all-super-interfaces interface c))))
+           (setf (%all-super-interfaces interface) asi)
+           asi))))
+    (:method ((interfaces cons))
+      (with-unique-collector (c)
+        (collect-all-super-interfaces interfaces c))))
+
+  (defgeneric collect-all-super-interfaces (interfaces collector)
+    (:method ((symbol symbol) collector)
+      (when symbol
+        (collect-all-super-interfaces (find-class symbol) collector)))
+    (:method ((interface interface-class) collector)
+      (cond
+        ((slot-boundp interface '%all-super-interfaces)
+         (map () collector (%all-super-interfaces interface)))
+        (t
+         ;; (finalize-inheritance class)
+         (funcall collector interface)
+         (collect-all-super-interfaces (direct-super-interfaces interface) collector))))
+    (:method ((interfaces cons) collector)
+      (loop :for interface :in interfaces :do
+        (collect-all-super-interfaces interface collector))))
 
   (defun all-interface-generics (interfaces)
     (remove-duplicates
-     (loop :for class :in (all-superclasses interfaces)
+     (loop :for class :in (all-super-interfaces interfaces)
        :when (typep class 'interface-class)
        :append (interface-direct-generics class))))
 
@@ -83,7 +131,7 @@
       :finally (return (values nil nil))))
 
   (defun interface-gf-options (interface gf)
-    (search-gf-options (all-superclasses interface) gf))
+    (search-gf-options (all-super-interfaces interface) gf))
 
   (defun keep-keyed-clos-options (keys options)
     (remove-if-not (memberp keys) options :key 'car))
@@ -131,7 +179,8 @@
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (defclass ,interface ,super-interfaces ,slots
            ,@(unless metaclass `((:metaclass interface-class)))
-           ,@class-options))
+           ,@class-options)
+         (finalize-inheritance (find-class ',interface)))
        ,@(when (or parametric singleton)
            (destructuring-bind (formals &body body)
                (or (cdr parametric)
@@ -252,7 +301,6 @@
       (etypecase interface
         (cons (values (first interface) (second interface)))
         (symbol (values interface interface)))
-    (finalize-inheritance (find-class interface-class))
     (if (length=n-p rest 1)
         ;; One-argument: simply map a method to an interface-less function
         (nest

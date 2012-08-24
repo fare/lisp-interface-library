@@ -6,7 +6,6 @@
  (:depends-on
   ("interface/interface"
    "interface/eq"
-   "pure/package"
    "pure/map-interface"
    "pure/alist-interface"
    "pure/tree-interface")))
@@ -14,8 +13,7 @@
 (in-package :pure)
 
 (define-interface <hash-table>
-    (<map>
-     map-simple-join map-simple-update-key map-simple-map/2)
+    (map-simple-join map-simple-update-key map-simple-map/2 <map>)
   ((key-interface :reader key-interface :initarg :key)
    (hashmap-interface :reader hashmap-interface :initarg :hashmap)
    (bucketmap-interface :reader bucketmap-interface :initarg :bucketmap))

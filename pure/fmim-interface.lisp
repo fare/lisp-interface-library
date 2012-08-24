@@ -13,11 +13,11 @@
 (in-package :pure)
 
 (define-interface <fmim>
-    (<tree> <map>
-     map-simple-empty map-simple-decons map-simple-update-key
+    (map-simple-empty map-simple-decons map-simple-update-key
      map-simple-map/2 map-simple-join/list
      map-size-from-fold-left map-for-each-from-fold-left
-     map-divide/list-from-divide)
+     map-divide/list-from-divide
+     <tree> <map>)
   ()
   (:singleton)
   (:documentation "Fast Merge Integer Maps"))

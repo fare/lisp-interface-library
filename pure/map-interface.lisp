@@ -69,11 +69,11 @@ we could have a
 |#
 
 ;;; Mixins implementing simple cases for a lot of the above functions
-(defclass map-simple-empty () ())
-(defclass map-simple-decons () ())
-(defclass map-simple-update-key () ())
-(defclass map-simple-join () ())
-(defclass map-simple-join/list () ())
-(defclass map-divide/list-from-divide () ())
-(defclass map-simple-map/2 () ())
-(defclass map-size<=n-p-from-decons () ())
+(define-interface map-simple-empty (<map>) ())
+(define-interface map-simple-decons (<map>) ())
+(define-interface map-simple-update-key (<map>) ())
+(define-interface map-simple-join (<map>) ())
+(define-interface map-simple-join/list (<map>) ())
+(define-interface map-divide/list-from-divide (<map>) ())
+(define-interface map-simple-map/2 (<map>) ())
+(define-interface map-size<=n-p-from-decons (<map>) ())
