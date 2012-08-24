@@ -227,6 +227,8 @@
                       :key-encoder #'(lambda (dk) (* dk 2))
                       :key-decoder #'(lambda (ek) (/ ek 2))))
 
+(defparameter <lsnm> (<linearized-map> stateful:<number-map>))
+
 (deftest test-pure-map-interfaces ()
   (dolist (i (list <alist> <number-map> <hash-table> <fmim> <denm>))
     (interface-test i)))

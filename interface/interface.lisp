@@ -64,7 +64,7 @@
       (closer-mop:class-precedence-list class))
     (:method ((classes cons))
       (remove-duplicates
-       (mapcan #'closer-mop:class-precedence-list classes)
+       (mapcan #'all-superclasses classes)
        :from-end t)))
 
   (defun all-interface-generics (interfaces)

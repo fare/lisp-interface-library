@@ -8,28 +8,27 @@
 ;;; TODO: handle gf's with or without explicit override
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun find-matching-pure-method (name &key package methods in out superclasses)
-    (let* ((pure-name (or (cadr (assoc name methods))
-                          (find-symbol (string name) package)))
-           (options (search-gf-options pure-name superclasses)))
-      (NIY pure-name options in out))))
+  (defun un<>ate (string)
+    (let ((string (string string)))
+      (if (string-enclosed-p "<" string ">")
+          (subseq string 1 (1- (length string)))
+          string))))
 
-(defun %define-linearized-method
-    (linearized-interface stateful-interface 
-     pure-gf stateful-gf &key ;;mapping
+(defmacro define-linearized-method
+    (linearized-interface pure-classes stateful-classes
+     pure-gf stateful-gf &key
      pure-lambda-list pure-values pure-effects pure-gf-options
      stateful-lambda-list stateful-values stateful-effects stateful-gf-options)
   (nest
-   (let ((linearized-interface* (find-class linearized-interface))
-         (stateful-interface* (find-class stateful-interface)))
-     (finalize-inheritance linearized-interface*)
-     (finalize-inheritance stateful-interface*))
+   (progn
+     (dolist (class (append pure-classes stateful-classes))
+       (finalize-inheritance class)))
    (let* ((pure-gf-options
            (or pure-gf-options
-               (interface-gf-options linearized-interface pure-gf)))
+               (interface-gf-options pure-classes pure-gf)))
           (stateful-gf-options
            (or stateful-gf-options
-               (interface-gf-options stateful-interface stateful-gf)))
+               (interface-gf-options stateful-classes stateful-gf)))
           (pure-gf* (symbol-function pure-gf))
           (stateful-gf* (symbol-function stateful-gf))
           (pure-lambda-list
@@ -160,7 +159,7 @@
              :collect v))
           (stateful-argument-bindings
            (append
-            `((,si-var (linearized-stateful-interface ,pi-var)))
+            `((,si-var (stateful-interface ,pi-var)))
             required-input-bindings
             (loop :for ipi :in ineffective-pure-inputs
               :for isi :in ineffective-stateful-inputs
@@ -191,27 +190,43 @@
            (,pure-results-invoker #'values ,@pure-results-arguments)))))))
 
 (defmacro define-linearized-interface
-    (names superclasses &rest options)
-  (destructuring-bind (stateful-name
-                       &optional (linearized-name (alexandria:symbolicate '#:linearized- stateful-name))
-                       &key (package *package*) methods)
-      (alexandria:ensure-list names)
-    (let* ((stateful-name (first names))
-           (generics (all-interface-generics stateful-name))
-           (overridden-methods (remove :method options :key 'car :test-not 'eq))
-           (overridden-methods-hash (alexandria:alist-hash-table overridden-methods :test 'eq))
-           (all-superclasses (all-superclasses superclasses))
-           (superclass-generics (all-interface-generics superclasses)))
-      `(define-interface ,linearized-name (<one-use-box> ,@superclasses)
-         ()
-         ,@(loop :for generic :in generics
-             :unless (gethash generic overridden-methods-hash) :do
-             (destructuring-bind (&key in out) (search-gf-options all-superclasses generic)
-               ;; methods that side-effect
-               (when (and in out (eq t (car (alexandria:ensure-list out))))
-                 (let ((pure-method (find-matching-pure-method
-                                     generic :package package :in in :out out
-                                     :superclasses all-superclasses
-                                     :methods methods)))
-                   (NIY pure-method superclass-generics)))))
-       ,@options))))
+    (name pure-classes stateful-classes &rest options)
+    (let* ((all-pure-classes (all-superclasses pure-classes))
+           (pure-gfs (all-interface-generics all-pure-classes))
+           (all-stateful-classes (all-superclasses stateful-classes))
+           (stateful-gfs (all-interface-generics all-stateful-classes))
+           (stateful-gfs-hash
+            (alexandria:alist-hash-table
+             (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test 'equal))
+           (overridden-gfs (find-multiple-clos-options :method options))
+           (overridden-gfs-hash
+            (alexandria:alist-hash-table
+             (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
+      `(progn
+         (define-interface ,name (<linearized> ,@pure-classes)
+           ()
+           ,@options)
+         ,@(loop :for pure-gf :in pure-gfs
+             :unless (gethash pure-gf overridden-gfs-hash) :append
+             (nest
+              (let ((pure-effects (getf (search-gf-options all-pure-classes pure-gf) :effects))))
+               ;; methods that have registered effects as expressible and expressed in our trivial language
+              (when pure-effects)
+              (let* ((stateful-gf (gethash (symbol-name pure-gf) stateful-gfs-hash))
+                     (stateful-effects (getf (search-gf-options all-stateful-classes stateful-gf) :effects)))
+                (assert stateful-effects))
+              `((define-linearized-method ,name ,pure-classes ,stateful-classes
+                                          ,pure-gf ,stateful-gf)))))))
+
+(in-package :pure)
+
+(define-interface <linearized> ()
+  ((stateful-interface
+    :reader stateful-interface
+    :initarg :stateful-interface)
+   #|(box-interface
+    :reader box-interface
+    :initarg :box-interface :initform <one-use-value-box>)|#)
+  (:parametric (interface #|&key unsafe|#)
+    (make-interface :stateful-interface interface
+                    #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

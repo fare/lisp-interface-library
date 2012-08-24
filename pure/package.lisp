@@ -70,11 +70,15 @@
 
    #:encode-key #:decode-key
 
-   ;; updatef
+   #|;; updatef
    #:updatef
    #:define-updatef-expander
    #:defupdatef
    #:define-updatef-function
    #:get-updatef-expansion
-   #:updatef-function
+   #:updatef-function|#
+
+   ;; linearize --- TODO: move to its own package?
+   <linearized>
+   <linearized-map>
    ))
