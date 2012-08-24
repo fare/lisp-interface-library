@@ -5,6 +5,8 @@
 
 (in-package :interface)
 
+(declaim (optimize (speed 1) (safety 3) (debug 3)))
+
 ;;; TODO: handle gf's with or without explicit override
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -19,6 +21,7 @@
      pure-gf stateful-gf &key
      pure-lambda-list pure-values pure-effects pure-gf-options
      stateful-lambda-list stateful-values stateful-effects stateful-gf-options)
+  (declare (optimize (speed 1) (safety 3) (debug 3)))
   (nest
    (let* ((pure-gf-options
            (or pure-gf-options
@@ -62,7 +65,7 @@
      (declare (ignore stateful-mimic-ignorables stateful-mimic-mappings)))
    (multiple-value-bind (pure-required pure-optionals
                          pure-rest pure-keys pure-allow-other-keys pure-aux)
-         (alexandria:parse-ordinary-lambda-list pure-lambda-list)
+         (alexandria:parse-ordinary-lambda-list pure-mimic-lambda-list)
      (declare (ignore pure-keys pure-allow-other-keys pure-aux)))
    (multiple-value-bind (stateful-required stateful-optionals
                          stateful-rest stateful-keys stateful-allow-other-keys stateful-aux)
@@ -108,7 +111,7 @@
      :for (pin pout) :in pure-effects
      :for (sin sout) :in stateful-effects
      :do (assert (eq (integerp pin) (integerp sin)))
-         (assert (eq (null pout) (null sout))) ;; new is new
+         (assert (eq (null pin) (null sin))) ;; new is new
          (check-type pout (or integer null)) ;; pure is pure
      :when (integerp pin)
        :collect (list pin pout sin sout) :into effective-inputs :end
@@ -156,7 +159,7 @@
              :collect v))
           (stateful-argument-bindings
            (append
-            `((,si-var (stateful-interface ,pi-var)))
+            `((,si-var (pure::stateful-interface ,pi-var)))
             required-input-bindings
             (loop :for ipi :in ineffective-pure-inputs
               :for isi :in ineffective-stateful-inputs
@@ -188,32 +191,33 @@
 
 (defmacro define-linearized-interface
     (name pure-interfaces stateful-interfaces &rest options)
-    (let* ((all-pure-interfaces (all-super-interfaces pure-interfaces))
-           (pure-gfs (all-interface-generics all-pure-interfaces))
-           (all-stateful-interfaces (all-super-interfaces stateful-interfaces))
-           (stateful-gfs (all-interface-generics all-stateful-interfaces))
-           (stateful-gfs-hash
-            (alexandria:alist-hash-table
-             (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test 'equal))
-           (overridden-gfs (find-multiple-clos-options :method options))
-           (overridden-gfs-hash
-            (alexandria:alist-hash-table
-             (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
-      `(progn
-         (define-interface ,name (pure::<linearized> ,@pure-interfaces)
-           ()
-           ,@options)
-         ,@(loop :for pure-gf :in pure-gfs
-             :unless (gethash pure-gf overridden-gfs-hash) :append
-             (nest
-              (let ((pure-effects (getf (search-gf-options all-pure-interfaces pure-gf) :effects))))
-               ;; methods that have registered effects as expressible and expressed in our trivial language
-              (when pure-effects)
-              (let* ((stateful-gf (gethash (symbol-name pure-gf) stateful-gfs-hash))
-                     (stateful-effects (getf (search-gf-options all-stateful-interfaces stateful-gf) :effects)))
-                (assert stateful-effects))
-              `((define-linearized-method ,name ,pure-interfaces ,stateful-interfaces
-                                          ,pure-gf ,stateful-gf)))))))
+  (declare (optimize (speed 1) (safety 3) (debug 3)))
+  (let* ((all-pure-interfaces (all-super-interfaces pure-interfaces))
+         (pure-gfs (all-interface-generics all-pure-interfaces))
+         (all-stateful-interfaces (all-super-interfaces stateful-interfaces))
+         (stateful-gfs (all-interface-generics all-stateful-interfaces))
+         (stateful-gfs-hash
+          (alexandria:alist-hash-table
+           (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test 'equal))
+         (overridden-gfs (find-multiple-clos-options :method options))
+         (overridden-gfs-hash
+          (alexandria:alist-hash-table
+           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
+    `(progn
+       (define-interface ,name (pure::<linearized> ,@pure-interfaces)
+         ()
+         ,@options)
+       ,@(loop :for pure-gf :in pure-gfs
+           :unless (gethash pure-gf overridden-gfs-hash) :append
+           (nest
+            (let ((pure-effects (getf (search-gf-options all-pure-interfaces pure-gf) :effects))))
+            ;; methods that have registered effects as expressible and expressed in our trivial language
+            (when pure-effects)
+            (let* ((stateful-gf (gethash (symbol-name pure-gf) stateful-gfs-hash))
+                   (stateful-effects (getf (search-gf-options all-stateful-interfaces stateful-gf) :effects)))
+              (assert stateful-effects))
+            `((define-linearized-method ,name ,pure-interfaces ,stateful-interfaces
+                                        ,pure-gf ,stateful-gf)))))))
 
 (in-package :pure)
 

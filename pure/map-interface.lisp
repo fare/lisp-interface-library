@@ -25,7 +25,7 @@ returning four values:
 3- a key
 4- a value.
 Which association is dropped is the same as per first-key-value."))
-  (:generic join (<map> map1 map2) (:in 1 2) (:values map1) (:out t t)
+  (:generic join (<map> map1 map2) #|(:in 1 2) (:values map1) (:out 0 nil)|#
    (:documentation "Join two maps, returning a new joined map.
 Mappings from MAP1 override those from MAP2."))
   (:generic divide (<map> map) (:in 1) (:values map2 map) (:out 1 0)

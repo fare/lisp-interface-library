@@ -278,12 +278,12 @@
         (append mrequired
                 (when moptionals (cons '&optional moptionals))
                 (when mrest (list '&rest mrest))
-                (when mkeys (cons '&key mkeys))
+                (when keyp (cons '&key mkeys))
                 (when allow-other-keys '(&allow-other-keys)))
         ;; mimic-ignorables
         (mapcar 'cadar mkeys)
         ;; mimic-invoker
-        (if (or optionals rest) 'apply 'funcall)
+        (if (or optionals rest keyp) 'apply 'funcall)
         ;; mimic-arguments
         (append mrequired
                 (reduce
@@ -292,7 +292,7 @@
                        (declare (ignore default))
                        `(if ,mopvar (cons ,movar ,acc) '())))
                  moptionals
-                 :initial-value mrest
+                 :initial-value (if (or rest keyp) (list mrest) '())
                  :from-end t))
         (reverse mappings))))))
 
