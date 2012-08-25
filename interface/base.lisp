@@ -15,7 +15,7 @@
 based on provided initarg keywords, returning the object."))
   (:generic
    check-invariant (<type> object &key #+sbcl &allow-other-keys)
-   (:in 1) (:values object) (:out 0)
+   (:in 1) (:values object) (:out nil) ;; :out nil because normal methods don't return anything!
    (:documentation "Check whether an OBJECT fulfills the invariant(s) required
 to be an object of the type represented by this interface.
 On success the OBJECT itself is returned. On failure an error is signalled.")
@@ -48,11 +48,11 @@ with those specified as initarg keywords, returning a new object."))
   (:documentation "Convert an OBJECT from interface <ORIGIN> to interface <DESTINATION>."))
 
 ;;; Size
-(defgeneric size (<interface> object)
-  (:documentation "Size the object, e.g. number of elements in a map"))
-
-(defgeneric size<=n-p (<interface> object n)
-  (:documentation "Is the size of the object less or equal to integer n?"))
+(define-interface <sizable> (<type>) ()
+  (:generic size (<interface> object) (:in 1) (:values size) (:out nil)
+   (:documentation "Size the object, e.g. number of elements in a map"))
+  (:generic size<=n-p (<interface> object n) (:in 1) (:values boolean) (:out nil)
+   (:documentation "Is the size of the object less or equal to integer n?")))
 
 ;;; Emptyable
 (define-interface <emptyable> (<type>)

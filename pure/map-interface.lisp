@@ -29,11 +29,10 @@ Which association is dropped is the same as per first-key-value."))
    (:documentation "Join two maps, returning a new joined map.
 Mappings from MAP1 override those from MAP2."))
   (:generic divide (<map> map) (:in 1) (:values map2 map) (:out 1 0)
-  (:documentation "Divide a map in two,
+   (:documentation "Divide a map in two,
 returning two maps MAP1 and MAP2 that each have strictly
-fewer associations than MAP unless MAP is of size zero or one.
-If MAP is of size one, then MAP1 is MAP and MAP2 is empty.
-If MAP is of size zero, then both MAP1 and MAP2 are empty."))
+fewer associations than MAP unless MAP is of size zero or one,
+at which point MAP2 is empty."))
   (:generic join/list (<map> list) #|(:in #|((1 list))|#) (:values map) (:out 0)|#
    (:documentation "Join a list of maps,
 returning a new joined map where mappings from
@@ -53,7 +52,7 @@ where fun will return two values,
 the new value and a boolean,
 the association being dropped if the boolean is NIL,
 otherwise a new association being setup with the new value."))
-  (:generic map/2 (<map> fun map1 map2) (:in 1 2) (:values map) (:out 0)
+  (:generic map/2 (<map> fun map1 map2) (:in 2 3) (:values map) (:out 0 nil)
    (:documentation "Join two maps, returning a joined map.
 For each key K present in either MAP1 or MAP2,
 the function FUN is called with arguments K V1 F1 V2 F2 where

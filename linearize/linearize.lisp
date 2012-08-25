@@ -189,7 +189,7 @@
            (,pure-results-invoker #'values ,@pure-results-arguments)))))))
 
 (defmacro define-linearized-interface
-    (name pure-interfaces stateful-interfaces &rest options)
+    (name pure-interfaces stateful-interfaces &optional slots &rest options)
   (let* ((all-pure-interfaces (all-super-interfaces pure-interfaces))
          (pure-gfs (all-interface-generics all-pure-interfaces))
          (all-stateful-interfaces (all-super-interfaces stateful-interfaces))
@@ -203,7 +203,7 @@
            (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
     `(progn
        (define-interface ,name (pure::<linearized> ,@pure-interfaces)
-         ()
+         ,slots
          ,@options)
        ,@(loop :for pure-gf :in pure-gfs
            :unless (gethash pure-gf overridden-gfs-hash) :append
@@ -216,16 +216,3 @@
               (assert stateful-effects))
             `((define-linearized-method ,name ,pure-interfaces ,stateful-interfaces
                                         ,pure-gf ,stateful-gf)))))))
-
-(in-package :pure)
-
-(define-interface <linearized> ()
-  ((stateful-interface
-    :reader stateful-interface
-    :initarg :stateful-interface)
-   #|(box-interface
-    :reader box-interface
-    :initarg :box-interface :initform <one-use-value-box>)|#)
-  (:parametric (interface #|&key unsafe|#)
-    (make-interface :stateful-interface interface
-                    #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

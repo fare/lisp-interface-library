@@ -63,17 +63,11 @@
            (drop i (right node) key))))))
 
 (defmethod divide ((i <binary-tree>) node)
-  (cond
-    ((empty-p i node)
-     (values (empty i) node))
-    ((empty-p i (left node))
-     (let ((right (right node)))
-       (setf (right node) (empty i))
-       (values right node)))
-    (t
-     (let ((left (left node)))
-       (setf (left node) (empty i))
-       (values left node)))))
+  (if (empty-p i node)
+      (values (empty i) node)
+      (let ((left (left node)))
+        (setf (left node) (empty i))
+        (values left node))))
 
 (defmethod divide/list ((i <binary-tree>) node)
   (if (empty-p i node)

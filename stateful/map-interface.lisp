@@ -59,8 +59,9 @@ where fun will return two values,
 the new value and a boolean,
 the association being dropped if the boolean is NIL,
 otherwise a new association being setup with the new value."))
-  (:generic map/2 (<map> fun map1 map2) (:in 1 2) (:values) (:out t t)
-   (:documentation "Join two maps, returning MAP1 after merging elements from MAP2.
+  (:generic map/2 (<map> fun map1 map2) (:in 2 3) (:values) (:out t nil)
+   (:documentation "Join two maps into the first one, after merging elements from MAP2.
+Return no values.
 For each key K present in either MAP1 or MAP2,
 the function FUN is called with arguments K V1 F1 V2 F2 where
 V1 and F1 are the value and found flag for MAP1, and

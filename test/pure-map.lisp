@@ -9,6 +9,11 @@
             :documentation "Testing pure functional maps"))
 
 (defmethod interface-test ((i <map>))
+  (simple-linear-map-test i)
+  (harder-linear-map-test i))
+
+(defmethod simple-linear-map-test ((i <map>))
+  (declare (optimize (speed 1) (debug 3) (space 3)))
   ;;; TODO: test each and every function in the API
   (X 'interface-test *package* i)
   (X 'empty)
@@ -54,8 +59,10 @@
   (is (= 101 (size i (insert i (alist-map* i *al-1*) 101 "101"))))
 
   (X 'drop)
-  (is (equal '(nil nil nil)
-             (multiple-value-list (drop i (empty i) 0))))
+  (multiple-value-bind (m k v) (drop i (empty i) 0)
+    (is (empty-p i m))
+    (is (null k))
+    (is (null v)))
   (multiple-value-bind (r d b)
       (drop i (alist-map* i '((1 . "1") (2 . "2"))) 1)
     (is (equal '(((2 . "2")) "1" t)
@@ -90,7 +97,9 @@
       (is (equal v vv))))
 
   (X 'decons)
-  (is (equal '(() () () ()) (multiple-value-list (decons i (empty i)))))
+  (multiple-value-bind (b m k v) (decons i (empty i))
+    (is (empty-p i m))
+    (is (equal '(nil nil nil) (list b k v))))
   (multiple-value-bind (b m k v) (decons i (alist-map* i *alist-10-latin*))
     (is (eq b t))
     (is (equal (list v t)
@@ -143,7 +152,7 @@
                                       (format o "~A~A" x y)))))))
 
   (X 'join)
-  (is (equal '() (join i (empty i) (empty i))))
+  (is (empty-p i (join i (empty i) (empty i))))
   (is (equal-alist '((1 . "1") (2 . "2") (5 . "5") (6 . "6"))
                    (map-alist
                     i
@@ -157,7 +166,9 @@
                          (alist-map* i *alist-100-latin*)))))
 
   (X 'divide-and-join)
-  (is (equal '(nil nil) (multiple-value-list (divide i (empty i)))))
+  (multiple-value-bind (m1 m2) (divide i (empty i))
+    (is (empty-p i m1))
+    (is (empty-p i m2)))
   (multiple-value-bind (x y)
       (divide i (alist-map* i *alist-10-latin*))
     (is (equal-alist *alist-10-latin*
@@ -170,8 +181,8 @@
     (is (empty-p i y)))
   (multiple-value-bind (x y)
       (divide i (alist-map* i '((1 . "1"))))
-    (is (empty-p i y))
-    (is (= 1 (size i x))))
+    (is (empty-p i x))
+    (is (= 1 (size i y))))
   (multiple-value-bind (x y)
       (divide i (alist-map* i *alist-100-latin*))
     (let ((sx (size i x)) (sy (size i y)))
@@ -184,21 +195,13 @@
   (is (= 100 (size i (alist-map* i *alist-100-decimal*))))
   (is (= 99 (size i (nth-value 1 (decons i (alist-map* i *alist-100-decimal*))))))
 
-  ;; (X 'join/list)
-  ;; TODO: add tests
-
-
-  (X 'divide/list)
-  ;; TODO: add more tests
-  (is (null (divide/list i (empty i))))
-
   (X 'update-key)
   ;; TODO: add more tests
-  (is (null (update-key i (empty i) 0 (constantly nil))))
+  (is (empty-p i (update-key i (empty i) 0 (constantly nil))))
 
   (X 'map/2)
   ;; TODO: add more tests
-  (is (null (map/2 i (constantly t) (empty i) (empty i))))
+  (is (empty-p i (map/2 i (constantly t) (empty i) (empty i))))
 
   (X 'convert)
   (is (null (convert <alist> i (empty i))))
@@ -210,7 +213,15 @@
                    (flow i <alist> (convert i <alist> *alist-10-latin*) nil)))
   t)
 
-(defmethod interface-test :after ((i <number-map>))
+(defmethod harder-linear-map-test ((i <map>))
+  ;; (X 'join/list)
+  ;; TODO: add tests
+
+  (X 'divide/list)
+  ;; TODO: add more tests
+  (is (null (divide/list i (empty i)))))
+
+(defmethod simple-linear-map-test :after ((i <number-map>))
   (let* ((a1 (make-alist 1000 "~@R"))
          (a2 (shuffle-list a1))
          (m1 (convert i <alist> a1))
@@ -231,4 +242,5 @@
 
 (deftest test-pure-map-interfaces ()
   (dolist (i (list <alist> <number-map> <hash-table> <fmim> <denm>))
-    (interface-test i)))
+    (interface-test i))
+  (simple-linear-map-test <lsnm>))

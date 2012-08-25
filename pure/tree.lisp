@@ -51,14 +51,9 @@
                        value foundp)))))))
 
 (defmethod divide ((i <binary-tree>) node)
-  (cond
-    ((null node)
-     (values nil nil))
-    ((null (left node))
-     (values (node i :key (node-key node) :value (node-value node))
-             (right node)))
-    (t
-     (values (left node) (insert i (right node) (node-key node) (node-value node))))))
+  (if (null node)
+      (values nil nil)
+      (values (left node) (insert i (right node) (node-key node) (node-value node)))))
 
 (defmethod divide/list ((i <binary-tree>) node)
   (if (null node) '()

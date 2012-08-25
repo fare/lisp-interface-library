@@ -37,7 +37,7 @@
                    (map-alist i (alist-map* i *al-1*))))
   (is (equal-alist *al-5*
                    (with-map (m2 i *al-2*)
-                     (is (eq m2 (join i m2 (alist-map i *al-3*)))))))
+                     (is (null (values-list (join i m2 (alist-map i *al-3*))))))))
 
   (X 'insert)
   (is (equal '((0)) (with-map (m i) (insert i m 0 nil))))
@@ -204,7 +204,9 @@
 
   (X 'map/2)
   ;; TODO: add more tests
-  (is (empty-p i (map/2 i (constantly t) (empty i) (empty i))))
+  (let ((x (empty i)))
+    (map/2 i (constantly t) x (empty i))
+    (is (empty-p i x)))
 
   (X 'convert)
   (is (null (convert <alist> i (empty i))))
@@ -232,6 +234,6 @@
                       :key-encoder #'(lambda (dk) (* dk 2))
                       :key-decoder #'(lambda (ek) (/ ek 2))))
 
-(deftest test-pure-map-interfaces ()
+(deftest test-stateful-map-interfaces ()
   (dolist (i (list <number-map> <hash-table> <denm>))
     (interface-test i)))

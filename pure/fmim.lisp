@@ -320,7 +320,7 @@
      (let ((height (node-height map))
            (datum (box-ref map)))
        (if (zerop height)
-           (values map nil)
+           (values nil map)
            (etypecase datum
              (trie-branch
               (values
@@ -332,7 +332,7 @@
                      (plen (node-prefix-length datum))
                      (position (- height plen)))
                 (if (zerop position)
-                    (values map nil)
+                    (values nil map)
                     (etypecase (box-ref datum)
                       (trie-branch
                        (flet ((f (bit datum)

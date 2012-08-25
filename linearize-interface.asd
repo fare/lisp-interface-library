@@ -8,4 +8,5 @@
    (:module "linearize"
     :components
     ((:file "linearize")
-     (:file "map" :depends-on ("linearize"))))))
+     (:file "base" :depends-on ("linearize"))
+     (:file "map" :depends-on ("base"))))))

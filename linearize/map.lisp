@@ -2,7 +2,7 @@
 
 (in-package :pure)
 
-(define-interface <linearized-map> (<linearized> <map>)
+(interface::define-linearized-interface <linearized-map> (<map>) (stateful:<map>)
   ()
   (:parametric (interface #|&key unsafe|#)
     (make-interface :stateful-interface interface
