@@ -12,6 +12,10 @@
   `(let ((,m (alist-map* ,i ,init))) ,@body (map-alist i ,m)))
 
 (defmethod interface-test ((i <map>))
+  (simple-map-test i)
+  (harder-map-test i))
+
+(defmethod simple-map-test ((i <map>))
   (X 'interface-test *package* i)
   ;;; TODO: test each and every function in the API
   (X 'empty)
@@ -190,14 +194,6 @@
     (decons i m)
     (is (= 99 (size i m))))
 
-  ;; (X 'join/list)
-  ;; TODO: add tests
-
-
-  (X 'divide/list)
-  ;; TODO: add more tests
-  (is (null (divide/list i (empty i))))
-
   (X 'update-key)
   ;; TODO: add more tests
   (is (null (update-key i (empty i) 0 (constantly nil))))
@@ -217,6 +213,16 @@
   (is (equal-alist *alist-10-latin*
                    (map-alist i
                               (flow i i (alist-map* i *alist-10-latin*) (empty i)))))
+  t)
+
+(defmethod harder-map-test ((i <map>))
+  ;; (X 'join/list)
+  ;; TODO: add tests
+
+  (X 'divide/list)
+  ;; TODO: add more tests
+  (is (null (divide/list i (empty i))))
+
   t)
 
 (defmethod interface-test :after ((i <number-map>))
@@ -240,7 +246,5 @@
 
 (defparameter <msnm> (<mutating-map> pure:<number-map>))
 
-#| ;; fix all issues first
 (deftest test-mutating-map-interfaces ()
-  (interface-test <msnm>))
-|#
+  (simple-map-test <msnm>))

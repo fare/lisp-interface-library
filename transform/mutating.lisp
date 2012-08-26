@@ -132,11 +132,13 @@
            (loop :for (eso esi epo ()) :in effective-outputs
              :when (integerp eso)
              :collect `(,(nth eso stateful-results-required)
-                        (make-instance 'box! :value
-                                       ,(nth epo pure-results-required)))))
+                        ,(if (integerp esi)
+                             (nth esi stateful-required)
+                             `(make-instance 'box! :value
+                                             ,(nth epo pure-results-required))))))
           (required-output-updates
            (loop :for (eso esi epo ()) :in effective-outputs
-             :when (eq eso t)
+             :when (integerp esi)
              :collect `(interface::set-box-value
                         ,(nth epo pure-results-required)
                         ,(nth esi stateful-required))))
