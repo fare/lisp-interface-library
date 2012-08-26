@@ -10,7 +10,8 @@
 
 (defmethod interface-test ((i <map>))
   (simple-linear-map-test i)
-  (harder-linear-map-test i))
+  (harder-linear-map-test i)
+  (multilinear-map-test i))
 
 (defmethod simple-linear-map-test ((i <map>))
   (declare (optimize (speed 1) (debug 3) (space 3)))
@@ -221,6 +222,10 @@
   ;; TODO: add more tests
   (is (null (divide/list i (empty i)))))
 
+(defmethod multilinear-map-test ((i <map>))
+  (let ((m (alist-map* i *alist-10-latin*)))
+    (equal-alist (map-alist i m) (map-alist i (join i m m)))))
+
 (defmethod simple-linear-map-test :after ((i <number-map>))
   (let* ((a1 (make-alist 1000 "~@R"))
          (a2 (shuffle-list a1))
@@ -238,9 +243,11 @@
                       :key-encoder #'(lambda (dk) (* dk 2))
                       :key-decoder #'(lambda (ek) (/ ek 2))))
 
-(defparameter <lsnm> (<linearized-map> stateful:<number-map>))
-
 (deftest test-pure-map-interfaces ()
   (dolist (i (list <alist> <number-map> <hash-table> <fmim> <denm>))
-    (interface-test i))
+    (interface-test i)))
+
+(defparameter <lsnm> (<linearized-map> stateful:<number-map>))
+
+(deftest test-linearized-map-interfaces ()
   (simple-linear-map-test <lsnm>))

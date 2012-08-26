@@ -8,7 +8,7 @@
 ** [[adopt same names as cl-containers?]]
 
 * fare:
-** test explicit -> explicit adapters
+** test explicit -> implicit adapters
 *** Remember functions that were built with explicit->implicit adapter,
   and optimize away indirection through interface in any implicit->explicit transformation back.
 

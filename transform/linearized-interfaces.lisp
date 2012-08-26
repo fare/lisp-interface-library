@@ -1,7 +1,8 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; From Pure to Stateful and back
+;;;;; From Stateful to Pure by Linearization: actual interfaces
 
-#+xcvb (module (:depends-on ("linearize/linearize" "pure/map-interface")))
+#+xcvb
+(module (:depends-on ("transform/linearize" "pure/map-interface" "stateful/map-interface")))
 
 (in-package :pure)
 
@@ -14,6 +15,12 @@
    #|(box-interface
     :reader box-interface
     :initarg :box-interface :initform <one-use-value-box>)|#)
+  (:parametric (interface #|&key unsafe|#)
+    (make-interface :stateful-interface interface
+                    #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))
+
+(define-linearized-interface <linearized-map> (<map>) (stateful:<map>)
+  ()
   (:parametric (interface #|&key unsafe|#)
     (make-interface :stateful-interface interface
                     #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

@@ -7,7 +7,7 @@ or our upcoming ILC'2012 article http://github.com/fare/lil-ilc2012/
 "
   :depends-on (:interface
                :pure-datastructures :stateful-datastructures
-               :linearize-interface))
+               :interface-transform))
 
 (defmethod perform ((op test-op) (system (eql (find-system :lisp-interface-library))))
   (asdf:load-system :lisp-interface-library-test)

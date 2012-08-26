@@ -79,6 +79,5 @@
    #:updatef-function|#
 
    ;; linearize --- TODO: move to its own package?
-   <linearized>
-   <linearized-map>
+   #:<linear> #:<linearized> #:<linearized-map>
    ))

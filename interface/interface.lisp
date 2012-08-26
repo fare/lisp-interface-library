@@ -146,7 +146,13 @@
       (car found)))
 
   (defun find-multiple-clos-options (key options)
-    (remove key options :key 'car :test-not 'eq)))
+    (remove key options :key 'car :test-not 'eq))
+
+  (defun un<>ate (string)
+    (let ((string (string string)))
+      (if (string-enclosed-p "<" string ">")
+          (subseq string 1 (1- (length string)))
+          string))))
 
 (defmacro define-interface-generic (interface name lambda-list &rest options)
   (let ((generic-options
@@ -201,8 +207,7 @@
        ,@(loop :for (() . gf) :in gfs :collect
            `(define-interface-generic ,interface ,@gf))
        ,@(when methods
-           (with-gensyms (ivar)
-             `((define-interface-methods (,ivar ,interface) ,@methods))))
+           `((define-interface-methods (,interface ,interface) ,@methods)))
        ',interface)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)

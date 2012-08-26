@@ -1,5 +1,5 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; From Pure to Stateful and back
+;;;;; From Stateful to Pure via linearization: Macros
 
 #+xcvb (module (:depends-on ("interface/interface" "interface/box")))
 
@@ -8,13 +8,6 @@
 (declaim (optimize (speed 1) (safety 3) (debug 3)))
 
 ;;; TODO: handle gf's with or without explicit override
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun un<>ate (string)
-    (let ((string (string string)))
-      (if (string-enclosed-p "<" string ">")
-          (subseq string 1 (1- (length string)))
-          string))))
 
 (defmacro define-linearized-method
     (linearized-interface pure-interfaces stateful-interfaces

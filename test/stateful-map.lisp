@@ -237,3 +237,10 @@
 (deftest test-stateful-map-interfaces ()
   (dolist (i (list <number-map> <hash-table> <denm>))
     (interface-test i)))
+
+(defparameter <msnm> (<mutating-map> pure:<number-map>))
+
+#| ;; fix all issues first
+(deftest test-mutating-map-interfaces ()
+  (interface-test <msnm>))
+|#

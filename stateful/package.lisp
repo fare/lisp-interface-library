@@ -68,4 +68,7 @@
    #:encode-key #:decode-key
 
    #:balance-node #:rotate-node-left #:rotate-node-right
+
+   ;; mutating --- TODO: move to its own package?
+   #:<mutating> #:<mutating-map>
    ))

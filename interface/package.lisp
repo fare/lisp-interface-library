@@ -73,4 +73,9 @@
    ;; simple mixins
    #:map-cheap-size #:map-for-each-from-fold-left
    #:map-fold-right-from-fold-left #:map-size-from-fold-left
+
+   ;; linearize
+   #:define-linearized-interface #:define-linearized-method
+   ;; mutating
+   #:define-mutating-interface #:define-mutating-method
    ))
