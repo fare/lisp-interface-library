@@ -1,37 +1,37 @@
 ;;;;-*- Lisp -*-
 #|
 * oconnore:
-** review abstract
+** review article
+** implement functional arrays -- use RRB-trees?
+  http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
+
+* ebzzry:
 ** implement Red-Black trees?
-** implement arrays -- use RRB-trees? http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
-** [[adopt same names as cl-containers?]]
 
 * fare:
-** Add "Minimal Viable Snippet" for the library and each of its major features. Sigh.
- Some treesort ?
-
-** test explicit <-> implicit adapters
-*** Remember functions that were built with explicit->implicit adapter,
-  and optimize away indirection through interface in any implicit->explicit transformation back.
-
-** write pure <-> impure adapters
-
 ** write detached <-> subjective adapters
 *** subjective interfaces (=regular OO) vs separate interfaces.
+** objectification can be done in a generic way with a parameterized class
+ objectify-interface with two slots: the interface and the object.
 
+* Unassigned:
+** [[adopt same names as cl-containers?]]
+** Add "Minimal Viable Snippet" for the library and each of its major features.
+*** Initial: some treesort ?
+** test explicit <-> implicit adapters
 ** update abstract
 ** look at how scala does these things http://www.scala-lang.org/
-
 ** Move the payload of a tree out of the basic tree structure (i.e. (key, value))
-** Add drop and insert side chooser as a method.
-** Add value merging as a method
+** Add method to choose on which side of the tree to drop and/or insert,
+ or document why the default is always right.
+** Have stateful classes that allow for removing
+ one and/or many entries while walking the structure once and/or many times (?)
+** Add value merging as a method, i.e. generalize the map/2 mechanism to insert.
 ** Get something like cl-container's find-or-create-class, combined with memoization,
   for generating classes that match some specification of an interface.
 ** Note that a single interface may have many classes and sub-interfaces,
   sometimes with mutual recursion in classes pointing to each other
   through methods and/or :class allocated slots.
-
-
 ** Develop example of multiply-indexed-organized tuple store.
   Each node is simultaneously node of multiple trees.
   Depending on which index you're using,
@@ -40,50 +40,8 @@
   The same tree-manipulation routines can be used on the same tree nodes
   with completely different results depending on which interface you use.
 
-objectification can be done in a generic way with a parameterized class
-objectify-interface with two slots: the interface and the object.
+* Low Priority:
+** Remember functions that were built with explicit->implicit adapter,
+  and optimize away indirection through interface in any implicit->explicit transformation back.
 
 |#
-
-(in-package :pure)
-
-(define-interface <linearized> ()
-  ((stateful-interface
-    :reader stateful-interface
-    :initarg :stateful-interface)
-   (box-interface
-    :reader box-interface
-    :initarg :box-interface :initform <one-use-value-box>))
-  (:parametric (interface &optional unsafe)
-    (make-interface :stateful-interface interface
-                    :box-interface (if unsafe <value-box> <one-use-value-box>))))
-
-(define-interface linearized-map (<map> <linearized>)
-  ()
-  (:parametric (interface &optional unsafe)
-    (make-interface :stateful-interface interface
-                    :box-interface (if unsafe <value-box> <one-use-value-box>))))
-
-(defmethod lookup ((i linearized-map) map key)
-  (lookup (stateful-interface i) (box-value map) key))
-
-(defmethod insert ((i linearized-map) map key value)
-  (let ((map-object (unbox (box-interface i) map)))
-    (multiple-value-bind ()
-        (stateful:insert (stateful-interface i) map-object key value)
-      (values (make-box (box-interface i) :value map-object)))))
-
-(defun linearize-map-interface (stateful-map-interface &optional unsafe)
-  (<linearize>
-    method pure:convert ((l linearized-map) (s stateful-map) m)
-  (make-box (box-interface l) :value m))
-
-
-(in-package :stateful)
-
-(symbol-macrolet
-   ((s (stateful-interface i))
-    (p (pure-interface i)))
-
-pure:empty-table p
-
