@@ -12,3 +12,8 @@ We are currently writing an article explaining about our library:
 	http://github.com/fare/lil-ilc2012/
 
 
+Features:
+
+* lil sports both pure (persistent) and stateful (ephemeral) variants of datastructures,
+ with a common core for read-only operations, and automatic transforms to go from
+ stateful to pure (linearization) and back (boxing).

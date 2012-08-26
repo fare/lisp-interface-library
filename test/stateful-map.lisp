@@ -247,4 +247,4 @@
 (defparameter <msnm> (<mutating-map> pure:<number-map>))
 
 (deftest test-mutating-map-interfaces ()
-  (simple-map-test <msnm>))
+  (interface-test <msnm>))

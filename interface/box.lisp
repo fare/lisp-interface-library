@@ -94,6 +94,9 @@
 (defclass one-use-box (box)
   ((usedp :type boolean :initform nil :accessor box-usedp)))
 
+(defun one-use-box (x)
+  (make-instance 'one-use-box :value x))
+
 (define-interface <one-use-box> (<classy-box>)
   ((class :initform 'one-use-box)))
 
@@ -160,6 +163,9 @@
 
 (defclass box! (mutable-box emptyable-box value-box)
   ((value :writer set-box-value)))
+
+(defun box! (x)
+  (make-instance 'box! :value x))
 
 (define-interface <box!> (<mutable-box> <classy-box> <emptyable-box>)
   ((class :initform 'box!)))

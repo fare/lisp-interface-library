@@ -21,6 +21,21 @@
 
 (define-linearized-interface <linearized-map> (<map>) (stateful:<map>)
   ()
+  (:method join/list (list)
+     (cond
+       (list
+        (interface::one-use-box
+         (stateful:join/list (stateful-interface <linearized-map>)
+                             (mapcar 'interface::box-ref list))))
+       (t
+        (empty <linearized-map>))))
+  (:method divide/list (map)
+     (let ((list
+            (stateful:divide/list
+             (stateful-interface <linearized-map>)
+             (interface::box-ref map))))
+       (and list
+            (mapcar 'interface::one-use-box list))))
   (:parametric (interface #|&key unsafe|#)
     (make-interface :stateful-interface interface
                     #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

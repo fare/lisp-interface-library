@@ -1,24 +1,20 @@
 ;;;;-*- Lisp -*-
 #|
 * oconnore:
-** migrate ds.scrbl from exscribe to racket's scribble with acm alternate style (ask jonrafkind on #racket)
 ** review abstract
 ** implement Red-Black trees?
 ** implement arrays -- use RRB-trees? http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
 ** [[adopt same names as cl-containers?]]
 
 * fare:
-** test explicit -> implicit adapters
+** Add "Minimal Viable Snippet" for the library and each of its major features. Sigh.
+ Some treesort ?
+
+** test explicit <-> implicit adapters
 *** Remember functions that were built with explicit->implicit adapter,
   and optimize away indirection through interface in any implicit->explicit transformation back.
 
 ** write pure <-> impure adapters
-  Provide wrappers for all relevant methods via macros.
-  Also need to identify for every method
-  which position in argument and/or return values
-  holds the object or datum to wrap/unwrap.
-  mutating
-  linearized
 
 ** write detached <-> subjective adapters
 *** subjective interfaces (=regular OO) vs separate interfaces.

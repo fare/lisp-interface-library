@@ -250,4 +250,5 @@
 (defparameter <lsnm> (<linearized-map> stateful:<number-map>))
 
 (deftest test-linearized-map-interfaces ()
-  (simple-linear-map-test <lsnm>))
+  (simple-linear-map-test <lsnm>)
+  (harder-linear-map-test <lsnm>))
