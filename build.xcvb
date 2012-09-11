@@ -36,8 +36,10 @@
    "stateful/tree"
    "stateful/encoded-key-map"
    "stateful/hash-table"
-   "linearize/linearize"
-   "linearize/map"
+   "transform/linearize"
+   "transform/linearized-interfaces"
+   "transform/mutating"
+   "transform/mutating-interfaces"
    #|"test/pure-map" "test/stateful-map"|#
    )
   :supersedes-asdf

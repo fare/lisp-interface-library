@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Stateful to Pure via linearization: Macros
 
-#+xcvb (module (:depends-on ("interface/interface" "interface/box")))
+#+xcvb (module (:depends-on ("interface/box" "pure/package")))
 
 (in-package :interface)
 

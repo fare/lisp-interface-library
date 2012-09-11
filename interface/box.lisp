@@ -1,6 +1,6 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 
-#+xcvb (module (:depends-on ("interface/interface")))
+#+xcvb (module (:depends-on ("interface/base")))
 
 (in-package :interface)
 
@@ -27,17 +27,6 @@
    (:documentation "Return the value inside the box")))
 
 
-;;; Classy box: same, based on a class
-(define-interface <classy-box> (<box> <classy>) ())
-
-(defmethod make-box ((i <classy-box>) generator &rest keys &key #+sbcl &allow-other-keys)
-  (apply 'make i :generator generator keys))
-
-(defmethod unbox ((i <classy-box>) box)
-  (declare (ignorable i))
-  (box-ref box))
-
-
 ;;;; Boxes that hold a value
 
 (defclass value-box (box)
@@ -57,7 +46,7 @@
 (defmethod box-ref ((box simple-value-box))
   (box-value box))
 
-(define-interface <value-box> (<classy-box>)
+(define-interface <value-box> (<box>)
   ((class :initform 'simple-value-box))
   (:singleton))
 
@@ -72,7 +61,7 @@
 (defmethod box-ref ((box simple-thunk-box))
   (funcall (box-thunk box)))
 
-(define-interface <thunk-box> (<classy-box>)
+(define-interface <thunk-box> (<box>)
   ((class :initform 'simple-thunk-box)))
 
 
@@ -97,7 +86,7 @@
 (defun one-use-box (x)
   (make-instance 'one-use-box :value x))
 
-(define-interface <one-use-box> (<classy-box>)
+(define-interface <one-use-box> (<box>)
   ((class :initform 'one-use-box)))
 
 (defmethod box-ref :before ((box one-use-box))
@@ -157,7 +146,7 @@
 
 (defgeneric set-box! (<box> box value))
 
-(defmethod set-box! ((i <classy-box>) box value)
+(defmethod set-box! ((i <box>) box value)
   (declare (ignorable i))
   (box-set! box value))
 
@@ -167,7 +156,7 @@
 (defun box! (x)
   (make-instance 'box! :value x))
 
-(define-interface <box!> (<mutable-box> <classy-box> <emptyable-box>)
+(define-interface <box!> (<mutable-box> <emptyable-box>)
   ((class :initform 'box!)))
 
 (defmethod box-set! ((box box!) value)

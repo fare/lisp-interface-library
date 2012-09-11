@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Pure to Stateful: Macros
 
-#+xcvb (module (:depends-on ("interface/interface" "interface/box")))
+#+xcvb (module (:depends-on ("interface/box" "stateful/package")))
 
 (in-package :interface)
 
@@ -11,16 +11,9 @@
 
 (defmacro define-mutating-method
     (mutating-interface stateful-interfaces pure-interfaces
-     stateful-gf pure-gf &rest keys)
-  (apply '%define-mutating-method
-   mutating-interface stateful-interfaces pure-interfaces
-     stateful-gf pure-gf keys))
-(defun %define-mutating-method
-    (mutating-interface stateful-interfaces pure-interfaces
      stateful-gf pure-gf &key
      pure-lambda-list pure-values pure-effects pure-gf-options
      stateful-lambda-list stateful-values stateful-effects stateful-gf-options)
-  (declare (optimize (speed 1) (safety 3) (debug 3)))
   (nest
    (let* ((pure-gf-options
            (or pure-gf-options

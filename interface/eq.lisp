@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Equality
 
-#+xcvb (module (:depends-on ("interface/interface")))
+#+xcvb (module (:depends-on ("interface/base")))
 
 (in-package :cl)
 

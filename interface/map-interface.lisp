@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; mapping of keys to values -- part common to pure and stateful
 
-#+xcvb (module (:depends-on ("interface/interface")))
+#+xcvb (module (:depends-on ("interface/base")))
 
 (in-package :interface)
 
@@ -64,6 +64,6 @@ yielding association k_1 v_1 .. k_n v_n, and computing
   (:method size (map)
     (fold-left map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0)))
 
-(define-interface map-cheap-size (<interface>) ()
+(define-interface map-cheap-size (<sizable>) ()
   (:method size<=n-p (map n)
     (<= (size map) n)))
