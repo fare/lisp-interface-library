@@ -10,4 +10,5 @@
     ((:file "linearize")
      (:file "mutating")
      (:file "linearized-interfaces" :depends-on ("linearize"))
-     (:file "mutating-interfaces" :depends-on ("mutating"))))))
+     (:file "mutating-interfaces" :depends-on ("mutating"))
+     (:file "classify")))))

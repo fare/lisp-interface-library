@@ -16,7 +16,8 @@
   (apply '%define-classified-method args))
 (defun %define-classified-method
     (class interface class-gf interface-gf &key
-     interface-argument (extract-interface interface-argument)
+     interface-argument
+     (extract-interface (first (ensure-list interface-argument)))
      (interface-keyword :interface)
      (value-keyword :value)
      (wrap `(make-instance ',class))
@@ -122,7 +123,7 @@
                                ,@(when interface-keyword
                                        `(,interface-keyword ,interface-var))
                                ,@(when value-keyword `(,value-keyword))
-                               (nth epo interface-results-required))))))
+                               ,(nth epo interface-results-required))))))
           (ineffective-class-inputs
            (loop :for i :from 1 :below lsin
              :for v :in (rest class-required)
@@ -184,40 +185,44 @@
             (,class-results-invoker #'values ,@class-results-arguments)))))))
 
 (defmacro define-classified-interface-class
-    (name class-interfaces interface-interfaces &optional slots &rest options)
-  (let* ((all-class-interfaces (all-super-interfaces class-interfaces))
-         (class-gfs (all-interface-generics all-class-interfaces))
-         (all-interface-interfaces (all-super-interfaces interface-interfaces))
-         (interface-gfs (all-interface-generics all-interface-interfaces))
-         (interface-gfs-hash
-          (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (symbol-name x) x)) interface-gfs) :test 'equal))
+    (name superclasses interface &optional slots &rest options)
+  (let* ((all-interfaces (all-super-interfaces interface))
+         (interface-gfs (all-interface-generics all-interfaces))
          (overridden-gfs (find-multiple-clos-options :method options))
          (overridden-gfs-hash
           (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
+           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql))
+         (interface-argument (find-unique-clos-option :interface-argument options))
+         (extract-interface (find-unique-clos-option :extract-interface-argument options))
+         (interface-keyword (find-unique-clos-option :interface-keyword options))
+         (value-keyword (find-unique-clos-option :value-keyword options))
+         (wrap (find-unique-clos-option :wrap options))
+         (unwrap (find-unique-clos-option :unwrap options))
+         (genericp (find-unique-clos-option :genericp options))
+         (class-options (remove-keyed-clos-options
+                             '(:interface-argument :extract-interface-argument
+                               :interface-keyword :value-keyword
+                               :wrap :unwrap :genericp) options))
+         (package (symbol-package name)))
     `(progn
-       (define-interface ,name (stateful::<mutating> ,@class-interfaces)
+       (defclass ,name (,@superclasses #|stateful::<mutating>|#)
          ,slots
-         ,@options)
-       ,@(loop :for class-gf :in class-gfs
-           :unless (gethash class-gf overridden-gfs-hash) :append
+         ,@class-options)
+       ,@(loop :for interface-gf :in interface-gfs
+           :unless (gethash interface-gf overridden-gfs-hash) :append
            (nest
-            (let ((class-effects (getf (search-gf-options all-class-interfaces class-gf) :effects))))
+            (let ((effects (getf (search-gf-options all-interfaces interface-gf) :effects))))
             ;; methods that have registered effects as expressible and expressed in our trivial language
-            (when class-effects)
-            (let ((interface-gf (gethash (symbol-name class-gf) interface-gfs-hash))))
-            (when interface-gf)
-            (let ((interface-effects (getf (search-gf-options all-interface-interfaces interface-gf) :effects)))
-              (assert interface-effects))
-            `((define-mutating-method
-                  ,name ,class-interfaces ,interface-interfaces
-                  ,class-gf ,interface-gf))))))
-
-    (class interface class-gf interface-gf &key
-     interface-argument (extract-interface interface-argument)
-     (interface-keyword :interface)
-     (value-keyword :value)
-     (wrap `(make-instance ',class))
-     (unwrap `(box-ref))
-     (genericp t))
+            (when effects)
+            (when (or interface-argument
+                      (find-if #'integerp effects :key 'car)))
+            (let ((class-gf (intern (symbol-name interface-gf) package))))
+            `((define-classified-method
+                ,name ,interface ,class-gf ,interface-gf
+                ,@interface-argument
+                ,@extract-interface
+                ,@interface-keyword
+                ,@value-keyword
+                ,@wrap
+                ,@unwrap
+                ,@genericp)))))))
