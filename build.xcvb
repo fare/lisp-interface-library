@@ -41,6 +41,7 @@
    "transform/mutating"
    "transform/mutating-interfaces"
    "transform/classify"
+   "transform/classified"
    #|"test/pure-map" "test/stateful-map"|#
    )
   :supersedes-asdf
