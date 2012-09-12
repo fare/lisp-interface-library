@@ -78,4 +78,5 @@
    #:define-linearized-interface #:define-linearized-method
    ;; mutating
    #:define-mutating-interface #:define-mutating-method
-   ))
+   ;; classify
+   #:define-classified-interface-class #:define-classified-method))

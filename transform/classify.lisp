@@ -81,7 +81,8 @@
    (multiple-value-bind (extra-arguments interface-expression)
        (if first-object-index
            (values nil `(class-interface ,(nth first-object-index class-required)))
-           (values `(,interface-argument) extract-interface)))
+           (values (when interface-argument `(,interface-argument)) extract-interface))
+     (assert interface-expression))
    (let ((interface-var (first interface-required))
          (lpin (length interface-required))
          (lsin (length class-required))
@@ -115,15 +116,18 @@
              :collect `(,piv (,@unwrap ,siv))))
           (required-output-bindings
            (loop :for (eso esi epo ()) :in effective-outputs
+             :for epor = (nth epo interface-results-required)
              :when (integerp eso)
              :collect `(,(nth eso class-results-required)
                         ,(if (integerp esi)
-                             (nth esi class-required)
+                             (progn
+                               (push epor interface-results-ignorables)
+                               (nth esi class-required))
                              `(,@wrap
                                ,@(when interface-keyword
                                        `(,interface-keyword ,interface-var))
                                ,@(when value-keyword `(,value-keyword))
-                               ,(nth epo interface-results-required))))))
+                               ,epor)))))
           (ineffective-class-inputs
            (loop :for i :from 1 :below lsin
              :for v :in (rest class-required)
@@ -193,14 +197,14 @@
           (alexandria:alist-hash-table
            (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql))
          (interface-argument (find-unique-clos-option :interface-argument options))
-         (extract-interface (find-unique-clos-option :extract-interface-argument options))
+         (extract-interface (find-unique-clos-option :extract-interface options))
          (interface-keyword (find-unique-clos-option :interface-keyword options))
          (value-keyword (find-unique-clos-option :value-keyword options))
          (wrap (find-unique-clos-option :wrap options))
          (unwrap (find-unique-clos-option :unwrap options))
          (genericp (find-unique-clos-option :genericp options))
          (class-options (remove-keyed-clos-options
-                             '(:interface-argument :extract-interface-argument
+                             '(:interface-argument :extract-interface
                                :interface-keyword :value-keyword
                                :wrap :unwrap :genericp) options))
          (package (symbol-package name)))
@@ -215,6 +219,7 @@
             ;; methods that have registered effects as expressible and expressed in our trivial language
             (when effects)
             (when (or interface-argument
+                      extract-interface
                       (find-if #'integerp effects :key 'car)))
             (let ((class-gf (intern (symbol-name interface-gf) package))))
             `((define-classified-method
