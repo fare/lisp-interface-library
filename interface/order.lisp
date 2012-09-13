@@ -55,7 +55,7 @@
   ((compare :initarg :compare :reader compare-function))
   (:parametric (compare) (make-interface :compare compare))
   (:method compare (x y)
-    (funcall (compare-function) x y)))
+    (funcall (compare-function <compare>) x y)))
 
 (define-interface <lessp> (<order-from-lessp>)
   ((lessp :initarg :lessp :reader lessp-function))

@@ -11,6 +11,9 @@
      map-divide-from-for-each map-first-key-value-from-for-each
      map-fold-left-from-for-each <map>)
   ((key-interface :reader key-interface :initarg :key-interface))
-  (:parametric (&key (key <eql>)) (make-interface :key-interface key))
+  ;; we would default to <eql>, but there is no standard hash function associated to it, for
+  ;; there is no standard way to re-hash the table after a GC that would disturb pointer values.
+  ;; So instead we default to <equal>.
+  (:parametric (&key (key <equal>)) (make-interface :key-interface key))
   (:singleton)
   (:documentation "stateful hash table"))
