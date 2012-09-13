@@ -19,13 +19,13 @@
 
 (define-interface <eq-from-==> (<eq>) ()
   (:method eq-function ()
-    #'(lambda (x y) (== i x y))))
+    #'(lambda (x y) (== x y))))
 
 (define-interface <eq-from-eq-function> (<eq>)
   ((eq-function :initarg :eq-function :reader eq-function))
   (:parametric (&key eq-function) (make-interface :eq-function eq-function))
   (:method == (x y)
-    (funcall (eq-function i) x y)))
+    (funcall (eq-function) x y)))
 
 (define-interface <hashable> (<eq>) ()
   (:generic hash (i x) (:in 1) (:values bool)))
