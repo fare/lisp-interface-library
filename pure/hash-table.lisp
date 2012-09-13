@@ -21,11 +21,11 @@
 
 (defmethod lookup ((i <hash-table>) map key)
   (let ((bucket (lookup (hashmap-interface i) map
-                        (eq:hash (key-interface i) key))))
+                        (hash (key-interface i) key))))
     (lookup (bucketmap-interface i) bucket key)))
 
 (defmethod insert ((i <hash-table>) map key value)
-  (let ((hash (eq:hash (key-interface i) key)))
+  (let ((hash (hash (key-interface i) key)))
     (insert
      (hashmap-interface i) map hash
      (insert (bucketmap-interface i)
@@ -35,7 +35,7 @@
              key value))))
 
 (defmethod drop ((i <hash-table>) map key)
-  (let ((hash (eq:hash (key-interface i) key)))
+  (let ((hash (hash (key-interface i) key)))
     (multiple-value-bind (bucket hashfoundp)
         (lookup (hashmap-interface i) map hash)
       (if (null hashfoundp)

@@ -3,21 +3,7 @@
 
 #+xcvb (module (:depends-on ("interface/base" "interface/eq")))
 
-(in-package :cl)
-
-(defpackage :order
-  (:use :interface :eq :cl :xcvb-utils)
-  (:shadowing-import-from :asdf
-   #:appendf #:ends-with #:featurep) ;; also in alexandria
-  (:export
-   #:<order> #:<number> #:<string> #:<char>
-   #:<order-from-lessp> #:<lessp>
-   #:<order-from-compare> #:<compare>
-   #:<key> #:<order-parameter>
-   #:order< #:order<= #:order> #:order>= #:== #:compare
-   #:order-interface))
-
-(in-package :order)
+(in-package :interface)
 
 (define-interface <order> (<eq>)
   ()
@@ -43,38 +29,39 @@
        ((order> x y) 1)
        (t 0))))
 
-(define-interface <order-from-compare> (<order>) ())
-(defmethod order< ((i <order-from-compare>) x y)
-  (ecase (compare i x y)
-    ((-1) t)
-    ((0 1) nil)))
-(defmethod order<= ((i <order-from-compare>) x y)
-  (ecase (compare i x y)
-    ((-1 0) t)
-    (1 nil)))
-(defmethod order> ((i <order-from-compare>) x y)
-  (ecase (compare i x y)
-    ((-1 0) nil)
-    ((1) t)))
-(defmethod order>= ((i <order-from-compare>) x y)
-  (ecase (compare i x y)
-    ((-1) nil)
-    ((0 1) t)))
-(defmethod == ((i <order-from-compare>) x y)
-  (ecase (compare i x y)
-    ((-1 1) nil)
-    ((0) t)))
+(define-interface <order-from-compare> (<order>) ()
+  (:method order< (x y)
+     (ecase (compare x y)
+       ((-1) t)
+       ((0 1) nil)))
+  (:method order<= (x y)
+     (ecase (compare x y)
+       ((-1 0) t)
+       (1 nil)))
+  (:method order> (x y)
+     (ecase (compare x y)
+       ((-1 0) nil)
+       ((1) t)))
+  (:method order>= (x y)
+     (ecase (compare x y)
+       ((-1) nil)
+       ((0 1) t)))
+  (:method == (x y)
+     (ecase (compare x y)
+       ((-1 1) nil)
+       ((0) t))))
 
 (define-interface <compare> (<order-from-compare>)
   ((compare :initarg :compare :reader compare-function))
-  (:parametric (compare) (make-interface :compare compare)))
-(defmethod compare ((i <compare>) x y)
-  (funcall (compare-function i) x y))
+  (:parametric (compare) (make-interface :compare compare))
+  (:method compare (x y)
+    (funcall (compare-function) x y)))
 
 (define-interface <lessp> (<order-from-lessp>)
   ((lessp :initarg :lessp :reader lessp-function))
   (:parametric (lessp) (make-interface :lessp lessp)))
 
+#|
 (macrolet ((delegate (&rest names)
              `(progn
                 ,@(loop :for (name suffix) :in names :collect
@@ -84,6 +71,7 @@
                               (funcall (key-function i) y)))))))
   (delegate (order< <) (order<= <=) (order> >) (order>= >=)
             (== =) (compare -compare)))
+|#
 
 (defun call< (lessp x y)
   (funcall lessp x y))
@@ -118,19 +106,6 @@
   (builtin <number> "")
   (builtin <char> char)
   (builtin <string> string))
-
-(define-interface <key> ()
-  ((order-key :initarg :key :reader key-function)
-   (order-key-interface :initarg :order :reader order-interface))
-  (:parametric (&key key order) (make-interface :key key :order order)))
-(macrolet ((delegate (&rest names)
-             `(progn
-                ,@(loop :for name :in names :collect
-                    `(defmethod ,name ((i <key>) x y)
-                       (,name (order-interface i)
-                              (funcall (key-function i) x)
-                              (funcall (key-function i) y)))))))
-  (delegate order< order<= order> order>= == compare))
 
 (define-interface <order-parameter> ()
   ((order-interface :initarg :order :reader order-interface)))

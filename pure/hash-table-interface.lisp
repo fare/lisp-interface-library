@@ -17,7 +17,7 @@
   ((key-interface :reader key-interface :initarg :key)
    (hashmap-interface :reader hashmap-interface :initarg :hashmap)
    (bucketmap-interface :reader bucketmap-interface :initarg :bucketmap))
-  (:parametric (&key (key eq:<equal>)
+  (:parametric (&key (key <equal>)
                      (hashmap <number-map>)
                      (bucketmap (<alist> key)))
                (make-interface :key key :hashmap hashmap :bucketmap bucketmap))

@@ -41,6 +41,10 @@ yielding association k_1 v_1 .. k_n v_n, and computing
   (:generic alist-map (<map> alist) (:values map) (:out 0)
    (:documentation "Convert an alist to a map of given interface")))
 
+(defgeneric key-interface (<map>)
+  (:documentation "Interface for the type of keys of a map"))
+(defgeneric value-interface (<map>)
+  (:documentation "Interface for the type of values of a map"))
 
 ;;; Simple Mixins
 (define-interface map-fold-right-from-fold-left (<map>) ()

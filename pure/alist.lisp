@@ -9,13 +9,13 @@
   (loop :for ((key . nil) . rest) :on map :do
     (assert (not (member key rest
                          :key 'car
-                         :test (eq:test-function (eq-interface i))))
+                         :test (eq-function (key-interface i))))
             () "Key ~S is present twice in alist ~S" key map)))
 
 (defmethod lookup ((i <alist>) map key)
   (if (null map)
       (values nil nil)
-      (let ((pair (assoc key map :test (eq:test-function (eq-interface i)))))
+      (let ((pair (assoc key map :test (eq-function (key-interface i)))))
         (if pair
             (values (cdr pair) t)
             (values nil nil)))))
@@ -28,7 +28,7 @@
       (values nil nil nil)
       (multiple-value-bind (v f) (lookup i map key)
         (if f
-            (values (remove key map :key 'car :test (eq:test-function (eq-interface i))) v t)
+            (values (remove key map :key 'car :test (eq-function (key-interface i))) v t)
             (values map nil nil)))))
 
 (defmethod first-key-value ((i <alist>) map)

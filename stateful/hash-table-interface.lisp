@@ -10,7 +10,7 @@
      map-fold-right-from-fold-left map-cheap-size map-divide/list-from-divide
      map-divide-from-for-each map-first-key-value-from-for-each
      map-fold-left-from-for-each <map>)
-  ((key-interface :reader key-interface :initarg :key))
-  (:parametric (&key (key eq:<equal>)) (make-interface :key key))
+  ((key-interface :reader key-interface :initarg :key-interface))
+  (:parametric (&key (key <eql>)) (make-interface :key-interface key))
   (:singleton)
   (:documentation "stateful hash table"))

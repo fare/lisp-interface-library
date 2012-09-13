@@ -10,7 +10,7 @@
 
 (defpackage :pure
   (:nicknames #:pure-functional)
-  (:use :cl :interface :order :eq :xcvb-utils)
+  (:use :cl :interface :xcvb-utils)
   (:export
 
    ;;; Iterators

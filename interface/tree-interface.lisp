@@ -15,8 +15,6 @@
   (:documentation "abstract interface for nodes of trees"))
 (defgeneric node-interface (<tree>)
   (:documentation "returns the interface for nodes of given tree interface"))
-(defgeneric key-interface (<interface>)
-  (:documentation "returns the interface for keys of given tree interface"))
 |#
 
 ;; We should probably be using a node interface instead, but this will do for now
@@ -46,8 +44,7 @@
 
 ;;; Vanilla Binary Tree
 
-(define-interface <binary-tree>
-    (<tree> <map> order:<order>) ;; TODO: delegate that to a key interface?
+(define-interface <binary-tree> (<tree> <map>)
   ()
   (:documentation "Keys in binary trees increase from left to right"))
 
@@ -87,4 +84,5 @@
 (defgeneric node-balance (node))
 
 ;;; Common special case: when keys are (real) numbers
-(define-interface <number-map> (<avl-tree> order:<number>) ())
+(define-interface <number-map> (<avl-tree>)
+  ((key-interface :allocation :class :initform <number> :reader key-interface)))

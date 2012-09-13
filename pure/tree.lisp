@@ -15,7 +15,7 @@
 (defmethod insert ((i <binary-tree>) node key value)
   (if (null node)
       (node i :key key :value value)
-      (ecase (order:compare i key (node-key node))
+      (ecase (compare (key-interface i) key (node-key node))
         (0 (node i :key key :value value ;; (update-node i node :key key :value value)
                  :left (left node) :right (right node)))
         (-1 (node i :key (node-key node) :value (node-value node)
@@ -28,7 +28,7 @@
       (values nil nil nil)
       (let ((k (node-key node))
             (v (node-value node)))
-        (ecase (order:compare i key k)
+        (ecase (compare (key-interface i) key k)
           (0 (values
               (cond
                 ((null (left node)) (right node))

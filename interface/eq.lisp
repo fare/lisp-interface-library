@@ -3,52 +3,37 @@
 
 #+xcvb (module (:depends-on ("interface/base")))
 
-(in-package :cl)
+(in-package :interface)
 
-(defpackage :eq
-  (:use :cl :interface)
-  (:export
-   #:<eq> #:<eq-simple> #:<eq-slot>
-   #:<equal>
-   #:== #:test-function
-   #:<hashable>
-   #:hash
-   ))
-
-(in-package :eq)
-
-(define-interface <eq> (<type>)
-  ()
-  (:singleton)
+(define-interface <eq> (<type>) ()
   (:generic == (i x y) (:in 1 2) (:values bool))
-  (:generic
-   test-function (i) (:values fun)
+  (:generic eq-function (i) (:values fun)
    (:documentation "test function for <eq> interface")))
 
-(defmethod == ((i <eq>) x y)
-  (eql x y))
-(defmethod test-function ((i <eq>))
-  #'eql)
+(define-interface <eql> (<eq>) ()
+  (:singleton)
+  (:method == (x y)
+    (eql x y))
+  (:method eq-function ()
+    #'eql))
 
-(define-interface <eq-simple> (<eq>) () (:singleton))
-(defmethod test-function ((i <eq-simple>))
-  #'(lambda (x y) (== i x y)))
+(define-interface <eq-from-==> (<eq>) ()
+  (:method eq-function ()
+    #'(lambda (x y) (== i x y))))
 
-(define-interface <eq-slot> (<eq>)
-  ((test :initform #'eql :initarg :test :reader test-function))
-  (:parametric (&key test) (make-interface :test test)))
-(defmethod == ((i <eq-slot>) x y)
-  (funcall (test-function i) x y))
+(define-interface <eq-from-eq-function> (<eq>)
+  ((eq-function :initarg :eq-function :reader eq-function))
+  (:parametric (&key eq-function) (make-interface :eq-function eq-function))
+  (:method == (x y)
+    (funcall (eq-function i) x y)))
 
-(define-interface <hashable> (<eq>)
-  ()
+(define-interface <hashable> (<eq>) ()
   (:generic hash (i x) (:in 1) (:values bool)))
 
-(defmethod hash ((i <hashable>) x)
-  (sxhash x)) ; Note: matches equal, not eql
-
-(define-interface <equal> (<hashable>) () (:singleton))
-(defmethod == ((i <equal>) x y)
-  (equal x y))
-(defmethod test-function ((i <equal>))
-  #'equal)
+(define-interface <equal> (<hashable>) () (:singleton)
+  (:method == (x y)
+    (equal x y))
+  (:method eq-function ()
+    #'equal)
+  (:method hash (x)
+    (sxhash x)))

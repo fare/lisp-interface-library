@@ -18,7 +18,7 @@
      (change-class node (node-class i) :key key :value value)
      (values))
     (t
-     (ecase (order:compare i key (node-key node))
+     (ecase (compare (key-interface i) key (node-key node))
        (0 (setf (node-value node) value) (values))
        (-1 (insert i (left node) key value))
        (1 (insert i (right node) key value))))))
@@ -41,7 +41,7 @@
       (values nil nil)
       (let ((k (node-key node))
             (v (node-value node)))
-        (ecase (order:compare i key k)
+        (ecase (compare (key-interface i) key k)
           (0 (cond
                ((empty-p i (left node))
                 (copy-node node (right node)))

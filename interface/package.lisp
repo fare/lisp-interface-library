@@ -37,6 +37,19 @@
    ;;; Empty?
    #:<emptyable> #:empty #:empty-p
 
+   ;;; eq
+   #:<eq> #:== #:eq-function
+   #:<hashable> #:hash
+   #:<eql> #:<equal>
+   #:<eq-from-==> #:<eq-from-eq-function>
+
+   ;;; order
+   #:<order> #:<number> #:<string> #:<char>
+   #:<order-from-lessp> #:<lessp>
+   #:<order-from-compare> #:<compare>
+   #:order< #:order<= #:order> #:order>= #:== #:compare
+   #:<order-parameter> #:order-interface
+
    ;;; Boxes!
    #:box #:box-ref #:box-set!
    #:<box> #:make-box #:unbox
@@ -59,6 +72,7 @@
    #:lookup #:first-key-value #:fold-left #:fold-right #:map-alist #:alist-map
    #:node #:node-key #:node-value #:left #:right #:node-height #:node-balance
    #:locate #:node-key-value #:leftmost-node #:rightmost-node #:leftmost #:rightmost
+   #:key-interface #:value-interface
 
    ;; number iterators
    #:make-number-iterator

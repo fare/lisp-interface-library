@@ -9,7 +9,7 @@
 (in-package :cl)
 
 (defpackage :stateful
-  (:use :cl :interface :order :eq :xcvb-utils)
+  (:use :cl :interface :xcvb-utils)
   (:export
 
    ;;; Iterators

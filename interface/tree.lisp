@@ -11,11 +11,13 @@
 (defmethod check-invariant ((i <binary-tree>) (node binary-branch) &key
                             lower (lowerp lower) upper (upperp upper))
   (typep node (node-class i))
-  (let ((key (node-key node)))
+  (let ((ki (key-interface i))
+	(key (node-key node)))
+    (check-type ki <order>)
     (when lowerp
-      (assert (order:order< i lower key)))
+      (assert (order< ki lower key)))
     (when upperp
-      (assert (order:order< i key upper)))
+      (assert (order< ki key upper)))
     (when (left node)
       (check-invariant i (left node) :lowerp lowerp :lower lower :upperp t :upper key))
     (when (right node)
@@ -27,7 +29,7 @@
 ;;  (compare (key-interface i) key1 key2))
 
 (defmethod locate ((i <binary-tree>) node key path)
-  (ecase (order:compare i key (node-key node)) ;; (compare-key i key (node-key node))
+  (ecase (compare (key-interface i) key (node-key node))
     (0 (values node path))
     (-1 (locate i (left node) key (cons 'left path)))
     (1 (locate i (right node) key (cons 'right path)))))
@@ -35,7 +37,7 @@
 (defmethod lookup ((i <binary-tree>) node key)
   (if (empty-p i node)
       (values nil nil)
-      (ecase (order:compare i key (node-key node)) ;; (compare-key i key (node-key node))
+      (ecase (compare (key-interface i) key (node-key node))
         (0 (values (node-value node) t))
         (-1 (lookup i (left node) key))
         (1 (lookup i (right node) key)))))

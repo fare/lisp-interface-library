@@ -1,6 +1,6 @@
 #+xcvb (module ())
 (defpackage :lisp-interface-library-test
-  (:use :interface :eq :order :reader-interception :xcvb-utils
+  (:use :interface :reader-interception :xcvb-utils
         :cl :hu.dwim.stefil)
   (:export
    #:test-suite
@@ -22,13 +22,13 @@
 
 (defpackage :lisp-pure-datastructure-test
   (:use :pure :lisp-interface-library-test
-        :interface :eq :order
+        :interface
         :reader-interception :xcvb-utils
         :cl :hu.dwim.stefil))
 
 (defpackage :lisp-stateful-datastructure-test
   (:use :stateful :lisp-interface-library-test
-        :interface :eq :order
+        :interface
         :reader-interception :xcvb-utils
         :cl :hu.dwim.stefil)
   (:import-from :pure #:<alist>))

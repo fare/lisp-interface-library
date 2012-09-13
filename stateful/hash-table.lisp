@@ -5,7 +5,7 @@
 
 (in-package :stateful)
 
-(defun normalize-test-function (x)
+(defun normalize-eq-function (x)
   (cond
     ((member x '(eq eql equal equalp)) x)
     ((eq x #'eq) 'eq)
@@ -13,18 +13,18 @@
     ((eq x #'equal) 'equal)
     ((eq x #'equalp) 'equalp)))
 
-(defun same-test-function-p (x y)
-  (let ((x (normalize-test-function x))
-        (y (normalize-test-function y)))
+(defun same-eq-function-p (x y)
+  (let ((x (normalize-eq-function x))
+        (y (normalize-eq-function y)))
     (and x y (eq x y))))
 
 (defmethod check-invariant ((i <hash-table>) map &key)
   (check-type map hash-table)
-  (assert (normalize-test-function (test-function (key-interface i))))
-  (assert (same-test-function-p (test-function (key-interface i)) (hash-table-test map))))
+  (assert (normalize-eq-function (eq-function (key-interface i))))
+  (assert (same-eq-function-p (eq-function (key-interface i)) (hash-table-test map))))
 
 (defmethod empty ((i <hash-table>))
-  (make-hash-table :test (normalize-test-function (test-function (key-interface i)))))
+  (make-hash-table :test (normalize-eq-function (eq-function (key-interface i)))))
 
 (defmethod empty-p ((i <hash-table>) map)
   (= 0 (hash-table-count map)))
