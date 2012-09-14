@@ -6,6 +6,7 @@
 (in-package :interface)
 
 (define-interface <eq> (<type>) ()
+  (:abstract)
   (:generic == (i x y) (:in 1 2) (:values bool))
   (:generic eq-function (i) (:values fun)
    (:documentation "test function for <eq> interface")))
@@ -18,6 +19,7 @@
     #'eql))
 
 (define-interface <eq-from-==> (<eq>) ()
+  (:abstract)
   (:method eq-function ()
     #'(lambda (x y) (== x y))))
 
@@ -28,6 +30,7 @@
     (funcall (eq-function) x y)))
 
 (define-interface <hashable> (<eq>) ()
+  (:abstract)
   (:generic hash (i x) (:in 1) (:values bool)))
 
 (define-interface <equal> (<hashable>) () (:singleton)

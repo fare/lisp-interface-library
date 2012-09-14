@@ -11,7 +11,8 @@
   (defclass interface-class (standard-class)
     ((generics :initform (make-hash-table :test 'eql) :accessor interface-generics)
      ;;(%direct-super-interfaces :accessor %direct-super-interfaces)
-     (%all-super-interfaces :accessor %all-super-interfaces)))
+     (%all-super-interfaces :accessor %all-super-interfaces)
+     (abstractp :initform nil :reader interface-abstract-p :type boolean)))
 
   (defun interface-class-p (class)
     (typep class 'interface-class))
@@ -175,19 +176,24 @@
   (let ((class-options
          ;;(keep-keyed-clos-options '(:default-initargs :documentation :metaclass) options)
          (remove-keyed-clos-options
-          '(:generic :method :singleton :parametric) options))
+          '(:generic :method :singleton :parametric :abstract) options))
         (metaclass (find-unique-clos-option :metaclass options))
         (gfs (find-multiple-clos-options :generic options))
         (methods (find-multiple-clos-options :method options))
         (parametric (find-unique-clos-option :parametric options))
-        (singleton (find-unique-clos-option :singleton options)))
+        (singleton (find-unique-clos-option :singleton options))
+        (abstract (find-unique-clos-option :abstract options)))
     `(progn
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (defclass ,interface ,super-interfaces ,slots
            ,@(unless metaclass `((:metaclass interface-class)))
            ,@class-options)
-         (finalize-inheritance (find-class ',interface)))
+       	 (let ((interface-class (find-class ',interface)))
+	   (finalize-inheritance interface-class)
+	   ,@(when abstract
+	       '((setf (slot-value interface-class 'abstractp) t)))))
        ,@(when (or parametric singleton)
+	   (assert (not abstract))
            (destructuring-bind (formals &body body)
                (or (cdr parametric)
                    '(() (make-interface)))
@@ -334,6 +340,12 @@
                 `(define-interface-method ,',interface ,gf ,@rest)))
      ,@body))
 
-(define-interface <interface> ()
-  ()
-  (:documentation "An interface, encapsulating an algorithm"))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (define-interface <interface> () ()
+    (:abstract)
+    (:documentation "An interface, encapsulating an algorithm")))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmethod shared-initialize :before ((instance <interface>) slot-names &key &allow-other-keys)
+    (when (interface-abstract-p (class-of instance))
+      (error "Trying to instantiate abstract interface ~S" (type-of instance)))))

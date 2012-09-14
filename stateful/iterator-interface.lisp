@@ -5,8 +5,8 @@
 
 (in-package :stateful)
 
-(define-interface <fount> (<interface>) ())
-(define-interface <sink> (<interface>) ())
+(define-interface <fount> (<interface>) () (:abstract))
+(define-interface <sink> (<interface>) () (:abstract))
 
 (define-condition end-of-iteration (error) ())
 

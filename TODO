@@ -11,14 +11,12 @@
 * fare:
 ** write detached <-> subjective adapters
 *** subjective interfaces (=regular OO) vs separate interfaces.
-** objectification can be done in a generic way with a parameterized class
- objectify-interface with two slots: the interface and the object.
 
 * Unassigned:
 ** Some bootstrapped datastructure from Okasaki
 ** More from
 	http://planet.plt-scheme.org/display.ss?package=pfds.plt&owner=krhari
-** [[adopt same names as cl-containers?]]
+** Import functionality from cl-containers?
 ** Add "Minimal Viable Snippet" for the library and each of its major features.
 *** Initial: some treesort ?
 ** test explicit <-> implicit adapters
@@ -47,6 +45,6 @@
 ** Remember functions that were built with explicit->implicit adapter,
   and optimize away indirection through interface in any implicit->explicit transformation back.
 ** refactor transformers through a with-lambda-list-adapter
-** Create a DSL so both pure and stateful variants can be extracted from a single specification, whereby you can (make-node :identity a) and it will preserve the identity of linear variable a when in stateful mode.
+** Create a DSL so both pure and stateful variants can be extracted from a single specification, whereby you can (update-node a ...) and it will preserve the identity of linear variable a when in stateful mode.
 
 |#

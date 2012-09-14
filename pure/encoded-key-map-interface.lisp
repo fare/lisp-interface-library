@@ -4,7 +4,8 @@
 
 (in-package :pure)
 
-(define-interface <encoded-key-map> (<map>) ())
+(define-interface <encoded-key-map> (<map>) ()
+  (:abstract))
 
 (define-interface <parametric-encoded-key-map> (<encoded-key-map>)
   ((base-interface :initarg :base-interface :reader base-interface)

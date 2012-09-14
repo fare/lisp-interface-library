@@ -8,10 +8,12 @@
 ;;; Trees in general
 
 (define-interface <tree> (<map>) ()
+  (:abstract)
   (:documentation "abstract interface for trees"))
 
 #| ;;; TODO: do we want a node interface associated to the tree interface?
 (define-interface <node> (<type>) ()
+  (:abstract)
   (:documentation "abstract interface for nodes of trees"))
 (defgeneric node-interface (<tree>)
   (:documentation "returns the interface for nodes of given tree interface"))
@@ -44,8 +46,8 @@
 
 ;;; Vanilla Binary Tree
 
-(define-interface <binary-tree> (<tree> <map>)
-  ()
+(define-interface <binary-tree> (<tree> <map>) ()
+  (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
 
 (defclass binary-branch ()
@@ -72,7 +74,8 @@
 
 ;;; pure AVL-tree
 
-(define-interface <avl-tree> (<binary-tree>) ())
+(define-interface <avl-tree> (<binary-tree>) ()
+  (:abstract))
 
 (defclass avl-tree-node (binary-tree-node)
   ((height
@@ -85,4 +88,5 @@
 
 ;;; Common special case: when keys are (real) numbers
 (define-interface <number-map> (<avl-tree>)
-  ((key-interface :allocation :class :initform <number> :reader key-interface)))
+  ((key-interface :allocation :class :initform <number> :reader key-interface))
+  (:abstract)) ;; must be pure or stateful!

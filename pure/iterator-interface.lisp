@@ -6,8 +6,8 @@
 
 (in-package :pure)
 
-(define-interface <fount> (<interface>) ())
-(define-interface <sink> (<interface>) ())
+(define-interface <fount> (<interface>) () (:abstract))
+(define-interface <sink> (<interface>) () (:abstract))
 
 (defgeneric iterator (<fount> fount)
   (:documentation "Given a <FOUNT> interface and an object FOUNT, return

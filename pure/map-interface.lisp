@@ -5,8 +5,8 @@
 
 (in-package :pure)
 
-(define-interface <map> (interface::<map> <fount> <sink>)
-  ()
+(define-interface <map> (interface::<map> <fount> <sink>) ()
+  (:abstract)
   (:generic insert (<map> map key value) (:in 1) (:values map) (:out 0)
    (:documentation "Add a key-value pair to a map,
 replacing any previous association for this key,
@@ -68,11 +68,11 @@ we could have a
 |#
 
 ;;; Mixins implementing simple cases for a lot of the above functions
-(define-interface map-simple-empty (<map>) ())
-(define-interface map-simple-decons (<map>) ())
-(define-interface map-simple-update-key (<map>) ())
-(define-interface map-simple-join (<map>) ())
-(define-interface map-simple-join/list (<map>) ())
-(define-interface map-divide/list-from-divide (<map>) ())
-(define-interface map-simple-map/2 (<map>) ())
-(define-interface map-size<=n-p-from-decons (<map>) ())
+(define-interface map-simple-empty (<map>) () (:abstract))
+(define-interface map-simple-decons (<map>) () (:abstract))
+(define-interface map-simple-update-key (<map>) () (:abstract))
+(define-interface map-simple-join (<map>) () (:abstract))
+(define-interface map-simple-join/list (<map>) () (:abstract))
+(define-interface map-divide/list-from-divide (<map>) () (:abstract))
+(define-interface map-simple-map/2 (<map>) () (:abstract))
+(define-interface map-size<=n-p-from-decons (<map>) () (:abstract))

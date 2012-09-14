@@ -8,7 +8,8 @@
 (define-interface <number-iterator> (<interface>)
   ((start :initarg :start :reader iterator-start)
    (end :initarg :end :reader iterator-end)
-   (increment :initarg :increment :reader iterator-increment)))
+   (increment :initarg :increment :reader iterator-increment))
+  (:abstract))  
 
 (define-interface <decreasing-number-iterator> (<number-iterator>) ())
 

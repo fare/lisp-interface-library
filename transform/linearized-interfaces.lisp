@@ -6,7 +6,7 @@
 
 (in-package :pure)
 
-(define-interface <linear> (<interface>) ())
+(define-interface <linear> (<interface>) () (:abstract))
 
 (define-interface <linearized> (<linear>)
   ((stateful-interface

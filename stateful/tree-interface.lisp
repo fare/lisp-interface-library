@@ -8,6 +8,7 @@
 ;;; Trees in general
 
 (define-interface <tree> (interface::<tree> <map>) ()
+  (:abstract)
   (:documentation "abstract interface for stateful trees"))
 
 ;;; Vanilla Binary Tree
@@ -19,6 +20,7 @@
      map-simple-join map-simple-map/2 map-simple-join/list
      map-size-from-fold-left)
   ()
+  (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
 
 (defclass binary-branch (interface::binary-branch)
@@ -43,9 +45,11 @@
 
 ;;; pure AVL-tree
 
-(define-interface <post-self-balanced-binary-tree> (<binary-tree>) ())
+(define-interface <post-self-balanced-binary-tree> (<binary-tree>) ()
+  (:abstract))
 
-(define-interface <avl-tree> (<post-self-balanced-binary-tree> interface::<avl-tree>) ())
+(define-interface <avl-tree> (<post-self-balanced-binary-tree> interface::<avl-tree>) ()
+  (:abstract))
 
 (defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
   ((interface::height :accessor node-height))) ;; make it writable.

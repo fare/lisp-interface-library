@@ -5,16 +5,16 @@
 
 (in-package :interface)
 
-(define-interface <order> (<eq>)
-  ()
+(define-interface <order> (<eq>) ()
+  (:abstract)
   (:generic order< (i x y) (:in 1 2))
   (:generic order<= (i x y) (:in 1 2))
   (:generic order> (i x y) (:in 1 2))
   (:generic order>= (i x y) (:in 1 2))
   (:generic compare (i x y) (:in 1 2)))
 
-(define-interface <order-from-lessp> (<order>)
-  ()
+(define-interface <order-from-lessp> (<order>) ()
+  (:abstract)
   (:method order<= (x y)
      (not (order< y x)))
   (:method order> (x y)
@@ -30,6 +30,7 @@
        (t 0))))
 
 (define-interface <order-from-compare> (<order>) ()
+  (:abstract)
   (:method order< (x y)
      (ecase (compare x y)
        ((-1) t)
@@ -52,7 +53,7 @@
        ((0) t))))
 
 (define-interface <compare> (<order-from-compare>)
-  ((compare :initarg :compare :reader compare-function))
+  ((compare-function :initarg :compare :reader compare-function))
   (:parametric (compare) (make-interface :compare compare))
   (:method compare (x y)
     (funcall (compare-function <compare>) x y)))

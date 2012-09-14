@@ -5,8 +5,8 @@
 
 (in-package :interface)
 
-(define-interface <map> (<sizable> <emptyable>)
-  ()
+(define-interface <map> (<sizable> <emptyable>) ()
+  (:abstract)
   (:generic lookup (<map> map key) (:in 1) (:values value foundp)
    (:documentation "Lookup what map associates to a key,
 return two values, the associated value and
@@ -48,6 +48,7 @@ yielding association k_1 v_1 .. k_n v_n, and computing
 
 ;;; Simple Mixins
 (define-interface map-fold-right-from-fold-left (<map>) ()
+  (:abstract)
   (:method fold-right (map fun seed)
     (funcall
      (fold-left
@@ -57,6 +58,7 @@ yielding association k_1 v_1 .. k_n v_n, and computing
      seed)))
 
 (define-interface map-for-each-from-fold-left (<map>) ()
+  (:abstract)
   (:method for-each (map fun)
     (fold-left
      map
@@ -65,9 +67,11 @@ yielding association k_1 v_1 .. k_n v_n, and computing
     (values)))
 
 (define-interface map-size-from-fold-left (<map>) ()
+  (:abstract)
   (:method size (map)
     (fold-left map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0)))
 
 (define-interface map-cheap-size (<sizable>) ()
+  (:abstract)
   (:method size<=n-p (map n)
     (<= (size map) n)))

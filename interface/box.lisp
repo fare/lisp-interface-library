@@ -15,8 +15,8 @@
 ;;; An interface for boxes
 
 ;;; A box: you can make it, or get something out of it
-(define-interface <box> (<interface>)
-  ()
+(define-interface <box> (<interface>) ()
+  (:abstract)
   (:generic
    make-box (<box> generator &key #+sbcl &allow-other-keys)
    (:out 0) (:values box)
@@ -122,7 +122,8 @@
 
 
 ;;; Some boxes can be empty
-(define-interface <emptyable-box> (<box>) ())
+(define-interface <emptyable-box> (<emptyable> <box>) ()
+  (:abstract))
 (defclass emptyable-box (box) ())
 
 ;;; Some boxes can be refilled
@@ -130,7 +131,8 @@
 (defclass mutable-box (box) ())
 (defclass immutable-box (box) ())
 
-(define-interface <mutable-box> (<box>) ())
+(define-interface <mutable-box> (<box>) ()
+  (:abstract))
 
 (defgeneric box-set! (box value)
   (:documentation "set the contents of a BOX (if applicable). Return VALUE."))

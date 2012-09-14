@@ -8,6 +8,7 @@
 ;;; Trees in general
 
 (define-interface <tree> (interface::<tree> <map>) ()
+  (:abstract)
   (:documentation "abstract interface for trees"))
 
 ;;; Vanilla Binary Tree
@@ -19,6 +20,7 @@
      map-simple-join map-simple-map/2 map-simple-join/list
      map-size-from-fold-left)
   ()
+  (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
 
 (defclass association-pair (interface::association-pair)
@@ -33,7 +35,8 @@
 
 ;;; pure AVL-tree
 
-(define-interface <avl-tree> (<binary-tree> interface::<avl-tree>) ())
+(define-interface <avl-tree> (<binary-tree> interface::<avl-tree>) ()
+  (:abstract))
 
 (defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
   ())

@@ -5,8 +5,8 @@
 
 (in-package :stateful)
 
-(define-interface <map> (interface::<map> <fount> <sink>)
-  ()
+(define-interface <map> (interface::<map> <fount> <sink>) ()
+  (:abstract)
   (:generic empty! (<map> map) (:in 1) (:values) (:out t)
    (:documentation "Clear the map and make it empty. Return no value."))
   (:generic insert (<map> map key value) (:in 1) (:values) (:out t)
@@ -76,13 +76,13 @@ we could have a
 |#
 
 ;;; Mixins implementing simple cases for a lot of the above functions
-(define-interface map-simple-empty (<map>) ())
-(define-interface map-simple-decons (<map>) ())
-(define-interface map-simple-update-key (<map>) ())
-(define-interface map-simple-join (<map>) ())
-(define-interface map-simple-join/list (<map>) ())
-(define-interface map-divide/list-from-divide (<map>) ())
-(define-interface map-simple-map/2 (<map>) ())
-(define-interface map-divide-from-for-each (<map>) ())
-(define-interface map-fold-left-from-for-each (<map>) ())
-(define-interface map-first-key-value-from-for-each (<map>) ())
+(define-interface map-simple-empty (<map>) () (:abstract))
+(define-interface map-simple-decons (<map>) () (:abstract))
+(define-interface map-simple-update-key (<map>) () (:abstract))
+(define-interface map-simple-join (<map>) () (:abstract))
+(define-interface map-simple-join/list (<map>) () (:abstract))
+(define-interface map-divide/list-from-divide (<map>) () (:abstract))
+(define-interface map-simple-map/2 (<map>) () (:abstract))
+(define-interface map-divide-from-for-each (<map>) () (:abstract))
+(define-interface map-fold-left-from-for-each (<map>) () (:abstract))
+(define-interface map-first-key-value-from-for-each (<map>) () (:abstract))
