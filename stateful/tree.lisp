@@ -110,31 +110,33 @@
   (declare (ignore key value))
   (balance-node i node))
 
+;;; Trees that maintain a record of their height
+
+(defmethod copy-node :after ((destination-node heighted-binary-tree-node)
+			     (origin-node heighted-binary-tree-node))
+  (setf (node-height destination-node) (node-height origin-node))
+  (values))
+
+(defmethod update-height ((node heighted-binary-tree-node))
+  (setf (node-height node)
+        (1+ (max (node-height (left node))
+                 (node-height (right node))))))
+
+(defmethod rotate-node-right :after ((node heighted-binary-tree-node))
+  (update-height (right node))
+  (update-height node))
+
+(defmethod rotate-node-left :after ((node heighted-binary-tree-node))
+  (update-height (left node))
+  (update-height node))
 
 ;;; AVL trees
 
 (defmethod node-class ((i <avl-tree>))
   'avl-tree-node)
 
-(defmethod copy-node :after ((destination-node avl-tree-node) (origin-node avl-tree-node))
-  (setf (node-height destination-node) (node-height origin-node))
-  (values))
-
 (defmethod balance-node ((i <avl-tree>) (node empty-object))
   (values))
-
-(defmethod update-height ((node avl-tree-node))
-  (setf (node-height node)
-        (1+ (max (node-height (left node))
-                 (node-height (right node))))))
-
-(defmethod rotate-node-right :after ((node avl-tree-node))
-  (update-height (right node))
-  (update-height node))
-
-(defmethod rotate-node-left :after ((node avl-tree-node))
-  (update-height (left node))
-  (update-height node))
 
 (defmethod balance-node ((i <avl-tree>) (node avl-tree-node))
   (ecase (node-balance node)

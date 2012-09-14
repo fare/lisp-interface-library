@@ -43,22 +43,30 @@
 (defgeneric rotate-node-right (node))
 (defgeneric rotate-node-left (node))
 
-;;; pure AVL-tree
-
 (define-interface <post-self-balanced-binary-tree> (<binary-tree>) ()
   (:abstract))
 
-(define-interface <avl-tree> (<post-self-balanced-binary-tree> interface::<avl-tree>) ()
+;;; Trees that maintain a record of their height
+(define-interface <heighted-binary-tree> (interface::<heighted-binary-tree> <binary-tree> ) ()
   (:abstract))
 
-(defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
-  ((interface::height :accessor node-height))) ;; make it writable.
+(defclass heighted-binary-tree-node (interface::heighted-binary-tree-node binary-tree-node)
+    ((interface::height :accessor node-height))) ;; make it writable.
 
 (defgeneric update-height (node))
 
+;;; stateful AVL-tree
+
+(define-interface <avl-tree>
+    (interface::<avl-tree>
+     <heighted-binary-tree>
+     <post-self-balanced-binary-tree>) ()
+  (:abstract))
+
+(defclass avl-tree-node (interface::avl-tree-node heighted-binary-tree-node) ())
 
 ;;; Common special case: when keys are (real) numbers
-(define-interface <number-map> (<avl-tree> interface::<number-map>)
+(define-interface <number-map> (interface::<number-map> <avl-tree>)
   ()
   (:singleton))
 

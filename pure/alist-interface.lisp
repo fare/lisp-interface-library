@@ -9,9 +9,6 @@
     (map-simple-empty map-simple-decons map-simple-update-key
      map-divide/list-from-divide
      map-simple-map/2 map-simple-join map-simple-join/list <map>)
-  ((key-interface
-    :initarg :key-interface
-    :initform <eql>
-    :reader key-interface))
+  ((key-interface :initarg :key-interface :reader key-interface))
   (:parametric (&optional (eq <eql>)) (make-interface :key-interface eq))
   (:singleton))

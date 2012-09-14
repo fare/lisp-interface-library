@@ -72,19 +72,26 @@
   ;;; and use a node-interface with make and update?
   ())
 
-;;; pure AVL-tree
+;;; Trees that maintain a balance
+(defgeneric node-balance (node))
 
-(define-interface <avl-tree> (<binary-tree>) ()
+;;; Trees that maintain a record of their height
+(define-interface <heighted-binary-tree> (<binary-tree>) ()
   (:abstract))
 
-(defclass avl-tree-node (binary-tree-node)
+(defclass heighted-binary-tree-node (binary-tree-node)
   ((height
     :initarg :height
     :initform 0
     :type integer
     :reader node-height)))
 
-(defgeneric node-balance (node))
+;;; base AVL-tree
+
+(define-interface <avl-tree> (<heighted-binary-tree>) ()
+  (:abstract))
+
+(defclass avl-tree-node (heighted-binary-tree-node) ())
 
 ;;; Common special case: when keys are (real) numbers
 (define-interface <number-map> (<avl-tree>)

@@ -35,7 +35,7 @@
 
 ;;; pure AVL-tree
 
-(define-interface <avl-tree> (<binary-tree> interface::<avl-tree>) ()
+(define-interface <avl-tree> (interface::<avl-tree> <binary-tree>) ()
   (:abstract))
 
 (defclass avl-tree-node (interface::avl-tree-node binary-tree-node)

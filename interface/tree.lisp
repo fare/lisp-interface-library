@@ -90,9 +90,6 @@
 (defmethod rightmost ((i <binary-tree>) node)
   (node-key-value i (rightmost-node i node)))
 
-(defmethod node-class ((i <avl-tree>))
-  'avl-tree-node)
-
 (defmethod node-height ((node null))
   0)
 
@@ -111,11 +108,11 @@
 
 (defmethod check-invariant :before ((i <avl-tree>) (node avl-tree-node) &key)
   (assert (typep (node-height node)
-                 `(integer 1 ,most-positive-fixnum)))
+                 `(integer 1 ,most-positive-fixnum)) (node))
   (assert (= (node-height node)
              (1+ (max (node-height (left node))
-                      (node-height (right node))))))
-  (assert (member (node-balance node) '(-1 0 1))))
+                      (node-height (right node))))) (node))
+  (assert (member (node-balance node) '(-1 0 1)) (node)))
 
 #| Minimum number of nodes in a tree of height n (maximum is 2^n-1)
 (fmemo:define-memo-function f (n)
