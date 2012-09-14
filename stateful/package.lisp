@@ -71,4 +71,5 @@
 
    ;; mutating --- TODO: move to its own package?
    #:<mutating> #:<mutating-map>
+   #:<alist>
    ))

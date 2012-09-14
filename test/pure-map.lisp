@@ -227,16 +227,16 @@
     (equal-alist (map-alist i m) (map-alist i (join i m m)))))
 
 (defmethod simple-linear-map-test :after ((i <number-map>))
-  (let* ((a1 (make-alist 1000 "~@R"))
+  (let* ((a1 (make-alist 200 "~@R"))
          (a2 (shuffle-list a1))
          (m1 (convert i <alist> a1))
          (m2 (convert i <alist> a2)))
     (check-invariant i m1)
     (check-invariant i m2)
-    (is (= 10 (pure::node-height m1)))
-    (is (<= 10 (pure::node-height m2) 15))
-    (is (= 1000 (size i m1)))
-    (is (= 1000 (size i m2)))))
+    (is (= 8 (pure::node-height m1)))
+    (is (<= 8 (pure::node-height m2) 15))
+    (is (= 200 (size i m1)))
+    (is (= 200 (size i m2)))))
 
 (defparameter <denm> (<encoded-key-map>
                       :base-interface <number-map>

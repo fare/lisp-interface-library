@@ -30,5 +30,4 @@
   (:use :stateful :lisp-interface-library-test
         :interface
         :reader-interception :xcvb-utils
-        :cl :hu.dwim.stefil)
-  (:import-from :pure #:<alist>))
+        :cl :hu.dwim.stefil))

@@ -83,13 +83,13 @@
                (multiple-value-list (first-key-value i m)))))
   (with-map (m i *al-2*)
     (multiple-value-bind (k v b) (first-key-value i m)
-      (multiple-value-bind (vv bb) (lookup <alist> *al-2* k)
+      (multiple-value-bind (vv bb) (lookup pure:<alist> *al-2* k)
         (is (equal b t))
         (is (equal bb t))
         (is (equal v vv)))))
   (with-map (m i *alist-100-latin*)
     (multiple-value-bind (k v b) (first-key-value i m)
-      (multiple-value-bind (vv bb) (lookup <alist> *alist-100-latin* k)
+      (multiple-value-bind (vv bb) (lookup pure:<alist> *alist-100-latin* k)
         (is (equal b t))
         (is (equal bb t))
         (is (equal v vv)))))
@@ -101,7 +101,7 @@
     (multiple-value-bind (b k v) (decons i m)
       (is (eq b t))
       (is (equal (list v t)
-                 (multiple-value-list (lookup <alist> *alist-10-latin* k))))
+                 (multiple-value-list (lookup pure:<alist> *alist-10-latin* k))))
       (is (equal '(nil nil)
                  (multiple-value-list (lookup i m k))))
       (is (= (size i m) 9))))
@@ -205,9 +205,9 @@
     (is (empty-p i x)))
 
   (X 'convert)
-  (is (null (convert <alist> i (empty i))))
+  (is (null (convert pure:<alist> i (empty i))))
   (is (equal-alist *alist-10-latin*
-                   (convert <alist> i (convert i <alist> *alist-10-latin*))))
+                   (convert pure:<alist> i (convert i pure:<alist> *alist-10-latin*))))
 
   (X 'iterator)
   (is (equal-alist *alist-10-latin*
@@ -226,14 +226,14 @@
   t)
 
 (defmethod interface-test :after ((i <number-map>))
-  (let* ((a1 (make-alist 1000 "~@R"))
+  (let* ((a1 (make-alist 200 "~@R"))
          (a2 (shuffle-list a1))
          (m1 (alist-map* i a1))
          (m2 (alist-map* i a2)))
-    (is (= 10 (node-height m1)))
-    (is (<= 10 (node-height m2) 15))
-    (is (= 1000 (size i m1)))
-    (is (= 1000 (size i m2)))))
+    (is (= 8 (node-height m1)))
+    (is (<= 8 (node-height m2) 15))
+    (is (= 200 (size i m1)))
+    (is (= 200 (size i m2)))))
 
 (defparameter <denm> (<encoded-key-map>
                       :base-interface <number-map>
@@ -241,7 +241,7 @@
                       :key-decoder #'(lambda (ek) (/ ek 2))))
 
 (deftest test-stateful-map-interfaces ()
-  (dolist (i (list <number-map> <hash-table> <denm>))
+  (dolist (i (list <number-map> <hash-table> <denm> <alist>))
     (interface-test i)))
 
 (defparameter <msnm> (<mutating-map> pure:<number-map>))
