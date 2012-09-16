@@ -83,9 +83,6 @@
 (defclass one-use-box (box)
   ((usedp :type boolean :initform nil :accessor box-usedp)))
 
-(defun one-use-box (x)
-  (make-instance 'one-use-box :value x))
-
 (define-interface <one-use-box> (<box>)
   ((class :initform 'one-use-box)))
 
@@ -105,6 +102,9 @@
 (defclass one-use-thunk-box (one-use-box thunk-box) ())
 (define-interface <one-use-thunk-box> (<one-use-box> <thunk-box>)
   ((class :initform 'one-use-thunk-box)))
+
+(defun one-use-value-box (x)
+  (make-instance 'one-use-value-box :value x))
 
 (defun make-one-use-function (function &optional name)
   (let ((usedp nil))

@@ -24,18 +24,18 @@
   (:method join/list (list)
      (cond
        (list
-        (interface::one-use-box
+        (one-use-value-box
          (stateful:join/list (stateful-interface <linearized-map>)
-                             (mapcar 'interface::box-ref list))))
+                             (mapcar 'box-ref list))))
        (t
         (empty <linearized-map>))))
   (:method divide/list (map)
      (let ((list
             (stateful:divide/list
              (stateful-interface <linearized-map>)
-             (interface::box-ref map))))
+             (box-ref map))))
        (and list
-            (mapcar 'interface::one-use-box list))))
+            (mapcar 'one-use-value-box list))))
   (:parametric (interface #|&key unsafe|#)
     (make-interface :stateful-interface interface
                     #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

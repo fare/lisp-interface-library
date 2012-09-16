@@ -125,7 +125,7 @@
            (loop :for (epo () eso esi) :in effective-outputs
              :for pov = (nth epo pure-results-required)
              :collect `(,pov
-                        (make-instance 'one-use-value-box :value
+                        (one-use-value-box
                          ,(etypecase eso
                             (integer (nth eso stateful-results-required))
                             ((eql t) (nth esi stateful-required)))))))

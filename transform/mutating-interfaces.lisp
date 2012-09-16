@@ -16,14 +16,14 @@
 (define-mutating-interface <mutating-map> (<map>) (pure:<map>)
   ()
   (:method empty! (x)
-     (interface::set-box-value (empty (pure-interface <mutating-map>)) x))
+     (set-box-value (empty (pure-interface <mutating-map>)) x))
   (:method join/list (list)
      (cond
        (list
         (let ((f (first list)))
-          (interface::set-box-value
+          (set-box-value
            (pure:join/list (pure-interface <mutating-map>)
-                           (mapcar 'interface::box-value list))
+                           (mapcar 'box-value list))
            f)
           f))
        (t
@@ -32,11 +32,11 @@
      (let ((list
             (pure:divide/list
              (pure-interface <mutating-map>)
-             (interface::box-value map))))
+             (box-value map))))
        (and list
             (progn
-              (interface::set-box-value (first list) map)
-              (cons map (mapcar 'interface::box! (rest list)))))))
+              (set-box-value (first list) map)
+              (cons map (mapcar 'box! (rest list)))))))
   (:parametric (interface)
     (make-interface :pure-interface interface)))
 

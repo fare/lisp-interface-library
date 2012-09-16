@@ -52,6 +52,7 @@
 
    ;;; Boxes!
    #:box #:box-ref #:box-set!
+   #:box-value #:set-box-value #:box!
    #:<box> #:make-box #:unbox
    #:<classy-box>
    #:<value-box> #:value-box #:simple-value-box ;;#:peek
