@@ -5,7 +5,17 @@
 
 (in-package :pure)
 
-(define-interface <map> (interface::<map> <fount> <sink>) ()
+(define-interface <empty!able> (<emptyable>) ()
+  (:generic empty! (<emptyable> ignored) (:in 1)
+    (:values empty) (:out 0)
+    (:method ((<i> <empty!able>) ignored)
+       (declare (ignorable ignored))
+       (empty <i>))
+    (:documentation
+     "This function is pretty useless to call, but allows for
+      automatic generation of mutating interface wrappers.")))
+
+(define-interface <map> (interface::<map> <empty!able> <fount> <sink>) ()
   (:abstract)
   (:generic insert (<map> map key value) (:in 1) (:values map) (:out 0)
    (:documentation "Add a key-value pair to a map,

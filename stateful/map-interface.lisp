@@ -5,10 +5,12 @@
 
 (in-package :stateful)
 
-(define-interface <map> (interface::<map> <fount> <sink>) ()
-  (:abstract)
+(define-interface <empty!able> (<emptyable>) ()
   (:generic empty! (<map> map) (:in 1) (:values) (:out t)
-   (:documentation "Clear the map and make it empty. Return no value."))
+   (:documentation "Clear the map and make it empty. Return no value.")))
+
+(define-interface <map> (interface::<map> <empty!able> <fount> <sink>) ()
+  (:abstract)
   (:generic insert (<map> map key value) (:in 1) (:values) (:out t)
    (:documentation "Modify the map to add a key-value pair,
 replacing any previous association for this key.
