@@ -151,7 +151,7 @@
              :collect v))
           (stateful-argument-bindings
            (append
-            `((,si-var (pure::stateful-interface ,pi-var)))
+            `((,si-var (stateful-interface ,pi-var)))
             required-input-bindings
             (loop :for ipi :in ineffective-pure-inputs
               :for isi :in ineffective-stateful-inputs
@@ -195,7 +195,7 @@
           (alexandria:alist-hash-table
            (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
     `(progn
-       (define-interface ,name (pure::<linearized> ,@pure-interfaces)
+       (define-interface ,name (pure:<linearized> ,@pure-interfaces)
          ,slots
          ,@options)
        ,@(loop :for pure-gf :in pure-gfs

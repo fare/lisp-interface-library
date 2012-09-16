@@ -90,8 +90,8 @@
    #:map-fold-right-from-fold-left #:map-size-from-fold-left
 
    ;; linearize
-   #:define-linearized-interface #:define-linearized-method
+   #:define-linearized-interface #:define-linearized-method #:stateful-interface
    ;; mutating
-   #:define-mutating-interface #:define-mutating-method
+   #:define-mutating-interface #:define-mutating-method #:pure-interface
    ;; classify
-   #:define-classified-interface-class #:define-classified-method))
+   #:define-classified-interface-class #:define-classified-method #:object-box))
