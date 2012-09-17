@@ -9,14 +9,15 @@
             :documentation "Testing pure functional maps"))
 
 (defmethod interface-test ((i <map>))
+  (read-only-linear-map-test i)
   (simple-linear-map-test i)
   (harder-linear-map-test i)
   (multilinear-map-test i))
 
-(defmethod simple-linear-map-test ((i <map>))
+(defmethod read-only-linear-map-test ((i interface::<map>))
   (declare (optimize (speed 1) (debug 3) (space 3)))
   ;;; TODO: test each and every function in the API
-  (X 'interface-test *package* i)
+  (X 'read-only-linear-map-test *package* i)
   (X 'empty)
   (is (null (map-alist i (empty i))))
   (is (empty-p i (alist-map* i ())))
@@ -38,11 +39,55 @@
                    (map-alist i (alist-map* i *alist-10-latin*))))
   (is (equal-alist *alist-100-decimal*
                    (map-alist i (alist-map* i *al-1*))))
-  (is (equal-alist *al-5*
-                   (map-alist
-                    i (check-invariant
-                       i (join i (alist-map* i *al-2*)
-                               (alist-map* i *al-3*))))))
+
+  (X 'first-key-value)
+  (is (equal '(nil nil nil)
+             (multiple-value-list (first-key-value i (empty i)))))
+  (multiple-value-bind (k v b)
+      (first-key-value i (alist-map* i *al-2*))
+    (multiple-value-bind (vv bb) (lookup <alist> *al-2* k)
+      (is (equal b t))
+      (is (equal bb t))
+      (is (equal v vv))))
+  (multiple-value-bind (k v b)
+      (first-key-value i (alist-map* i *alist-100-latin*))
+    (multiple-value-bind (vv bb) (lookup <alist> *alist-100-latin* k)
+      (is (equal b t))
+      (is (equal bb t))
+      (is (equal v vv))))
+
+  (X 'fold-left)
+  (is (eql nil (fold-left i (empty i) (constantly t) nil)))
+  (is (eql t (fold-left i (empty i) (constantly t) t)))
+
+  (X 'fold-right)
+  (is (eql nil (fold-right i (empty i) (constantly t) nil)))
+  (is (eql t (fold-right i (empty i) (constantly t) t)))
+
+  (X 'size)
+  (is (= 0 (size i (empty i))))
+  (is (= 100 (size i (alist-map* i *alist-100-decimal*))))
+
+  (X 'for-each)
+  (is (eql nil (while-collecting (c)
+                 (for-each i (empty i) #'(lambda (k v) (c (cons k v)))))))
+  (is (equal-alist
+       *alist-10-latin*
+       (while-collecting (c)
+         (with-output-to-string (o)
+           (for-each i (alist-map* i *alist-10-latin*)
+                     #'(lambda (k v) (c (cons k v))))))))
+  (is (= 1129 (length (with-output-to-string (o)
+                        (for-each i (alist-map* i *alist-100-english*)
+                                  #'(lambda (x y)
+                                      (format o "~A~A" x y)))))))
+
+  t)
+
+(defmethod simple-linear-map-test ((i <map>))
+  (declare (optimize (speed 1) (debug 3) (space 3)))
+  ;;; TODO: test each and every function in the API
+  (X 'simple-linear-map-test *package* i)
 
   (X 'insert)
   (is (equal '((0)) (map-alist i (insert i (empty i) 0 nil))))
@@ -81,22 +126,6 @@
     (is (equal d "57"))
     (is (eql b t)))
 
-  (X 'first-key-value)
-  (is (equal '(nil nil nil)
-             (multiple-value-list (first-key-value i (empty i)))))
-  (multiple-value-bind (k v b)
-      (first-key-value i (alist-map* i *al-2*))
-    (multiple-value-bind (vv bb) (lookup <alist> *al-2* k)
-      (is (equal b t))
-      (is (equal bb t))
-      (is (equal v vv))))
-  (multiple-value-bind (k v b)
-      (first-key-value i (alist-map* i *alist-100-latin*))
-    (multiple-value-bind (vv bb) (lookup <alist> *alist-100-latin* k)
-      (is (equal b t))
-      (is (equal bb t))
-      (is (equal v vv))))
-
   (X 'decons)
   (multiple-value-bind (b m k v) (decons i (empty i))
     (is (empty-p i m))
@@ -110,8 +139,6 @@
     (is (= (size i m) 9)))
 
   (X 'fold-left)
-  (is (eql nil (fold-left i (empty i) (constantly t) nil)))
-  (is (eql t (fold-left i (empty i) (constantly t) t)))
   (is (equal-alist
        '((2 . "2") (1 . "1") (20 . "20") (30 . "30"))
        (map-alist i
@@ -128,8 +155,6 @@
                           (alist-map* i *alist-100-latin*)))))
 
   (X 'fold-right)
-  (is (eql nil (fold-right i (empty i) (constantly t) nil)))
-  (is (eql t (fold-right i (empty i) (constantly t) t)))
   (is (equal-alist
        '((1 . "1") (2 . "2") (20 . "20") (30 . "30"))
        (map-alist i
@@ -138,21 +163,12 @@
                    #'(lambda (k v m) (insert i m k v))
                    (alist-map* i '((20 . "20") (30 . "30")))))))
 
-  (X 'for-each)
-  (is (eql nil (while-collecting (c)
-                 (for-each i (empty i) #'(lambda (k v) (c (cons k v)))))))
-  (is (equal-alist
-       *alist-10-latin*
-       (while-collecting (c)
-         (with-output-to-string (o)
-           (for-each i (alist-map* i *alist-10-latin*)
-                     #'(lambda (k v) (c (cons k v))))))))
-  (is (= 1129 (length (with-output-to-string (o)
-                        (for-each i (alist-map* i *alist-100-english*)
-                                  #'(lambda (x y)
-                                      (format o "~A~A" x y)))))))
-
   (X 'join)
+  (is (equal-alist *al-5*
+                   (map-alist
+                    i (check-invariant
+                       i (join i (alist-map* i *al-2*)
+                               (alist-map* i *al-3*))))))
   (is (empty-p i (join i (empty i) (empty i))))
   (is (equal-alist '((1 . "1") (2 . "2") (5 . "5") (6 . "6"))
                    (map-alist
@@ -191,9 +207,7 @@
       (is (plusp sy))
       (is (= 100 (+ sx sy)))))
 
-  (X 'size)
-  (is (= 0 (size i (empty i))))
-  (is (= 100 (size i (alist-map* i *alist-100-decimal*))))
+  (X 'size-and-decons)
   (is (= 99 (size i (nth-value 1 (decons i (alist-map* i *alist-100-decimal*))))))
 
   (X 'update-key)
@@ -212,6 +226,7 @@
   (X 'iterator)
   (is (equal-alist *alist-10-latin*
                    (flow i <alist> (convert i <alist> *alist-10-latin*) nil)))
+
   t)
 
 (defmethod harder-linear-map-test ((i <map>))
@@ -250,5 +265,6 @@
 (defparameter <lsnm> (<linearized-map> stateful:<number-map>))
 
 (deftest test-linearized-map-interfaces ()
+  (read-only-linear-map-test <lsnm>)
   (simple-linear-map-test <lsnm>)
   (harder-linear-map-test <lsnm>))

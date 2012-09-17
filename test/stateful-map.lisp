@@ -12,36 +12,13 @@
   `(let ((,m (alist-map* ,i ,init))) ,@body (map-alist i ,m)))
 
 (defmethod interface-test ((i <map>))
+  (lisp-pure-datastructure-test::read-only-linear-map-test i)
   (simple-map-test i)
   (harder-map-test i))
 
 (defmethod simple-map-test ((i <map>))
   (X 'interface-test *package* i)
   ;;; TODO: test each and every function in the API
-  (X 'empty)
-  (is (null (map-alist i (empty i))))
-  (is (empty-p i (alist-map* i ())))
-
-  (X 'lookup)
-  (is (equal "12"
-             (lookup
-              i
-              (alist-map*
-               i '((57 . "57") (10 . "10") (12 . "12")))
-              12)))
-  (loop :for (k . v) :in *al-1* :with m = (alist-map* i *al-1*) :do
-    (is (eq v (lookup i m k))))
-
-  (X 'alist-map*-and-back)
-  (is (equal-alist *alist-10-latin*
-                   (map-alist i (alist-map* i *alist-10-latin*))))
-  (is (equal-alist *alist-10-latin*
-                   (map-alist i (alist-map* i *alist-10-latin*))))
-  (is (equal-alist *alist-100-decimal*
-                   (map-alist i (alist-map* i *al-1*))))
-  (is (equal-alist *al-5*
-                   (with-map (m2 i *al-2*)
-                     (is (null (values-list (join i m2 (alist-map i *al-3*))))))))
 
   (X 'insert)
   (is (equal '((0)) (with-map (m i) (insert i m 0 nil))))
@@ -77,23 +54,6 @@
     (is (equal '("57" t) (multiple-value-list (drop i m 57))))
     (is (= (size i m) 99)))
 
-  (X 'first-key-value)
-  (with-map (m i)
-    (is (equal '(nil nil nil)
-               (multiple-value-list (first-key-value i m)))))
-  (with-map (m i *al-2*)
-    (multiple-value-bind (k v b) (first-key-value i m)
-      (multiple-value-bind (vv bb) (lookup pure:<alist> *al-2* k)
-        (is (equal b t))
-        (is (equal bb t))
-        (is (equal v vv)))))
-  (with-map (m i *alist-100-latin*)
-    (multiple-value-bind (k v b) (first-key-value i m)
-      (multiple-value-bind (vv bb) (lookup pure:<alist> *alist-100-latin* k)
-        (is (equal b t))
-        (is (equal bb t))
-        (is (equal v vv)))))
-
   (X 'decons)
   (with-map (m i)
     (is (equal '(() () ()) (multiple-value-list (decons i m)))))
@@ -107,8 +67,6 @@
       (is (= (size i m) 9))))
 
   (X 'fold-left)
-  (is (eql nil (fold-left i (empty i) (constantly 1) nil)))
-  (is (eql t (fold-left i (empty i) (constantly 1) t)))
   (is (equal-alist
        '((2 . "2") (1 . "1") (20 . "20") (30 . "30"))
        (with-map (m i '((20 . "20") (30 . "30")))
@@ -117,7 +75,6 @@
           #'(lambda (n k v) (declare (ignore n)) (insert i m k v))
           nil))))
 
-    ;;; CONVERT FROM PURE TO STATEFUL FROM HERE ON...
   (X 'fold-left-and-size)
   (with-map (m i *alist-100-latin*)
     (fold-left i (alist-map* i *alist-100-decimal*)
@@ -136,21 +93,10 @@
           #'(lambda (k v n) (declare (ignore n)) (insert i m k v))
           nil))))
 
-  (X 'for-each)
-  (is (eql nil (while-collecting (c)
-                 (for-each i (empty i) #'(lambda (k v) (c (cons k v)))))))
-  (is (equal-alist
-       *alist-10-latin*
-       (while-collecting (c)
-         (with-output-to-string (o)
-           (for-each i (alist-map* i *alist-10-latin*)
-                     #'(lambda (k v) (c (cons k v))))))))
-  (is (= 1129 (length (with-output-to-string (o)
-                        (for-each i (alist-map* i *alist-100-english*)
-                                  #'(lambda (x y)
-                                      (format o "~A~A" x y)))))))
-
   (X 'join)
+  (is (equal-alist *al-5*
+                   (with-map (m2 i *al-2*)
+                     (is (null (values-list (join i m2 (alist-map i *al-3*))))))))
   (is (equal '() (with-map (m i) (join i m (empty i)))))
   (is (equal-alist '((1 . "1") (2 . "2") (5 . "5") (6 . "6"))
                    (with-map (m i '((1 . "1") (2 . "2")))
@@ -188,8 +134,6 @@
       (is (= 100 (+ sx sy)))))
 
   (X 'size)
-  (is (= 0 (size i (empty i))))
-  (is (= 100 (size i (alist-map* i *alist-100-decimal*))))
   (with-map (m i *alist-100-decimal*)
     (decons i m)
     (is (= 99 (size i m))))
