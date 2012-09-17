@@ -19,7 +19,7 @@
   ;;; TODO: test each and every function in the API
   (X 'read-only-linear-map-test *package* i)
   (X 'empty)
-  (is (null (map-alist i (empty i))))
+  (is (null (map-alist* i (empty i))))
   (is (empty-p i (alist-map* i ())))
 
   (X 'lookup)
@@ -34,11 +34,11 @@
 
   (X 'alist-map*-and-back)
   (is (equal-alist *alist-10-latin*
-                   (map-alist i (alist-map* i *alist-10-latin*))))
+                   (map-alist* i (alist-map* i *alist-10-latin*))))
   (is (equal-alist *alist-10-latin*
-                   (map-alist i (alist-map* i *alist-10-latin*))))
+                   (map-alist* i (alist-map* i *alist-10-latin*))))
   (is (equal-alist *alist-100-decimal*
-                   (map-alist i (alist-map* i *al-1*))))
+                   (map-alist* i (alist-map* i *al-1*))))
 
   (X 'first-key-value)
   (is (equal '(nil nil nil)
@@ -90,16 +90,16 @@
   (X 'simple-linear-map-test *package* i)
 
   (X 'insert)
-  (is (equal '((0)) (map-alist i (insert i (empty i) 0 nil))))
+  (is (equal '((0)) (map-alist* i (insert i (empty i) 0 nil))))
   (is (equal-alist
        '((1 . "1") (2 . "2") (3 . "3"))
-       (map-alist i (insert i (alist-map* i '((1 . "1") (3 . "3"))) 2 "2"))))
+       (map-alist* i (insert i (alist-map* i '((1 . "1") (3 . "3"))) 2 "2"))))
 
   (X 'insert-and-join)
   (is (equal-alist
        '((0 . "0") (1 . "1") (2 . "2"))
-       (map-alist i (insert i (join i (alist-map* i '((1 . "1")))
-                                    (alist-map* i'((2 . "2")))) 0 "0"))))
+       (map-alist* i (insert i (join i (alist-map* i '((1 . "1")))
+				     (alist-map* i'((2 . "2")))) 0 "0"))))
 
   (X 'insert-and-size)
   (is (= 101 (size i (insert i (alist-map* i *al-1*) 101 "101"))))
@@ -112,7 +112,7 @@
   (multiple-value-bind (r d b)
       (drop i (alist-map* i '((1 . "1") (2 . "2"))) 1)
     (is (equal '(((2 . "2")) "1" t)
-               (list (map-alist i r) d b))))
+               (list (map-alist* i r) d b))))
   (multiple-value-bind (r d b)
       (drop i (alist-map* i *al-1*) 42)
     (is (equal d "42")
@@ -141,11 +141,11 @@
   (X 'fold-left)
   (is (equal-alist
        '((2 . "2") (1 . "1") (20 . "20") (30 . "30"))
-       (map-alist i
-                  (fold-left
-                   i (alist-map* i (make-alist 2))
-                   #'(lambda (m k v) (insert i m k v))
-                   (alist-map* i '((20 . "20") (30 . "30")))))))
+       (map-alist* i
+		   (fold-left
+		    i (alist-map* i (make-alist 2))
+		    #'(lambda (m k v) (insert i m k v))
+		    (alist-map* i '((20 . "20") (30 . "30")))))))
 
   (X 'fold-left-and-size)
   (is (= 100
@@ -157,21 +157,21 @@
   (X 'fold-right)
   (is (equal-alist
        '((1 . "1") (2 . "2") (20 . "20") (30 . "30"))
-       (map-alist i
-                  (fold-right
-                   i (alist-map* i (make-alist 2))
-                   #'(lambda (k v m) (insert i m k v))
-                   (alist-map* i '((20 . "20") (30 . "30")))))))
+       (map-alist* i
+		   (fold-right
+		    i (alist-map* i (make-alist 2))
+		    #'(lambda (k v m) (insert i m k v))
+		    (alist-map* i '((20 . "20") (30 . "30")))))))
 
   (X 'join)
   (is (equal-alist *al-5*
-                   (map-alist
+                   (map-alist*
                     i (check-invariant
                        i (join i (alist-map* i *al-2*)
                                (alist-map* i *al-3*))))))
   (is (empty-p i (join i (empty i) (empty i))))
   (is (equal-alist '((1 . "1") (2 . "2") (5 . "5") (6 . "6"))
-                   (map-alist
+                   (map-alist*
                     i
                     (join i
                           (alist-map* i '((1 . "1") (2 . "2")))
@@ -189,7 +189,7 @@
   (multiple-value-bind (x y)
       (divide i (alist-map* i *alist-10-latin*))
     (is (equal-alist *alist-10-latin*
-                     (append (map-alist i x) (map-alist i y)))))
+                     (append (map-alist* i x) (map-alist* i y)))))
 
   (X 'divide-and-size)
   (multiple-value-bind (x y)
@@ -239,7 +239,7 @@
 
 (defmethod multilinear-map-test ((i <map>))
   (let ((m (alist-map* i *alist-10-latin*)))
-    (equal-alist (map-alist i m) (map-alist i (join i m m)))))
+    (equal-alist (map-alist* i m) (map-alist* i (join i m m)))))
 
 (defmethod simple-linear-map-test :after ((i <number-map>))
   (let* ((a1 (make-alist 200 "~@R"))

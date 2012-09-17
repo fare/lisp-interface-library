@@ -9,7 +9,7 @@
    #:make-alist
    #:equal-alist
    #:interface-test
-   #:alist-map*
+   #:alist-map* #:map-alist*
    #:*verbose* #:x
    #:*alist-10-latin*
    #:*alist-100-decimal*
@@ -18,7 +18,8 @@
    #:*al-1*
    #:*al-2*
    #:*al-3*
-   #:*al-5*))
+   #:*al-5*
+   #:read-only-linear-map-test))
 
 (defpackage :lisp-pure-datastructure-test
   (:use :pure :lisp-interface-library-test

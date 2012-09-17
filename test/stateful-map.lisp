@@ -9,7 +9,7 @@
             :documentation "Testing pure functional maps"))
 
 (defmacro with-map ((m i &optional (init '())) &body body)
-  `(let ((,m (alist-map* ,i ,init))) ,@body (map-alist i ,m)))
+  `(let ((,m (alist-map* ,i ,init))) ,@body (map-alist* i ,m)))
 
 (defmethod interface-test ((i <map>))
   (lisp-pure-datastructure-test::read-only-linear-map-test i)
@@ -115,7 +115,7 @@
     (multiple-value-bind (x y) (divide i m)
       (is (eq m y))
       (is (equal-alist *alist-10-latin*
-                       (append (map-alist i x) (map-alist i y))))))
+                       (append (map-alist* i x) (map-alist* i y))))))
 
   (X 'divide-and-size)
   (multiple-value-bind (x y)
@@ -155,8 +155,8 @@
 
   (X 'iterator)
   (is (equal-alist *alist-10-latin*
-                   (map-alist i
-                              (flow i i (alist-map* i *alist-10-latin*) (empty i)))))
+                   (map-alist* i
+                               (flow i i (alist-map* i *alist-10-latin*) (empty i)))))
   t)
 
 (defmethod harder-map-test ((i <map>))

@@ -110,6 +110,22 @@
   (declare (ignore key value))
   (balance-node i node))
 
+(defmethod divide ((i <post-self-balanced-binary-tree>) node)
+  ;; Our default method makes the right side very unbalanced
+  ;; by just cutting the left side out.
+  ;; Here, we cut the left side, remove the top key-value
+  ;; while preserving the top node identity,
+  ;; then insert it back on what was the right side
+  ;; but now has the identity of the top node.
+  (if (empty-p i node)
+      (values (empty i) node)
+      (let ((left (left node))
+	    (key (node-key node))
+	    (value (node-value node)))
+	(copy-node node (right node))
+	(insert i node key value)
+        (values left node))))
+
 ;;; Trees that maintain a record of their height
 
 (defmethod copy-node :after ((destination-node heighted-binary-tree-node)
@@ -144,15 +160,13 @@
      (update-height node))
     ((-2)
      (ecase (node-balance (left node))
-       ((-1 0)
-        (rotate-node-right node))
+       ((-1 0))
        ((1)
-        (rotate-node-left (left node))
-        (rotate-node-right node))))
+        (rotate-node-left (left node))))
+     (rotate-node-right node))
     ((2)
      (ecase (node-balance (right node))
        ((-1)
-        (rotate-node-right (right node))
-        (rotate-node-left node))
-       ((0 1)
-        (rotate-node-left node))))))
+        (rotate-node-right (right node)))
+       ((0 1)))
+     (rotate-node-left node))))

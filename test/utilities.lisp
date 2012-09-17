@@ -16,8 +16,11 @@
     (cons i (format nil formatter i))))
 (defun equal-alist (x y)
   (equal (sort-alist x) (sort-alist y)))
-(defun alist-map* (i map)
-  (check-invariant i (alist-map i map)))
+(defun alist-map* (i alist)
+  (check-invariant i (alist-map i alist)))
+(defun map-alist* (i map)
+  (check-invariant i map)
+  (map-alist i map))
 
 (defparameter *alist-10-latin* (make-alist 10 "~@R"))
 (defparameter *alist-100-decimal* (make-alist 100 "~D"))
