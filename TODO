@@ -9,8 +9,7 @@
 ** implement Red-Black trees?
 
 * fare:
-** write detached <-> subjective adapters
-*** subjective interfaces (=regular OO) vs separate interfaces.
+** collect any TODO item from the article that's missing in this file.
 
 * Unassigned:
 ** Some bootstrapped datastructure from Okasaki
@@ -20,7 +19,6 @@
 ** Add "Minimal Viable Snippet" for the library and each of its major features.
 *** Initial: some treesort ?
 ** test explicit <-> implicit adapters
-** update abstract
 ** look at how scala does these things http://www.scala-lang.org/
 ** Move the payload of a tree out of the basic tree structure (i.e. (key, value))
 ** Add method to choose on which side of the tree to drop and/or insert,
