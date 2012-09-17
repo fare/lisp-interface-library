@@ -29,6 +29,6 @@
 (in-package :classified-number-map)
 
 (define-classified-interface-class
-  >map< (object-box) stateful:<number-map>
+  >nm< (object-box) stateful:<number-map>
   ((interface :initform stateful:<number-map> :allocation :class))
   (:interface-keyword nil) (:extract-interface stateful:<number-map>))
