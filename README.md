@@ -11,9 +11,9 @@ We are currently writing an article explaining about our library:
 
 Draft versions of the compiled PDF and html results are here:
 
-	* PDF: http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.pdf
+* PDF: http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.pdf
 
-	* HTML: http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.html
+* HTML: http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.html
 
 A short introduction on our "Interface-Passing Style" of programming, is also at:
 	http://fare.livejournal.com/155094.html
