@@ -197,19 +197,21 @@
            (destructuring-bind (formals &body body)
                (or (cdr parametric)
                    '(() (make-interface)))
-             `((define-memo-function
-                   (,interface
-                    :normalization
-                    #'(lambda (make-interface &rest arguments)
-                        (flet ((make-interface (&rest arguments)
-                                 (apply make-interface arguments)))
-                          (apply #'(lambda ,formals
-                                     (block ,interface
-                                       ,@body))
-                                 arguments))))
-                   (&rest arguments)
-                 (apply 'make-instance ',interface arguments)))))
-       ,@(when singleton `((defvar ,interface (,interface))))
+             `((eval-when (:compile-toplevel :load-toplevel :execute)
+		 (define-memo-function
+		     (,interface
+                      :normalization
+                      #'(lambda (make-interface &rest arguments)
+                          (flet ((make-interface (&rest arguments)
+                                   (apply make-interface arguments)))
+                            (apply #'(lambda ,formals
+                                       (block ,interface
+                                         ,@body))
+                                   arguments))))
+                     (&rest arguments)
+                   (apply 'make-instance ',interface arguments))))))
+       ,@(when singleton `((eval-when (:compile-toplevel :load-toplevel :execute)
+			     (defvar ,interface (,interface)))))
        ,@(loop :for (() . gf) :in gfs :collect
            `(define-interface-generic ,interface ,@gf))
        ,@(when methods

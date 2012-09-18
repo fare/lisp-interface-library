@@ -12,9 +12,7 @@
 (defclass object-box (box!)
   ((interface :reader class-interface)))
 
-(defmacro define-classified-method (&rest args)
-  (apply '%define-classified-method args))
-(defun %define-classified-method
+(defmacro define-classified-method
     (class interface class-gf interface-gf &key
      interface-argument
      (extract-interface (first (ensure-list interface-argument)))

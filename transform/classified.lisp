@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Interfaces to Classes: Examples
 
-#+xcvb (module (:depends-on ("transform/classify" "pure/map-interface")))
+#+xcvb (module (:depends-on ("transform/classify" "pure/map-interface" "stateful/tree-interface")))
 
 (defpackage :classified
   (:use :xcvb-utils :cl)
