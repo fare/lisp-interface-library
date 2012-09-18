@@ -65,9 +65,23 @@
 (defmethod divide ((i <binary-tree>) node)
   (if (empty-p i node)
       (values (empty i) node)
-      (let ((left (left node)))
-        (setf (left node) (empty i))
-        (values left node))))
+      (let ((left (left node))
+	    (right (right node)))
+	(if (empty-p i left)
+	    (progn
+	      (setf (right node) (empty i))
+	      (values right node))
+	    (progn
+	      ;; We could "just" cut the non-empty left side,
+	      ;; and return it and the now very unbalanced tree.
+	      ;; But for balance, we instead replace the node
+	      ;; (to preserve identity) with that on its right, and
+	      ;; insert back the previous top key-value mapping.
+	      (let ((key (node-key node))
+		    (value (node-value node)))
+		(copy-node node right)
+		(insert i node key value)
+		(values left node)))))))
 
 (defmethod divide/list ((i <binary-tree>) node)
   (if (empty-p i node)
@@ -109,22 +123,6 @@
 (defmethod insert :after ((i <post-self-balanced-binary-tree>) node key value)
   (declare (ignore key value))
   (balance-node i node))
-
-(defmethod divide ((i <post-self-balanced-binary-tree>) node)
-  ;; Our default method makes the right side very unbalanced
-  ;; by just cutting the left side out.
-  ;; Here, we cut the left side, remove the top key-value
-  ;; while preserving the top node identity,
-  ;; then insert it back on what was the right side
-  ;; but now has the identity of the top node.
-  (if (empty-p i node)
-      (values (empty i) node)
-      (let ((left (left node))
-	    (key (node-key node))
-	    (value (node-value node)))
-	(copy-node node (right node))
-	(insert i node key value)
-        (values left node))))
 
 ;;; Trees that maintain a record of their height
 
