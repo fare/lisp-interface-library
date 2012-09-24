@@ -33,14 +33,17 @@
    #:<number-map> #:<nm>
    #:<hash-table>
    #:<fmim> #:<encoded-key-map>
-   #:map-simple-empty #:map-simple-decons
-   #:map-simple-update-key #:map-simple-join
-   #:map-simple-join/list
-   #:map-simple-map/2
-   #:map-divide/list-from-divide
-   #:map-fold-right-from-fold-left
-   #:map-for-each-from-fold-left #:map-size-from-fold-left
-   #:map-size<=n-p-from-decons
+   #:<map-empty-is-nil>
+   #:<map-decons-from-first-key-value-drop>
+   #:<map-update-key-from-lookup-insert-drop>
+   #:<map-join-from-fold-left-insert>
+   #:<map-join/list-from-join>
+   #:<map-map/2-from-fold-left-lookup-insert-drop>
+   #:<map-divide/list-from-divide>
+   #:<map-fold-right-from-fold-left>
+   #:<map-for-each-from-fold-left>
+   #:<map-size-from-fold-left>
+   #:<map-size<=n-p-from-decons>
 
    ;;; Trees
    #:<tree>

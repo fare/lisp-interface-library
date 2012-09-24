@@ -13,7 +13,11 @@
 (in-package :pure)
 
 (define-interface <hash-table>
-    (map-simple-join map-simple-update-key map-simple-map/2 <map>)
+    (<map-join-from-fold-left-insert>
+     <map-join/list-from-join>
+     <map-update-key-from-lookup-insert-drop>
+     <map-map/2-from-fold-left-lookup-insert-drop>
+     <map>)
   ((key-interface :reader key-interface :initarg :key)
    (hashmap-interface :reader hashmap-interface :initarg :hashmap)
    (bucketmap-interface :reader bucketmap-interface :initarg :bucketmap))

@@ -78,13 +78,13 @@ we could have a
 |#
 
 ;;; Mixins implementing simple cases for a lot of the above functions
-(define-interface map-simple-empty (<map>) () (:abstract))
-(define-interface map-simple-decons (<map>) () (:abstract))
-(define-interface map-simple-update-key (<map>) () (:abstract))
-(define-interface map-simple-join (<map>) () (:abstract))
-(define-interface map-simple-join/list (<map>) () (:abstract))
-(define-interface map-divide/list-from-divide (<map>) () (:abstract))
-(define-interface map-simple-map/2 (<map>) () (:abstract))
-(define-interface map-divide-from-for-each (<map>) () (:abstract))
-(define-interface map-fold-left-from-for-each (<map>) () (:abstract))
-(define-interface map-first-key-value-from-for-each (<map>) () (:abstract))
+(define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
+(define-interface <map-divide-from-for-each> (<map>) () (:abstract))
+(define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
+(define-interface <map-empty-is-empty-object> (<map>) () (:abstract))
+(define-interface <map-first-key-value-from-for-each> (<map>) () (:abstract))
+(define-interface <map-fold-left-from-for-each> (<map>) () (:abstract))
+(define-interface <map-join-from-for-each-lookup-insert> (<map>) () (:abstract))
+(define-interface <map-join/list-from-join> (<map>) () (:abstract))
+(define-interface <map-map/2-from-for-each-lookup-insert-drop> (<map>) () (:abstract))
+(define-interface <map-update-key-from-lookup-insert-drop> (<map>) () (:abstract))

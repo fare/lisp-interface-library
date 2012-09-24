@@ -26,7 +26,7 @@
        (list
         (one-use-value-box
          (stateful:join/list (stateful-interface <linearized-map>)
-                             (mapcar 'box-ref list))))
+                             (mapcar #'box-ref list))))
        (t
         (empty <linearized-map>))))
   (:method divide/list (map)
@@ -35,7 +35,7 @@
              (stateful-interface <linearized-map>)
              (box-ref map))))
        (and list
-            (mapcar 'one-use-value-box list))))
+            (mapcar #'one-use-value-box list))))
   (:parametric (interface #|&key unsafe|#)
     (make-interface :stateful-interface interface
                     #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

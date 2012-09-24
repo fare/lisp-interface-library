@@ -38,6 +38,9 @@
   and appropriate accessors have to be chosen for say subtree access.
   The same tree-manipulation routines can be used on the same tree nodes
   with completely different results depending on which interface you use.
+** In classify, have an option to add a prefix or suffix to names of constructor methods,
+  so normal methods can be part of an object-oriented protocol
+  without a clash because of unsharable constructors.
 
 * Low Priority:
 ** Remember functions that were built with explicit->implicit adapter,

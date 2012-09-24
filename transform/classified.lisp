@@ -18,7 +18,7 @@
 (define-classified-interface-class
   >map< (object-box) stateful:<map>
   ((interface :initarg :interface))
-  (:interface-argument stateful:<map>))
+  (:interface-argument (stateful:<map> stateful:<map>)))
 
 (defpackage :classified-number-map
   (:use :xcvb-utils :cl)

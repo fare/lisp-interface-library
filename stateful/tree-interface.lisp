@@ -14,11 +14,16 @@
 ;;; Vanilla Binary Tree
 
 (define-interface <binary-tree>
-    (<tree> interface::<binary-tree>
-     map-simple-empty ;; handles all the empty-object cases so we don't have to.
-     map-simple-decons map-simple-update-key
-     map-simple-join map-simple-map/2 map-simple-join/list
-     map-size-from-fold-left)
+    (<tree>
+     interface::<binary-tree>
+     <map-empty-is-empty-object> ;; handles all the empty-object cases so we don't have to.
+     <map-decons-from-first-key-value-drop>
+     <map-update-key-from-lookup-insert-drop>
+     <map-join-from-for-each-lookup-insert>
+     <map-join/list-from-join>
+     <map-map/2-from-for-each-lookup-insert-drop>
+     <map-size-from-fold-left>
+     <map>)
   ()
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))

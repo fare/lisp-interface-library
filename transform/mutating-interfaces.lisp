@@ -23,7 +23,7 @@
         (let ((f (first list)))
           (set-box-value
            (pure:join/list (pure-interface <mutating-map>)
-                           (mapcar 'box-value list))
+                           (mapcar #'box-value list))
            f)
           f))
        (t
@@ -36,7 +36,7 @@
        (and list
             (progn
               (set-box-value (first list) map)
-              (cons map (mapcar 'box! (rest list)))))))
+              (cons map (mapcar #'box! (rest list)))))))
   (:parametric (interface)
     (make-interface :pure-interface interface)))
 

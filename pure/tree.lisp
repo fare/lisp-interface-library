@@ -13,7 +13,7 @@
                  :key key :value value :left left :right right))
 
 (defmethod insert ((i <binary-tree>) node key value)
-  (if (null node)
+  (if (empty-p i node)
       (node i :key key :value value)
       (ecase (compare (key-interface i) key (node-key node))
         (0 (node i :key key :value value ;; (update-node i node :key key :value value)

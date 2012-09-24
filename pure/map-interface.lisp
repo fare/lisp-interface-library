@@ -78,11 +78,12 @@ we could have a
 |#
 
 ;;; Mixins implementing simple cases for a lot of the above functions
-(define-interface map-simple-empty (<map>) () (:abstract))
-(define-interface map-simple-decons (<map>) () (:abstract))
-(define-interface map-simple-update-key (<map>) () (:abstract))
-(define-interface map-simple-join (<map>) () (:abstract))
-(define-interface map-simple-join/list (<map>) () (:abstract))
-(define-interface map-divide/list-from-divide (<map>) () (:abstract))
-(define-interface map-simple-map/2 (<map>) () (:abstract))
-(define-interface map-size<=n-p-from-decons (<map>) () (:abstract))
+(define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
+(define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
+(define-interface <map-empty-is-nil> (<map>) () (:abstract))
+(define-interface <map-join-from-fold-left-insert> (<map>) () (:abstract))
+(define-interface <map-join/list-from-join> (<map>) () (:abstract))
+(define-interface <map-map/2-from-fold-left-lookup-insert-drop> (<map>) () (:abstract))
+(define-interface <map-size<=n-p-from-decons> (<map>) () (:abstract))
+(define-interface <map-update-key-from-lookup-insert-drop> (<map>) () (:abstract))
+(define-interface <map-divide/list-from-divide> (<map>) () (:abstract))

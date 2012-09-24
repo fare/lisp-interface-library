@@ -5,52 +5,56 @@
 
 (in-package :pure)
 
-;; map-simple-empty
-(defmethod check-invariant ((i map-simple-empty) (m null) &key &allow-other-keys)
+;; <map-empty-is-nil>
+(defmethod check-invariant ((<i> <map-empty-is-nil>) (m null) &key &allow-other-keys)
+  (declare (ignorable <i>))
   m)
-(defmethod empty ((i map-simple-empty))
+(defmethod empty ((<i> <map-empty-is-nil>))
+  (declare (ignorable <i>))
   '())
-(defmethod empty-p ((i map-simple-empty) map)
+(defmethod empty-p ((<i> <map-empty-is-nil>) map)
+  (declare (ignorable <i>))
   (null map))
-(defmethod node-key-value ((i map-simple-empty) (m null))
+(defmethod node-key-value ((<i> <map-empty-is-nil>) (m null))
+  (declare (ignorable <i> m))
   (values nil nil nil))
 
-;; map-simple-decons
-(defmethod decons ((i map-simple-decons) map)
-  (multiple-value-bind (k v f) (first-key-value i map)
+;; <map-decons-from-first-key-value-drop>
+(defmethod decons ((<i> <map-decons-from-first-key-value-drop>) map)
+  (multiple-value-bind (k v f) (first-key-value <i> map)
     (if f
-        (values f (drop i map k) k v)
+        (values f (drop <i> map k) k v)
         (values nil map nil nil))))
 
-;; map-simple-update-key
-(defmethod update-key ((i map-simple-update-key) map key fun)
-  (multiple-value-bind (value foundp) (lookup i map key)
+;; <map-update-key-from-lookup-insert-drop>
+(defmethod update-key ((<i> <map-update-key-from-lookup-insert-drop>) map key fun)
+  (multiple-value-bind (value foundp) (lookup <i> map key)
    (multiple-value-bind (new-value new-foundp) (funcall fun value foundp)
      (cond
        (new-foundp
-        (insert i map key new-value))
+        (insert <i> map key new-value))
        (foundp
-        (drop i map key))
+        (drop <i> map key))
        (t
         map)))))
 
-;; map-simple-join
-(defmethod join ((i map-simple-join) map1 map2)
-  (fold-left i map1 #'(lambda (m k v) (insert i m k v)) map2))
+;; <map-join-from-fold-left-insert>
+(defmethod join ((<i> <map-join-from-fold-left-insert>) map1 map2)
+  (fold-left <i> map1 #'(lambda (m k v) (insert <i> m k v)) map2))
 
-;; map-simple-join/list
-(defmethod join/list ((i map-simple-join/list) maplist)
-  (reduce #'join maplist :from-end t))
+;; <map-join/list-from-join>
+(defmethod join/list ((<i> <map-join/list-from-join>) maplist)
+  (reduce #'(lambda (m1 m2) (join <i> m1 m2)) maplist :from-end t))
 
-;; map-divide/list-from-divide
-(defmethod divide/list ((i map-divide/list-from-divide) map)
+;; <map-divide/list-from-divide>
+(defmethod divide/list ((<i> <map-divide/list-from-divide>) map)
   (cond
     ((null map) '())
-    ((empty-p i (nth-value 1 (decons i map))) (list map))
-    (t (multiple-value-list (divide i map)))))
+    ((empty-p <i> (nth-value 1 (decons <i> map))) (list map))
+    (t (multiple-value-list (divide <i> map)))))
 
-;; map-simple-map/2
-(defmethod map/2 ((i map-simple-map/2) fun map1 map2)
+;; <map-map/2-from-fold-left-lookup-insert-drop>
+(defmethod map/2 ((i <map-map/2-from-fold-left-lookup-insert-drop>) fun map1 map2)
   (labels ((join1 (a k v1)
              (let ((mm (car a))
                    (m2 (cdr a)))
@@ -93,9 +97,9 @@
    #'(lambda (k v map2) (insert i2 map2 k v))
    (empty i2)))
 
-(defmethod size<=n-p ((i map-size<=n-p-from-decons) map n)
+(defmethod size<=n-p ((<i> <map-size<=n-p-from-decons>) map n)
   (check-type n (integer 0 *))
   (cond
-    ((empty-p i map) t)
+    ((empty-p <i> map) t)
     ((zerop n) nil)
-    (t (size<=n-p i (nth-value 1 (decons i map)) (1- n)))))
+    (t (size<=n-p <i> (nth-value 1 (decons <i> map)) (1- n)))))

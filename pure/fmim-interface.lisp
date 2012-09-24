@@ -13,10 +13,15 @@
 (in-package :pure)
 
 (define-interface <fmim>
-    (map-simple-empty map-simple-decons map-simple-update-key
-     map-simple-map/2 map-simple-join/list
-     map-size-from-fold-left map-for-each-from-fold-left
-     map-divide/list-from-divide
+    (<map-empty-is-nil>
+     <map-decons-from-first-key-value-drop>
+     <map-update-key-from-lookup-insert-drop>
+     <map-size-from-fold-left>
+     <map-for-each-from-fold-left>
+     <map-map/2-from-fold-left-lookup-insert-drop>
+     <map-join-from-fold-left-insert>
+     <map-join/list-from-join>
+     <map-divide/list-from-divide>
      <tree> <map>)
   ()
   (:singleton)

@@ -5,8 +5,8 @@
 
 (in-package :stateful)
 
-;;; map-simple-empty
-(define-interface-methods (i map-simple-empty)
+;;; <map-empty-is-empty-object>
+(define-interface-methods (<i> <map-empty-is-empty-object>)
   (:method check-invariant ((m empty-object) &key &allow-other-keys)
     t)
   (:method empty ()
@@ -19,8 +19,8 @@
   (:method node-key-value ((m empty-object))
     (values nil nil nil)))
 
-;;; map-simple-decons
-(defmethod decons ((i map-simple-decons) map)
+;;; <map-decons-from-first-key-value-drop>
+(defmethod decons ((i <map-decons-from-first-key-value-drop>) map)
   (multiple-value-bind (k v f) (first-key-value i map)
     (cond
       (f
@@ -29,8 +29,8 @@
       (t
        (values nil nil nil)))))
 
-;;; map-simple-update-key
-(defmethod update-key ((i map-simple-update-key) map key fun)
+;;; <map-update-key-from-lookup-insert-drop>
+(defmethod update-key ((i <map-update-key-from-lookup-insert-drop>) map key fun)
   (multiple-value-bind (value foundp) (lookup i map key)
    (multiple-value-bind (new-value new-foundp) (funcall fun value foundp)
      (cond
@@ -42,39 +42,44 @@
        (t
         (values))))))
 
-;;; map-simple-join
-(defmethod join ((i map-simple-join) map1 map2)
-  (for-each i map2 #'(lambda (k v) (unless (lookup i map1 k) (insert i map1 k v))))
-  (values))
+;;; <map-join-from-for-each-lookup-insert>
+(defmethod join ((<i> <map-join-from-for-each-lookup-insert>) map1 map2)
+  (for-each <i> map2
+	    #'(lambda (k v)
+		  (unless (lookup <i> map1 k)
+		    (insert <i> map1 k v))))
+    (values))
 
-(defmethod join/list ((i map-simple-join/list) maplist)
-  (if maplist
-      (reduce #'join maplist)
-      (empty i)))
+(defmethod join/list ((<i> <map-join-from-for-each-lookup-insert>) maplist)
+  (with-interface (<i> <map>)
+    (if maplist
+	(reduce #'join maplist)
+	(empty))))
 
-(defmethod divide/list ((i map-divide/list-from-divide) map)
+(defmethod divide/list ((<i> <map-divide/list-from-divide>) map)
   (cond
-    ((empty-p i map) '())
-    ((size<=n-p i map 1) (list map))
-    (t (multiple-value-bind (map2 map) (divide i map) (list map map2)))))
+    ((empty-p <i> map) '())
+    ((size<=n-p <i> map 1) (list map))
+    (t (multiple-value-bind (map2 map) (divide <i> map) (list map map2)))))
 
-(defmethod map/2 ((i map-simple-map/2) fun map1 map2)
-  (for-each i map1
-            #'(lambda (k v1)
-                (multiple-value-bind (v2 f2) (lookup i map2 k)
-                  (multiple-value-bind (v f) (funcall fun k v1 t v2 f2)
-                    (if f
-                        (insert i map1 k v)
-                        (drop i map1 k))))))
-  (for-each i map2
-            #'(lambda (k v2)
-                (multiple-value-bind (v1 f1) (lookup i map1 k)
-                  (declare (ignore v1))
-                  (unless f1
-                    (multiple-value-bind (v f) (funcall fun k nil nil v2 t)
-                      (when f
-                        (insert i map1 k v)))))))
-  map1)
+(defmethod map/2 ((<i> <map-map/2-from-for-each-lookup-insert-drop>) fun map1 map2)
+  (with-interface (<i> <map>)
+    (for-each <i> map1
+	      #'(lambda (k v1)
+		  (multiple-value-bind (v2 f2) (lookup map2 k)
+		    (multiple-value-bind (v f) (funcall fun k v1 t v2 f2)
+		      (if f
+			  (insert map1 k v)
+			  (drop map1 k))))))
+    (for-each <i> map2
+	      #'(lambda (k v2)
+		  (multiple-value-bind (v1 f1) (lookup map1 k)
+		    (declare (ignore v1))
+		    (unless f1
+		      (multiple-value-bind (v f) (funcall fun k nil nil v2 t)
+			(when f
+			  (insert map1 k v)))))))
+    map1))
 
 ;;; Stateful maps as founts: trivial! BEWARE: this iterator empties the map as it goes.
 (defmethod iterator ((<map> <map>) map)
@@ -98,27 +103,27 @@
   map)
 
 ;;; Converting a map to another one... may destroy the original one
-(defmethod convert ((i2 <map>) (i1 interface::<map>) map1)
-  (let ((map2 (empty i2)))
-    (for-each i1 map1 (lambda (k v) (insert i2 map2 k v)))
-    map2))
+(defmethod convert ((<to> <map>) (<from> interface::<map>) frommap)
+  (let ((tomap (empty <to>)))
+    (for-each <from> frommap (lambda (k v) (insert <to> tomap k v)))
+    tomap))
 
-(defmethod fold-left ((i map-fold-left-from-for-each) map f seed)
-  (for-each i map #'(lambda (key value) (setf seed (funcall f seed key value))))
+(defmethod fold-left ((<i> <map-fold-left-from-for-each>) map f seed)
+  (for-each <i> map #'(lambda (key value) (setf seed (funcall f seed key value))))
   seed)
 
-(defmethod first-key-value ((i map-first-key-value-from-for-each) map)
+(defmethod first-key-value ((<i> <map-first-key-value-from-for-each>) map)
   (block nil
-    (for-each i map #'(lambda (key value) (return (values key value t))))
+    (for-each <i> map #'(lambda (key value) (return (values key value t))))
     (values nil nil nil)))
 
-(defmethod divide ((i map-divide-from-for-each) map)
-  (let ((map2 (empty i))
+(defmethod divide ((<i> <map-divide-from-for-each>) map)
+  (let ((map2 (empty <i>))
         (keep t))
-    (for-each i map
+    (for-each <i> map
               #'(lambda (k v)
                   (unless keep
-                    (drop i map k)
-                    (insert i map2 k v))
+                    (drop <i> map k)
+                    (insert <i> map2 k v))
                   (setf keep (not keep))))
     (values map2 map)))

@@ -108,7 +108,7 @@
   (builtin <char> char)
   (builtin <string> string))
 
-(define-interface <order-parameter> ()
+(define-interface <order-parameter> (<order>)
   ((order-interface :initarg :order :reader order-interface)))
 (macrolet ((delegate (&rest names)
              `(progn

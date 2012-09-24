@@ -47,7 +47,7 @@ yielding association k_1 v_1 .. k_n v_n, and computing
   (:documentation "Interface for the type of values of a map"))
 
 ;;; Simple Mixins
-(define-interface map-fold-right-from-fold-left (<map>) ()
+(define-interface <map-fold-right-from-fold-left> (<map>) ()
   (:abstract)
   (:method fold-right (map fun seed)
     (funcall
@@ -57,7 +57,7 @@ yielding association k_1 v_1 .. k_n v_n, and computing
       #'identity)
      seed)))
 
-(define-interface map-for-each-from-fold-left (<map>) ()
+(define-interface <map-for-each-from-fold-left> (<map>) ()
   (:abstract)
   (:method for-each (map fun)
     (fold-left
@@ -66,12 +66,12 @@ yielding association k_1 v_1 .. k_n v_n, and computing
      nil)
     (values)))
 
-(define-interface map-size-from-fold-left (<map>) ()
+(define-interface <map-size-from-fold-left> (<map>) ()
   (:abstract)
   (:method size (map)
     (fold-left map #'(lambda (x k v) (declare (ignore k v)) (1+ x)) 0)))
 
-(define-interface map-cheap-size (<sizable>) ()
+(define-interface <sizable-size<=n-p-from-size> (<sizable>) ()
   (:abstract)
   (:method size<=n-p (map n)
     (<= (size map) n)))

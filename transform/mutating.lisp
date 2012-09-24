@@ -195,11 +195,11 @@
          (pure-gfs (all-interface-generics all-pure-interfaces))
          (pure-gfs-hash
           (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (symbol-name x) x)) pure-gfs) :test 'equal))
+           (mapcar #'(lambda (x) (cons (symbol-name x) x)) pure-gfs) :test 'equal))
          (overridden-gfs (find-multiple-clos-options :method options))
          (overridden-gfs-hash
           (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
+           (mapcar #'(lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
     `(progn
        (define-interface ,name (stateful:<mutating> ,@stateful-interfaces)
          ,slots

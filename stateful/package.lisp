@@ -34,14 +34,20 @@
    #:<number-map> #:<nm>
    #:<hash-table>
    #:<encoded-key-map>
-   #:map-simple-empty #:empty-object
-   #:map-simple-decons
-   #:map-simple-update-key #:map-simple-join
-   #:map-simple-join/list #:map-divide/list-from-divide
-   #:map-simple-map/2 #:map-fold-right-from-fold-left
-   #:map-for-each-from-fold-left #:map-size-from-fold-left
-   #:map-divide-from-for-each
-   #:map-fold-left-from-for-each #:map-first-key-value-from-for-each
+   #:<map-empty-is-empty-object> #:empty-object
+   #:<map-decons-from-first-key-value-drop>
+   #:<map-update-key-from-lookup-insert-drop>
+   #:<map-join-from-for-each-lookup-insert>
+   #:<map-join/list-from-join>
+   #:<map-divide/list-from-divide>
+   #:<map-map/2-from-for-each-lookup-insert-drop>
+   #:<map-fold-right-from-fold-left>
+   #:<map-for-each-from-fold-left>
+   #:<map-fold-left-from-each>
+   #:<map-size-from-fold-left>
+   #:<map-divide-from-for-each>
+   #:<map-fold-left-from-for-each>
+   #:<map-first-key-value-from-for-each>
 
    ;;; Stateful Maps and Containers: Generic Functions
    #:empty

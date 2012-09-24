@@ -15,10 +15,13 @@
 
 (define-interface <binary-tree>
     (<tree>
-     map-simple-empty ;; handles all the null cases so we don't have to.
-     map-simple-decons map-simple-update-key
-     map-simple-join map-simple-map/2 map-simple-join/list
-     map-size-from-fold-left)
+     <map-decons-from-first-key-value-drop>
+     <map-empty-is-nil> ;; handles all the null cases so we don't have to.
+     <map-join-from-fold-left-insert>
+     <map-join/list-from-join>
+     <map-map/2-from-fold-left-lookup-insert-drop>
+     <map-update-key-from-lookup-insert-drop>
+     <map-size-from-fold-left>)
   ()
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))

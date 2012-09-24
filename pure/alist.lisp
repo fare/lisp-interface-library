@@ -42,25 +42,27 @@
   (reduce #'(lambda (pair acc) (funcall f (car pair) (cdr pair) acc))
           map :initial-value seed :from-end t))
 
-(defmethod for-each ((i <alist>) map f)
+(defmethod for-each ((<i> <alist>) map f)
+  (declare (ignorable <i>))
   (loop :for (key . val) :in map :do (funcall f key val))
   (values))
 
-(defmethod divide ((i <alist>) map)
+(defmethod divide ((<i> <alist>) map)
+  (declare (ignorable <i>))
   (let* ((l (length map))
          (l1 (floor l 2)))
     (values (subseq map 0 l1) (nthcdr l1 map))))
 
-(defmethod size ((i <alist>) map)
-  (declare (ignorable i))
+(defmethod size ((<i> <alist>) map)
+  (declare (ignorable <i>))
   (length map))
 
-(defmethod map-alist ((i interface::<map>) map)
-  (fold-right i map #'(lambda (k v acc) (acons k v acc)) '()))
+(defmethod map-alist ((<i> interface::<map>) map)
+  (fold-right <i> map #'(lambda (k v acc) (acons k v acc)) '()))
 
-(defmethod convert ((to <alist>) (from interface::<map>) map)
-  (declare (ignorable to))
-  (map-alist from map))
+(defmethod convert ((<to> <alist>) (<from> interface::<map>) map)
+  (declare (ignorable <to>))
+  (map-alist <from> map))
 
 (defmethod alist-map ((<map> interface::<map>) map)
   (convert <map> <alist> map))

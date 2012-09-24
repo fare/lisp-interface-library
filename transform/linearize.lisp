@@ -132,22 +132,22 @@
           (ineffective-pure-inputs
            (loop :for i :from 1 :below lpin
              :for v :in (rest pure-required)
-             :unless (find i effective-inputs :key 'first)
+             :unless (find i effective-inputs :key #'first)
              :collect v))
           (ineffective-stateful-inputs
            (loop :for i :from 1 :below lsin
              :for v :in (rest stateful-required)
-             :unless (find i effective-inputs :key 'third)
+             :unless (find i effective-inputs :key #'third)
              :collect v))
           (ineffective-pure-outputs
            (loop :for i :below lpout
              :for v :in pure-results-required
-             :unless (find i effective-outputs :key 'first)
+             :unless (find i effective-outputs :key #'first)
              :collect v))
           (ineffective-stateful-outputs
            (loop :for i :below lpout
              :for v :in stateful-results-required
-             :unless (find i effective-outputs :key 'third)
+             :unless (find i effective-outputs :key #'third)
              :collect v))
           (stateful-argument-bindings
            (append
@@ -189,11 +189,11 @@
          (stateful-gfs (all-interface-generics all-stateful-interfaces))
          (stateful-gfs-hash
           (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test 'equal))
+           (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test #'equal))
          (overridden-gfs (find-multiple-clos-options :method options))
          (overridden-gfs-hash
           (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
+           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test #'eql)))
     `(progn
        (define-interface ,name (pure:<linearized> ,@pure-interfaces)
          ,slots

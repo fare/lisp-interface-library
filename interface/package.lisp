@@ -86,8 +86,10 @@
    #:empty-object #:make-empty-object #:empty-object-p
 
    ;; simple mixins
-   #:map-cheap-size #:map-for-each-from-fold-left
-   #:map-fold-right-from-fold-left #:map-size-from-fold-left
+   #:<sizable-size<=n-p-from-size>
+   #:<map-for-each-from-fold-left>
+   #:<map-fold-right-from-fold-left>
+   #:<map-size-from-fold-left>
 
    ;; linearize
    #:define-linearized-interface #:define-linearized-method #:stateful-interface
