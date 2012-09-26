@@ -46,7 +46,8 @@ with those specified as initarg keywords, returning a new object."))
 
 ;;; Conversion between interfaces.
 (defgeneric convert (<destination> <origin> object)
-  (:documentation "Convert an OBJECT from interface <ORIGIN> to interface <DESTINATION>."))
+  (:documentation "Convert an OBJECT following interface <ORIGIN>
+   into a new object following interface <DESTINATION>."))
 
 ;;; Size
 (define-interface <sizable> (<type>) ()

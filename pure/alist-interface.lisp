@@ -14,6 +14,6 @@
      <map-join-from-fold-left-insert>
      <map-join/list-from-join>
      <map>)
-  ((key-interface :initarg :key-interface :reader key-interface))
+  ((key-interface :type <eq> :initarg :key-interface :reader key-interface))
   (:parametric (&optional (eq <eql>)) (make-interface :key-interface eq))
   (:singleton))
