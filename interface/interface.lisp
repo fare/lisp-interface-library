@@ -232,15 +232,17 @@
 
 (defmacro with-interface ((interface-sexp functions-spec &key prefix package) &body body)
   (with-gensyms (arguments)
-    (let ((function-names (collect-function-names functions-spec)))
+    (let* ((function-names (collect-function-names functions-spec))
+	   (local-names (loop :for function-name :in function-names :collect
+			      (make-local-name function-name :prefix prefix :package package))))
       `(flet ,(loop :for function-name :in function-names
-                :for local-name = (make-local-name function-name :prefix prefix :package package)
+                :for local-name :in local-names
                 :collect
                 `(,local-name (&rest ,arguments)
                               (apply ',function-name ,interface-sexp ,arguments)))
-       (declare (ignorable ,@(mapcar (lambda (x) `#',x) function-names)))
-       (declare (inline ,@function-names))
-       ,@body))))
+         (declare (ignorable ,@(mapcar (lambda (x) `#',x) local-names))
+		  (inline ,@local-names))
+	 ,@body))))
 
 (defmacro define-interface-specialized-functions (interface-sexp functions-spec &key prefix package)
   (with-gensyms (arguments)
