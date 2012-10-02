@@ -94,7 +94,7 @@
   (setf (box-usedp box) t))
 
 ;;; Some concrete classes following that pattern.
-(defclass one-use-value-box (one-use-box value-box) ())
+(defclass one-use-value-box (one-use-box simple-value-box) ())
 (define-interface <one-use-value-box> (<one-use-box> <value-box>)
   ((class :initform 'one-use-value-box))
   (:singleton))
@@ -102,6 +102,12 @@
 (defclass one-use-thunk-box (one-use-box thunk-box) ())
 (define-interface <one-use-thunk-box> (<one-use-box> <thunk-box>)
   ((class :initform 'one-use-thunk-box)))
+
+(defmethod box-ref :after ((box one-use-value-box))
+  (setf (slot-value box 'value) nil)) ;; also clear the used up value.
+
+(defmethod box-ref :after ((box one-use-thunk-box))
+  (setf (slot-value box 'thunk) nil)) ;; also clear the used up thunk.
 
 (defun one-use-value-box (x)
   (make-instance 'one-use-value-box :value x))
@@ -153,7 +159,7 @@
   (box-set! box value))
 
 (defclass box! (mutable-box emptyable-box value-box)
-  ((value :writer set-box-value)))
+  ((value :writer set-box-value :accessor box-value)))
 
 (defun box! (x)
   (make-instance 'box! :value x))
@@ -162,7 +168,7 @@
   ((class :initform 'box!)))
 
 (defmethod box-set! ((box box!) value)
-  (set-box-value value box))
+  (setf (box-value box) value))
 
 (defmethod empty-p ((i <box!>) box)
   (declare (ignorable i))
