@@ -7,7 +7,7 @@
 
 (define-interface <eq> (<type>) ()
   (:abstract)
-  (:generic == (i x y) (:in 1 2) (:values bool))
+  (:generic == (<eq> x y) (:in 1 2) (:values bool))
   (:generic eq-function (i) (:values fun)
    (:documentation "test function for <eq> interface")))
 
@@ -31,7 +31,7 @@
 
 (define-interface <hashable> (<eq>) ()
   (:abstract)
-  (:generic hash (i x) (:in 1) (:values bool)))
+  (:generic hash (<hashable> x) (:in 1) (:values bool)))
 
 (define-interface <equal> (<hashable>) () (:singleton)
   (:method == (x y)

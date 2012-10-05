@@ -18,9 +18,15 @@
      <map-update-key-from-lookup-insert-drop>
      <map-map/2-from-fold-left-lookup-insert-drop>
      <map>)
-  ((key-interface :reader key-interface :initarg :key)
-   (hashmap-interface :reader hashmap-interface :initarg :hashmap)
-   (bucketmap-interface :reader bucketmap-interface :initarg :bucketmap))
+  ((key-interface
+    :type <hashable>
+    :reader key-interface :initarg :key)
+   (hashmap-interface
+    :type <map>
+    :reader hashmap-interface :initarg :hashmap)
+   (bucketmap-interface
+    :type <map>
+    :reader bucketmap-interface :initarg :bucketmap))
   (:parametric (&key (key <equal>)
                      (hashmap <number-map>)
                      (bucketmap (<alist> key)))
