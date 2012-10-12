@@ -14,7 +14,7 @@
 * Unassigned:
 ** Some bootstrapped datastructure from Okasaki
 ** More from
-	http://planet.plt-scheme.org/display.ss?package=pfds.plt&owner=krhari
+ http://planet.plt-scheme.org/display.ss?package=pfds.plt&owner=krhari
 ** Import functionality from cl-containers?
 ** Add "Minimal Viable Snippet" for the library and each of its major features.
 *** Initial: some treesort ?
@@ -27,27 +27,33 @@
  one and/or many entries while walking the structure once and/or many times (?)
 ** Add value merging as a method, i.e. generalize the map/2 mechanism to insert.
 ** Get something like cl-container's find-or-create-class, combined with memoization,
-  for generating classes that match some specification of an interface.
-** Note that a single interface may have many classes and sub-interfaces,
-  sometimes with mutual recursion in classes pointing to each other
-  through methods and/or :class allocated slots.
+ for generating classes that match some specification of an interface.
+** Note that a single interface may have many classes and subinterfaces,
+ sometimes with mutual recursion in classes pointing to each other
+ through methods and/or :class allocated slots.
 ** Develop example of multiply-indexed-organized tuple store.
-  Each node is simultaneously node of multiple trees.
-  Depending on which index you're using,
-  they have to be viewed as a tree in the according way,
-  and appropriate accessors have to be chosen for say subtree access.
-  The same tree-manipulation routines can be used on the same tree nodes
-  with completely different results depending on which interface you use.
+ Each node is simultaneously node of multiple trees.
+ Depending on which index you're using,
+ they have to be viewed as a tree in the according way,
+ and appropriate accessors have to be chosen for say subtree access.
+ The same tree-manipulation routines can be used on the same tree nodes
+ with completely different results depending on which interface you use.
 ** In classify, have an option to add a prefix or suffix to names of constructor methods,
-  so normal methods can be part of an object-oriented protocol
-  without a clash because of unsharable constructors.
+ so normal methods can be part of an object-oriented protocol
+ without a clash because of unsharable constructors.
 ** Add :pre and :post pure compositional analogues to :before and :after --
  preprocess arguments and post-process results.
 
+* send mail to the maintainers of each and every datastructure library,
+ and offer to merge into lil.
+
 * Low Priority:
 ** Remember functions that were built with explicit->implicit adapter,
-  and optimize away indirection through interface in any implicit->explicit transformation back.
+ and optimize away indirection through interface in any implicit->explicit transformation back.
 ** refactor transformers through a with-lambda-list-adapter
-** Create a DSL so both pure and stateful variants can be extracted from a single specification, whereby you can (update-node a ...) and it will preserve the identity of linear variable a when in stateful mode.
+** Create a DSL so both pure and stateful variants
+ can be extracted from a single specification,
+ whereby you can (update-node a ...) and it will preserve
+ the identity of linear variable a when in stateful mode.
 
 |#
