@@ -7,12 +7,6 @@
 
 ;;; <map-empty-is-empty-object>
 (define-interface-methods (<i> <map-empty-is-empty-object>)
-  (:method check-invariant ((m empty-object) &key &allow-other-keys)
-    t)
-  (:method empty ()
-    (make-empty-object))
-  (:method empty-p (map)
-    (typep map 'empty-object))
   (:method empty! (map)
     (change-class map 'empty-object)
     (values))

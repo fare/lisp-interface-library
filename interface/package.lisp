@@ -34,6 +34,8 @@
 
    ;;; Empty?
    #:<emptyable> #:empty #:empty-p
+   #:<empty-is-nil>
+   #:<empty-is-empty-object>
 
    ;;; eq
    #:<eq> #:== #:eq-function

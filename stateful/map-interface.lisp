@@ -81,7 +81,8 @@ we could have a
 (define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
 (define-interface <map-divide-from-for-each> (<map>) () (:abstract))
 (define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
-(define-interface <map-empty-is-empty-object> (<map>) () (:abstract))
+(define-interface <map-empty-is-empty-object>
+    (<map> <empty-is-empty-object>) () (:abstract))
 (define-interface <map-first-key-value-from-for-each> (<map>) () (:abstract))
 (define-interface <map-fold-left-from-for-each> (<map>) () (:abstract))
 (define-interface <map-join-from-for-each-lookup-insert> (<map>) () (:abstract))

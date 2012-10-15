@@ -6,15 +6,6 @@
 (in-package :pure)
 
 ;; <map-empty-is-nil>
-(defmethod check-invariant ((<i> <map-empty-is-nil>) (m null) &key &allow-other-keys)
-  (declare (ignorable <i>))
-  m)
-(defmethod empty ((<i> <map-empty-is-nil>))
-  (declare (ignorable <i>))
-  '())
-(defmethod empty-p ((<i> <map-empty-is-nil>) map)
-  (declare (ignorable <i>))
-  (null map))
 (defmethod node-key-value ((<i> <map-empty-is-nil>) (m null))
   (declare (ignorable <i> m))
   (values nil nil nil))

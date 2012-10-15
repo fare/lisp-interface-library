@@ -80,7 +80,7 @@ we could have a
 ;;; Mixins implementing simple cases for a lot of the above functions
 (define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
 (define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
-(define-interface <map-empty-is-nil> (<map>) () (:abstract))
+(define-interface <map-empty-is-nil> (<map> <empty-is-nil>) () (:abstract))
 (define-interface <map-join-from-fold-left-insert> (<map>) () (:abstract))
 (define-interface <map-join/list-from-join> (<map>) () (:abstract))
 (define-interface <map-map/2-from-fold-left-lookup-insert-drop> (<map>) () (:abstract))
