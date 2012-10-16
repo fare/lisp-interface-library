@@ -44,7 +44,7 @@
    #:<eq-from-==> #:<eq-from-eq-function>
 
    ;;; order
-   #:<order> #:<number> #:<string> #:<char>
+   #:<order> #:<number> #:<string> #:<char> #:<case-insensitive-string>
    #:<order-from-lessp> #:<lessp>
    #:<order-from-compare> #:<compare>
    #:order< #:order<= #:order> #:order>= #:== #:compare
