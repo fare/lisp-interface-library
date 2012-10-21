@@ -8,14 +8,12 @@
 (define-interface <type> (<interface>) ()
   (:documentation "An interface encapsulating a particular type of objects")
   (:abstract)
-  (:generic
-   make (<type> &key #+sbcl &allow-other-keys)
+  (:generic make (<type> &key #+sbcl &allow-other-keys)
    (:values object) (:out 0)
    ;; the #+sbcl works around SBCL bug https://bugs.launchpad.net/sbcl/+bug/537711
    (:documentation "Given a <type>, create an object conforming to the interface
 based on provided initarg keywords, returning the object."))
-  (:generic
-   check-invariant (<type> object &key #+sbcl &allow-other-keys)
+  (:generic check-invariant (<type> object &key #+sbcl &allow-other-keys)
    (:in 1) (:values object) (:out nil) ;; :out nil because normal methods don't return anything!
    (:documentation "Check whether an OBJECT fulfills the invariant(s) required
 to be an object of the type represented by this interface.
@@ -23,7 +21,11 @@ On success the OBJECT itself is returned. On failure an error is signalled.")
    (:method :around (type object &key #+sbcl &allow-other-keys)
       (declare (ignorable type))
       (call-next-method)
-      object)))
+      object))
+  (:generic convert (<destination> <origin> object)
+   (:values object) (:out 0)
+   (:documentation "Convert an OBJECT following interface <ORIGIN>
+    into a new object following interface <DESTINATION>.")))
 
 
 ;;; This one is only colloquial for use in pure datastructure. TODO: Move it to pure-?
@@ -42,12 +44,6 @@ with those specified as initarg keywords, returning a new object."))
 
 (defmethod make ((i <classy>) &rest keys &key #+sbcl &allow-other-keys)
   (apply 'make-instance (interface-class i) keys))
-
-
-;;; Conversion between interfaces.
-(defgeneric convert (<destination> <origin> object)
-  (:documentation "Convert an OBJECT following interface <ORIGIN>
-   into a new object following interface <DESTINATION>."))
 
 ;;; Size
 (define-interface <sizable> (<type>) ()
