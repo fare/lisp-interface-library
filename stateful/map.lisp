@@ -7,10 +7,10 @@
 
 ;;; <map-empty-is-empty-object>
 (define-interface-methods (<i> <map-empty-is-empty-object>)
-  (:method empty! (map)
+  (:method> empty! (map)
     (change-class map 'empty-object)
     (values))
-  (:method node-key-value ((m empty-object))
+  (:method> node-key-value ((m empty-object))
     (values nil nil nil)))
 
 ;;; <map-decons-from-first-key-value-drop>

@@ -17,12 +17,10 @@
 ;;; A box: you can make it, or get something out of it
 (define-interface <box> (<interface>) ()
   (:abstract)
-  (:generic
-   make-box (<box> generator &key #+sbcl &allow-other-keys)
+  (:generic> make-box (generator &key #+sbcl &allow-other-keys)
    (:out 0) (:values box)
    (:documentation "Make a box from a generator for the value inside the box"))
-  (:generic
-   unbox (<box> box)
+  (:generic> unbox (box)
    (:in 1) (:values value)
    (:documentation "Return the value inside the box")))
 

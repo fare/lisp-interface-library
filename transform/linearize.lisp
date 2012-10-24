@@ -190,7 +190,8 @@
          (stateful-gfs-hash
           (alexandria:alist-hash-table
            (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test #'equal))
-         (overridden-gfs (find-multiple-clos-options :method options))
+         (overridden-gfs (append (find-multiple-clos-options :method options)
+				 (find-multiple-clos-options :method> options)))
          (overridden-gfs-hash
           (alexandria:alist-hash-table
            (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test #'eql)))

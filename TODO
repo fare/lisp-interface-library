@@ -10,6 +10,8 @@
 
 * fare:
 ** collect any TODO item from the article that's missing in this file.
+** fix expansion of :generic and :method so all generics are registered
+ before the methods (and their with-interface) are expanded.
 
 * Unassigned:
 ** Some bootstrapped datastructure from Okasaki

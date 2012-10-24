@@ -15,9 +15,9 @@
 
 (define-mutating-interface <mutating-map> (<map>) (pure:<map>)
   ()
-  (:method empty! (x)
+  (:method> empty! (x)
      (set-box-value (empty (pure-interface <mutating-map>)) x))
-  (:method join/list (list)
+  (:method> join/list (list)
      (cond
        (list
         (let ((f (first list)))
@@ -28,7 +28,7 @@
           f))
        (t
         (empty <mutating-map>))))
-  (:method divide/list (map)
+  (:method> divide/list (map)
      (let ((list
             (pure:divide/list
              (pure-interface <mutating-map>)

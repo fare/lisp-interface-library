@@ -190,7 +190,8 @@
     (name superclasses interface &optional slots &rest options)
   (let* ((all-interfaces (all-super-interfaces interface))
          (interface-gfs (all-interface-generics all-interfaces))
-         (overridden-gfs (find-multiple-clos-options :method options))
+         (overridden-gfs (append (find-multiple-clos-options :method options)
+				 (find-multiple-clos-options :method> options)))
          (overridden-gfs-hash
           (alexandria:alist-hash-table
            (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql))

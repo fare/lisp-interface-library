@@ -153,110 +153,8 @@
     (let ((string (string string)))
       (if (string-enclosed-p "<" string ">")
           (subseq string 1 (1- (length string)))
-          string))))
+          string)))
 
-(defmacro define-interface-generic (interface name lambda-list &rest options)
-  (let ((generic-options
-         ;;(keep-keyed-clos-options '(declare :documentation :method-combination :generic-function-class :method-class :argument-precedence-order) options)
-         (remove-keyed-clos-options '(:in :out :values) options))
-        (in (find-unique-clos-option :in options))
-        (out (find-unique-clos-option :out options))
-        (values (find-unique-clos-option :values options)))
-    `(progn
-       (defgeneric ,name ,lambda-list ,@generic-options)
-       (eval-when (:compile-toplevel :load-toplevel :execute)
-         (register-interface-generic
-          ',interface ',name
-          :lambda-list ',lambda-list
-          ,@(when in `(:in ',(cdr in)))
-          ,@(when out `(:out ',(cdr out)))
-          ,@(when values `(:values ',(cdr values))))))))
-
-(defmacro define-interface (interface super-interfaces slots &rest options)
-  (let ((class-options
-         ;;(keep-keyed-clos-options '(:default-initargs :documentation :metaclass) options)
-         (remove-keyed-clos-options
-          '(:generic :method :singleton :parametric :abstract) options))
-        (metaclass (find-unique-clos-option :metaclass options))
-        (gfs (find-multiple-clos-options :generic options))
-        (methods (find-multiple-clos-options :method options))
-        (parametric (find-unique-clos-option :parametric options))
-        (singleton (find-unique-clos-option :singleton options))
-        (abstract (find-unique-clos-option :abstract options)))
-    `(progn
-       (eval-when (:compile-toplevel :load-toplevel :execute)
-         (defclass ,interface ,super-interfaces ,slots
-           ,@(unless metaclass `((:metaclass interface-class)))
-           ,@class-options)
-       	 (let ((interface-class (find-class ',interface)))
-	   (finalize-inheritance interface-class)
-	   ,@(when abstract
-	       '((setf (slot-value interface-class 'abstractp) t)))))
-       ,@(when (or parametric singleton)
-	   (assert (not abstract))
-           (destructuring-bind (formals &body body)
-               (or (cdr parametric)
-                   '(() (make-interface)))
-             `((eval-when (:compile-toplevel :load-toplevel :execute)
-		 (define-memo-function
-		     (,interface
-                      :normalization
-                      #'(lambda (make-interface &rest arguments)
-                          (flet ((make-interface (&rest arguments)
-                                   (apply make-interface arguments)))
-                            (apply #'(lambda ,formals
-                                       (block ,interface
-                                         ,@body))
-                                   arguments))))
-                     (&rest arguments)
-                   (apply 'make-instance ',interface arguments))))))
-       ,@(when singleton `((eval-when (:compile-toplevel :load-toplevel :execute)
-			     (defvar ,interface (,interface)))))
-       ,@(loop :for (() . gf) :in gfs :collect
-           `(define-interface-generic ,interface ,@gf))
-       ,@(when methods
-           `((define-interface-methods (,interface ,interface) ,@methods)))
-       ',interface)))
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun make-local-name (name &key prefix package)
-    (intern (if prefix (strcat (string prefix) (string name)) (string name))
-            (or package *package*)))
-  (defun collect-function-names (functions-spec)
-    (remove-duplicates
-     (loop :for spec :in (alexandria:ensure-list functions-spec)
-       :append
-       (etypecase spec
-         (list spec)
-         (symbol (all-interface-generics spec)))))))
-
-(defmacro with-interface ((interface-sexp functions-spec &key prefix package) &body body)
-  (with-gensyms (arguments)
-    (let* ((function-names (collect-function-names functions-spec))
-	   (local-names (loop :for function-name :in function-names :collect
-			      (make-local-name function-name :prefix prefix :package package))))
-      `(flet ,(loop :for function-name :in function-names
-                :for local-name :in local-names
-                :collect
-                `(,local-name (&rest ,arguments)
-                              (apply ',function-name ,interface-sexp ,arguments)))
-         (declare (ignorable ,@(mapcar (lambda (x) `#',x) local-names))
-		  (inline ,@local-names))
-	 ,@body))))
-
-(defmacro define-interface-specialized-functions (interface-sexp functions-spec &key prefix package)
-  (with-gensyms (arguments)
-    (let ((function-names (collect-function-names functions-spec)))
-      `(progn
-         ,(loop :for function-name :in function-names
-            :for local-name = (make-local-name function-name :prefix prefix :package package)
-            :do (assert (not (eq local-name function-name)))
-            :collect
-            `(defun ,local-name (&rest ,arguments)
-               (apply ',function-name ,interface-sexp ,arguments)))
-         (declaim (inline ,@function-names))))))
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
   (defun lambda-list-mimicker (lambda-list &optional gensym-all)
     (nest
      (multiple-value-bind (required optionals rest keys allow-other-keys aux)
@@ -309,38 +207,162 @@
                  moptionals
                  :initial-value (if (or rest keyp) (list mrest) '())
                  :from-end t))
-        (reverse mappings))))))
+        (reverse mappings)))))
+
+  (defun expand-interface-method> (interface gf x &rest y)
+    (multiple-value-bind (interface-var interface-class)
+	(etypecase interface
+	  (cons (values (first interface) (second interface)))
+	  (symbol (values interface interface)))
+      (if (null y)
+	  ;; One-argument: simply map a method to an interface-less function
+	  (nest
+	   (let ((lambda-list (closer-mop:generic-function-lambda-list gf))
+		 (function x)))
+	   (multiple-value-bind (mimic-lambda-list
+				 mimic-ignorables
+				 mimic-invoker mimic-arguments #|mappings|#)
+	       (lambda-list-mimicker lambda-list))
+	   (let ((i-var (first mimic-lambda-list))))
+	   `(((,i-var ,interface-class) ,@(rest mimic-lambda-list))
+	     (declare (ignorable ,i-var ,@mimic-ignorables))
+	     (,mimic-invoker ,function ,@(rest mimic-arguments))))
+	  ;; More than one argument: a method that uses current interface
+	  (nest
+	   (multiple-value-bind (combination* spec)
+	       (etypecase x
+		 (list (values () (cons x y)))
+		 (symbol (values (list x) y))))
+	   (destructuring-bind (lambda-list &rest body) spec)
+	   (multiple-value-bind (remaining-forms declarations doc-string)
+	       (alexandria:parse-body body :documentation t))
+	   `(,@combination* ((,interface-var ,interface-class) ,@lambda-list)
+	     ,@doc-string ,@declarations (declare (ignorable ,interface-var))
+	     (with-interface (,interface-var ,interface-class)
+	       ,@remaining-forms)))))))
+
+(defmacro define-interface-generic> (interface name lambda-list &rest options)
+  `(%define-interface-generic ,interface ,interface ,name ,lambda-list ,@options))
+
+(defmacro define-interface-generic (interface name lambda-list &rest options)
+  `(%define-interface-generic nil ,interface ,name ,lambda-list ,@options))
+
+(defmacro %define-interface-generic (interface-argument interface name lambda-list &rest options)
+  (let ((generic-options
+         (remove-keyed-clos-options
+	  `(,@(when interface-argument '(:method>)) :in :out :values) options))
+        (methods> (when interface-argument (find-multiple-clos-options :method> options)))
+	(full-lambda-list `(,@(when interface-argument `(,interface-argument)) ,@lambda-list))
+        (in (find-unique-clos-option :in options))
+        (out (find-unique-clos-option :out options))
+        (values (find-unique-clos-option :values options)))
+    `(progn
+       (defgeneric ,name ,full-lambda-list
+	 ,@generic-options
+	 ,@(loop :for (() . spec) :in methods> :collect
+		 `(:method ,@(apply 'expand-interface-method> (list interface-argument interface) name spec))))
+       (eval-when (:compile-toplevel :load-toplevel :execute)
+         (register-interface-generic
+          ',interface ',name
+          :lambda-list ',full-lambda-list
+          ,@(when in `(:in ',(cdr in)))
+          ,@(when out `(:out ',(cdr out)))
+          ,@(when values `(:values ',(cdr values))))))))
+
+(defmacro define-interface (interface super-interfaces slots &rest options)
+  (let ((class-options
+         ;;(keep-keyed-clos-options '(:default-initargs :documentation :metaclass) options)
+         (remove-keyed-clos-options
+          '(:generic :generic> :method :method> :singleton :parametric :abstract) options))
+        (metaclass (find-unique-clos-option :metaclass options))
+        (gfs (find-multiple-clos-options :generic options))
+        (gfs> (find-multiple-clos-options :generic> options))
+        (methods (find-multiple-clos-options :method options))
+        (methods> (find-multiple-clos-options :method> options))
+        (parametric (find-unique-clos-option :parametric options))
+        (singleton (find-unique-clos-option :singleton options))
+        (abstract (find-unique-clos-option :abstract options)))
+    `(progn
+       (eval-when (:compile-toplevel :load-toplevel :execute)
+         (defclass ,interface ,super-interfaces ,slots
+           ,@(unless metaclass `((:metaclass interface-class)))
+           ,@class-options)
+       	 (let ((interface-class (find-class ',interface)))
+	   (finalize-inheritance interface-class)
+	   ,@(when abstract
+	       '((setf (slot-value interface-class 'abstractp) t)))))
+       ,@(when (or parametric singleton)
+	   (assert (not abstract))
+           (destructuring-bind (formals &body body)
+               (or (cdr parametric)
+                   '(() (make-interface)))
+             `((eval-when (:compile-toplevel :load-toplevel :execute)
+		 (define-memo-function
+		     (,interface
+                      :normalization
+                      #'(lambda (make-interface &rest arguments)
+                          (flet ((make-interface (&rest arguments)
+                                   (apply make-interface arguments)))
+                            (apply #'(lambda ,formals
+                                       (block ,interface
+                                         ,@body))
+                                   arguments))))
+                     (&rest arguments)
+                   (apply 'make-instance ',interface arguments))))))
+       ,@(when singleton `((eval-when (:compile-toplevel :load-toplevel :execute)
+			     (defvar ,interface (,interface)))))
+       ,@(loop :for (() . gf) :in gfs :collect
+           `(define-interface-generic ,interface ,@gf))
+       ,@(loop :for (() . gf>) :in gfs> :collect
+           `(define-interface-generic> ,interface ,@gf>))
+       ,@(when methods>
+           `((define-interface-methods (,interface ,interface) ,@methods>)))
+       ,@(mapcar #'(lambda (x) `(defmethod ,@(rest x))) methods)
+       ',interface)))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun make-local-name (name &key prefix package)
+    (intern (if prefix (strcat (string prefix) (string name)) (string name))
+            (or package *package*)))
+  (defun collect-function-names (functions-spec)
+    (remove-duplicates
+     (loop :for spec :in (alexandria:ensure-list functions-spec)
+       :append
+       (etypecase spec
+         (list spec)
+         (symbol (all-interface-generics spec)))))))
+
+(defmacro with-interface ((interface-sexp functions-spec &key prefix package) &body body)
+  (with-gensyms (arguments)
+    (let* ((function-names (collect-function-names functions-spec))
+	   (local-names (loop :for function-name :in function-names :collect
+			      (make-local-name function-name :prefix prefix :package package))))
+      `(flet ,(loop :for function-name :in function-names
+                :for local-name :in local-names
+                :collect
+                `(,local-name (&rest ,arguments)
+                              (apply ',function-name ,interface-sexp ,arguments)))
+         (declare (ignorable ,@(mapcar (lambda (x) `#',x) local-names))
+		  (inline ,@local-names))
+	 ,@body))))
+
+(defmacro define-interface-specialized-functions (interface-sexp functions-spec &key prefix package)
+  (with-gensyms (arguments)
+    (let ((function-names (collect-function-names functions-spec)))
+      `(progn
+         ,(loop :for function-name :in function-names
+            :for local-name = (make-local-name function-name :prefix prefix :package package)
+            :do (assert (not (eq local-name function-name)))
+            :collect
+            `(defun ,local-name (&rest ,arguments)
+               (apply ',function-name ,interface-sexp ,arguments)))
+         (declaim (inline ,@function-names))))))
 
 (defmacro define-interface-method (interface gf &rest rest)
-  (multiple-value-bind (interface-var interface-class)
-      (etypecase interface
-        (cons (values (first interface) (second interface)))
-        (symbol (values interface interface)))
-    (if (length=n-p rest 1)
-        ;; One-argument: simply map a method to an interface-less function
-        (nest
-         (let ((lambda-list (closer-mop:generic-function-lambda-list gf))
-               (function (first rest))))
-         (multiple-value-bind (mimic-lambda-list
-                               mimic-ignorables
-                               mimic-invoker mimic-arguments #|mappings|#)
-             (lambda-list-mimicker lambda-list))
-         (let ((i-var (first mimic-lambda-list))))
-         `(defmethod ,gf ((,i-var ,interface-class) ,@(rest mimic-lambda-list))
-            (declare (ignorable ,i-var ,@mimic-ignorables))
-            (,mimic-invoker ,function ,@(rest mimic-arguments))))
-        ;; More than one argument: a method that uses current interface
-        (nest
-         (destructuring-bind (lambda-list &rest body) rest)
-         (multiple-value-bind (remaining-forms declarations doc-string)
-             (alexandria:parse-body body :documentation t))
-         `(defmethod ,gf ((,interface-var ,interface-class) ,@lambda-list)
-            ,@doc-string ,@declarations (declare (ignorable ,interface-var))
-            (with-interface (,interface-var ,interface-class)
-              ,@remaining-forms))))))
+  `(defmethod ,gf ,@(apply 'expand-interface-method> interface gf rest)))
 
 (defmacro define-interface-methods (interface &body body)
-  `(macrolet ((:method (gf &rest rest)
+  `(macrolet ((:method> (gf &rest rest)
                 `(define-interface-method ,',interface ,gf ,@rest)))
      ,@body))
 

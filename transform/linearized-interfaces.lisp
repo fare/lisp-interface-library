@@ -21,7 +21,7 @@
 
 (define-linearized-interface <linearized-map> (<map>) (stateful:<map>)
   ()
-  (:method join/list (list)
+  (:method> join/list (list)
      (cond
        (list
         (one-use-value-box
@@ -29,7 +29,7 @@
                              (mapcar #'box-ref list))))
        (t
         (empty <linearized-map>))))
-  (:method divide/list (map)
+  (:method> divide/list (map)
      (let ((list
             (stateful:divide/list
              (stateful-interface <linearized-map>)
