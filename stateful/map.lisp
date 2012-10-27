@@ -99,7 +99,7 @@
 ;;; Converting a map to another one... may destroy the original one
 (defmethod convert ((<to> <map>) (<from> interface::<map>) frommap)
   (let ((tomap (empty <to>)))
-    (for-each <from> frommap (lambda (k v) (insert <to> tomap k v)))
+    (for-each <from> frommap #'(lambda (k v) (insert <to> tomap k v)))
     tomap))
 
 (defmethod fold-left ((<i> <map-fold-left-from-for-each>) map f seed)

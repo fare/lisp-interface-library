@@ -8,12 +8,12 @@
 (define-interface <type> (<interface>) ()
   (:documentation "An interface encapsulating a particular type of objects")
   (:abstract)
-  ;; This should be moved to <makable>
+  #| ;; This should be moved to <makable>
   (:generic> make (&key #+sbcl &allow-other-keys)
    (:values object) (:out 0)
    ;; the #+sbcl works around SBCL bug https://bugs.launchpad.net/sbcl/+bug/537711
    (:documentation "Given a <type>, create an object conforming to the interface
-based on provided initarg keywords, returning the object."))
+based on provided initarg keywords, returning the object."))|#
   (:generic> check-invariant (object &key #+sbcl &allow-other-keys)
    (:in 1) (:values object) (:out nil) ;; :out nil because normal methods don't return anything!
    (:documentation "Check whether an OBJECT fulfills the invariant(s) required

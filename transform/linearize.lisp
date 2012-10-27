@@ -189,12 +189,11 @@
          (stateful-gfs (all-interface-generics all-stateful-interfaces))
          (stateful-gfs-hash
           (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test #'equal))
+           (mapcar #'(lambda (x) (cons (symbol-name x) x)) stateful-gfs) :test #'equal))
          (overridden-gfs (append (find-multiple-clos-options :method options)
 				 (find-multiple-clos-options :method> options)))
          (overridden-gfs-hash
-          (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test #'eql)))
+          (alexandria:alist-hash-table (mapcar 'cdr overridden-gfs))))
     `(progn
        (define-interface ,name (pure:<linearized> ,@pure-interfaces)
          ,slots

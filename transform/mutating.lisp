@@ -199,8 +199,7 @@
          (overridden-gfs (append (find-multiple-clos-options :method options)
 				 (find-multiple-clos-options :method> options)))
          (overridden-gfs-hash
-          (alexandria:alist-hash-table
-           (mapcar #'(lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql)))
+          (alexandria:alist-hash-table (mapcar 'cdr overridden-gfs))))
     `(progn
        (define-interface ,name (stateful:<mutating> ,@stateful-interfaces)
          ,slots

@@ -9,9 +9,6 @@
 
 ;;; TODO: handle gf's with or without explicit override
 
-(defclass object-box (box!)
-  ((interface :reader class-interface)))
-
 (defmacro define-classified-method
     (class interface class-gf interface-gf &key
      interface-argument
@@ -82,91 +79,78 @@
            (values (when interface-argument `(,interface-argument)) extract-interface))
      (assert interface-expression))
    (let ((interface-var (first interface-required))
-         (lpin (length interface-required))
-         (lsin (length class-required))
-         (lpout (length interface-results-required))
-         (lsout (length class-results-required)))
-     (assert (plusp lpin))
-     (assert (= lpin lsin))
+         (lin (length interface-required))
+         (lcin (length class-required))
+         (lout (length interface-results-required))
+         (lcout (length class-results-required)))
+     (assert (plusp lin))
+     (assert (= lin lcin))
+     (assert (= lout lcout))
      (assert (= (length interface-optionals) (length class-optionals)))
      (assert (eq (and interface-rest t) (and class-rest t))))
    (loop
-     :with lepout = 0 :with lesout = 0
-     :for (pin pout) :in effects
-     :for (sin sout) :in effects
-     :do (assert (eq (integerp pin) (integerp sin)))
-         (assert (eq (null pin) (null sin))) ;; new is new
-     :when (integerp pin)
-       :collect (list sin sout pin pout) :into effective-inputs :end
-     :when (integerp pout)
-       :collect (list sout sin pout pin) :into effective-outputs :end
-     :when (integerp pout)
-       :do (incf lepout) :end
-     :when (integerp sout)
-       :do (incf lesout) :end
-     :finally
-     (assert (= (- lpout lepout) (- lsout lesout))))
+     :for (in out) :in effects
+     :when (integerp in)
+       :collect (list in out) :into effective-inputs :end
+     :when (integerp out)
+       :collect (list out in) :into effective-outputs :end
+     :finally)
    (return)
    (let* ((required-input-bindings
-           (loop :for (esi () epi ()) :in effective-inputs
-             :for siv = (nth esi class-required)
-             :for piv = (nth epi interface-required)
+           (loop :for (in ()) :in effective-inputs
+             :for siv = (nth in class-required)
+             :for piv = (nth in interface-required)
              :collect `(,piv (,@unwrap ,siv))))
           (required-output-bindings
-           (loop :for (eso esi epo ()) :in effective-outputs
-             :for epor = (nth epo interface-results-required)
-             :when (integerp eso)
-             :collect `(,(nth eso class-results-required)
-                        ,(if (integerp esi)
-                             (progn
-                               (push epor interface-results-ignorables)
-                               (nth esi class-required))
-                             `(,@wrap
-                               ,@(when interface-keyword
-                                       `(,interface-keyword ,interface-var))
-                               ,@(when value-keyword `(,value-keyword))
-                               ,epor)))))
+           (loop :for (out in) :in effective-outputs
+             :for eior = (nth out interface-results-required)
+             :collect `(,(nth out class-results-required)
+			(,@wrap
+			 ,@(when interface-keyword
+			     `(,interface-keyword ,interface-var))
+			 ,@(when value-keyword `(,value-keyword))
+			 ,eior))))
           (ineffective-class-inputs
-           (loop :for i :from 1 :below lsin
+           (loop :for i :from 1 :below lin
              :for v :in (rest class-required)
              :unless (find i effective-inputs :key 'first)
              :collect v))
           (ineffective-interface-inputs
-           (loop :for i :from 1 :below lpin
+           (loop :for i :from 1 :below lin
              :for v :in (rest interface-required)
-             :unless (find i effective-inputs :key 'third)
+             :unless (find i effective-inputs :key 'first)
              :collect v))
           (ineffective-class-outputs
-           (loop :for i :below lpout
+           (loop :for i :below lout
              :for v :in class-results-required
              :unless (find i effective-outputs :key 'first)
              :collect v))
           (ineffective-interface-outputs
-           (loop :for i :below lpout
+           (loop :for i :below lout
              :for v :in interface-results-required
-             :unless (find i effective-outputs :key 'third)
+             :unless (find i effective-outputs :key 'first)
              :collect v))
           (interface-argument-bindings
            (append
             `((,interface-var ,interface-expression))
             required-input-bindings
-            (loop :for ipi :in ineffective-interface-inputs
-              :for isi :in ineffective-class-inputs
-              :collect `(,ipi ,isi))
-            (loop :for (po () pop) :in interface-optionals
-              :for (so () sop) :in class-optionals
-              :append `((,po ,so) (,sop ,pop)))
+            (loop :for iii :in ineffective-interface-inputs
+              :for ici :in ineffective-class-inputs
+              :collect `(,iii ,ici))
+            (loop :for (io () iop) :in interface-optionals
+              :for (co () cop) :in class-optionals
+              :append `((,io ,co) (,iop ,cop)))
             (when interface-rest
               `((,interface-rest ,class-rest)))))
           (class-results-bindings
            (append
             required-output-bindings
-            (loop :for ipo :in ineffective-interface-outputs
-              :for iso :in ineffective-class-outputs
-              :collect `(,iso ,ipo))
-            (loop :for (pro () prop) :in interface-results-optionals
-              :for (sro () srop) :in class-results-optionals
-              :append `((,sro ,pro) (,srop ,prop)))
+            (loop :for iio :in ineffective-interface-outputs
+              :for ico :in ineffective-class-outputs
+              :collect `(,ico ,iio))
+            (loop :for (iro () irop) :in interface-results-optionals
+              :for (cro () crop) :in class-results-optionals
+              :append `((,cro ,iro) (,crop ,irop)))
             (when class-results-rest
               `((,class-results-rest ,interface-results-rest)))))))
    `(,(if genericp 'defmethod 'defun) ,class-gf
@@ -191,42 +175,57 @@
   (let* ((all-interfaces (all-super-interfaces interface))
          (interface-gfs (all-interface-generics all-interfaces))
          (overridden-gfs (append (find-multiple-clos-options :method options)
-				 (find-multiple-clos-options :method> options)))
+                                 (find-multiple-clos-options :method> options)))
          (overridden-gfs-hash
-          (alexandria:alist-hash-table
-           (mapcar (lambda (x) (cons (second x) (nthcdr 2 x))) overridden-gfs) :test 'eql))
-         (interface-argument (find-unique-clos-option :interface-argument options))
-         (extract-interface (find-unique-clos-option :extract-interface options))
-         (interface-keyword (find-unique-clos-option :interface-keyword options))
-         (value-keyword (find-unique-clos-option :value-keyword options))
-         (wrap (find-unique-clos-option :wrap options))
-         (unwrap (find-unique-clos-option :unwrap options))
-         (genericp (find-unique-clos-option :genericp options))
+          (alexandria:alist-hash-table (mapcar 'cdr overridden-gfs)))
+         (interface-argument (find-unique-clos-option/1* :interface-argument options))
+         (extract-interface (find-unique-clos-option/1* :extract-interface options))
+         (interface-keyword (find-unique-clos-option/1* :interface-keyword options))
+         (value-keyword (find-unique-clos-option/1* :value-keyword options))
+         (wrap (find-unique-clos-option/1* :wrap options))
+         (unwrap (find-unique-clos-option/1* :unwrap options))
+         (genericp (find-unique-clos-option/1* :genericp options))
+         (package (find-unique-clos-option/1 :package options (symbol-package name)))
+         (constructor-prefix (find-unique-clos-option/1 :constructor-prefix options))
+         (constructor-suffix (find-unique-clos-option/1 :constructor-suffix options))
+         (constructors-only (find-unique-clos-option/1 :constructors-only options))
          (class-options (remove-keyed-clos-options
                              '(:interface-argument :extract-interface
                                :interface-keyword :value-keyword
-                               :wrap :unwrap :genericp) options))
-         (package (symbol-package name)))
+                               :wrap :unwrap :genericp :package
+			       :constructor-prefix :constructor-suffix :constructors-only)
+			     options)))
     `(progn
        (defclass ,name (,@superclasses #|stateful::<mutating>|#)
          ,slots
          ,@class-options)
        ,@(loop :for interface-gf :in interface-gfs
            :unless (gethash interface-gf overridden-gfs-hash) :append
-           (nest
-            (let ((effects (getf (search-gf-options all-interfaces interface-gf) :effects))))
-            ;; methods that have registered effects as expressible and expressed in our trivial language
-            (when effects)
-            (when (or interface-argument
-                      extract-interface
-                      (find-if #'integerp effects :key 'car)))
-            (let ((class-gf (intern (symbol-name interface-gf) package))))
-            `((define-classified-method
-                ,name ,interface ,class-gf ,interface-gf
-                ,@interface-argument
-                ,@extract-interface
-                ,@interface-keyword
-                ,@value-keyword
-                ,@wrap
-                ,@unwrap
-                ,@genericp)))))))
+           (let* ((effects (getf (search-gf-options all-interfaces interface-gf) :effects))
+                  (constructorp (not (find-if #'integerp effects :key 'car))))
+             ;; methods that have registered effects as expressible and expressed in our trivial language
+             (when effects
+               `(,@(when (or (and (not constructorp) (not constructors-only))
+			     (and constructorp (or interface-argument extract-interface)))
+                     (let ((class-gf (intern (symbol-name interface-gf) package)))
+                       `((define-classified-method
+                             ,name ,interface ,class-gf ,interface-gf
+                           ,@interface-argument
+                           ,@extract-interface
+                           ,@interface-keyword
+                           ,@value-keyword
+                           ,@wrap
+                           ,@unwrap
+                           ,@genericp))))
+                 ,@(when (and constructorp (or constructor-prefix constructor-suffix))
+                     (let ((class-gf (format-symbol package "~@[~A~]~A~@[~A~]"
+                                                    constructor-prefix (symbol-name interface-gf)
+                                                    constructor-suffix)))
+                       `((define-classified-method
+                             ,name ,interface ,class-gf ,interface-gf
+                           :extract-interface ,interface
+                           ,@interface-keyword
+                           ,@value-keyword
+                           ,@wrap
+                           ,@unwrap
+                           :genericp nil)))))))))))

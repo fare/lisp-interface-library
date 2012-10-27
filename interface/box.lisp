@@ -112,14 +112,14 @@
 
 (defun make-one-use-function (function &optional name)
   (let ((usedp nil))
-    (lambda (&rest args)
-      (cond
-        ((not usedp)
-         (let ((fun function))
-           (setf usedp t function nil)
-           (apply fun args)))
-        (t
-         (error "Function ~@[~A ~]already called once" name))))))
+    #'(lambda (&rest args)
+	(cond
+	  ((not usedp)
+	   (let ((fun function))
+	     (setf usedp t function nil)
+	     (apply fun args)))
+	  (t
+	   (error "Function ~@[~A ~]already called once" name))))))
 
 (defmacro one-use-lambda (formals &body body)
   `(make-one-use-function #'(lambda ,formals ,@body)))

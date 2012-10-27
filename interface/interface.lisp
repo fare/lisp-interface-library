@@ -29,7 +29,7 @@
 
   (defun memberp (list &rest keys &key test test-not key)
     (declare (ignore test test-not key))
-    (lambda (x) (apply 'member x list keys)))
+    #'(lambda (x) (apply 'member x list keys)))
 
   (defun number-of-required-arguments (lambda-list)
     (or (position-if (memberp '(&optional &rest &key &environment &aux)) lambda-list)
@@ -145,6 +145,22 @@
            (again (member key (rest found) :key 'car)))
       (when again (error "option ~S appears more than once in ~S" key options))
       (car found)))
+
+  (defun find-unique-clos-option/0 (key options)
+    (let ((option (find-unique-clos-option key options)))
+      (when option
+	(assert (length=n-p option 1))
+	t)))
+
+  (defun find-unique-clos-option/1* (key options)
+    (let ((option (find-unique-clos-option key options)))
+      (when option
+	(assert (length=n-p option 2)))
+      option))
+
+  (defun find-unique-clos-option/1 (key options &optional default)
+    (let ((option (find-unique-clos-option/1* key options)))
+      (if option (second option) default)))
 
   (defun find-multiple-clos-options (key options)
     (remove key options :key 'car :test-not 'eq))
@@ -276,19 +292,19 @@
   (let ((class-options
          ;;(keep-keyed-clos-options '(:default-initargs :documentation :metaclass) options)
          (remove-keyed-clos-options
-          '(:generic :generic> :method :method> :singleton :parametric :abstract) options))
-        (metaclass (find-unique-clos-option :metaclass options))
+          '(:generic :generic> :method :method> :singleton :parametric :abstract :metaclass) options))
+        (metaclass (find-unique-clos-option/1 :metaclass options 'interface-class))
         (gfs (find-multiple-clos-options :generic options))
         (gfs> (find-multiple-clos-options :generic> options))
         (methods (find-multiple-clos-options :method options))
         (methods> (find-multiple-clos-options :method> options))
         (parametric (find-unique-clos-option :parametric options))
-        (singleton (find-unique-clos-option :singleton options))
-        (abstract (find-unique-clos-option :abstract options)))
+        (singleton (find-unique-clos-option/0 :singleton options))
+        (abstract (find-unique-clos-option/0 :abstract options)))
     `(progn
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (defclass ,interface ,super-interfaces ,slots
-           ,@(unless metaclass `((:metaclass interface-class)))
+           (:metaclass ,metaclass)
            ,@class-options)
        	 (let ((interface-class (find-class ',interface)))
 	   (finalize-inheritance interface-class)
@@ -349,7 +365,7 @@
                 :collect
                 `(,local-name (&rest ,arguments)
                               (apply ',function-name ,interface-sexp ,arguments)))
-         (declare (ignorable ,@(mapcar (lambda (x) `#',x) local-names))
+         (declare (ignorable ,@(mapcar #'(lambda (x) `#',x) local-names))
 		  (inline ,@local-names))
 	 ,@body))))
 
