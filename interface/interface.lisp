@@ -241,33 +241,36 @@
 	     (with-interface (,interface-var ,interface-class)
 	       ,@remaining-forms)))))))
 
-(defmacro define-interface-generic> (interface name lambda-list &rest options)
-  `(%define-interface-generic ,interface ,interface ,name ,lambda-list ,@options))
+(defmacro define-interface-generic> (time interface name lambda-list &rest options)
+  `(%define-interface-generic ,time ,interface ,interface ,name ,lambda-list ,@options))
 
-(defmacro define-interface-generic (interface name lambda-list &rest options)
-  `(%define-interface-generic nil ,interface ,name ,lambda-list ,@options))
+(defmacro define-interface-generic (time interface name lambda-list &rest options)
+  `(%define-interface-generic ,time nil ,interface ,name ,lambda-list ,@options))
 
-(defmacro %define-interface-generic (interface-argument interface name lambda-list &rest options)
-  (let ((generic-options
-         (remove-keyed-clos-options
-	  `(,@(when interface-argument '(:method>)) :in :out :values) options))
-        (methods> (when interface-argument (find-multiple-clos-options :method> options)))
-	(full-lambda-list `(,@(when interface-argument `(,interface-argument)) ,@lambda-list))
-        (in (find-unique-clos-option :in options))
-        (out (find-unique-clos-option :out options))
-        (values (find-unique-clos-option :values options)))
-    `(progn
-       (defgeneric ,name ,full-lambda-list
-	 ,@generic-options
-	 ,@(loop :for (() . spec) :in methods> :collect
-		 `(:method ,@(apply 'expand-interface-method> (list interface-argument interface) name spec))))
-       (eval-when (:compile-toplevel :load-toplevel :execute)
-         (register-interface-generic
-          ',interface ',name
-          :lambda-list ',full-lambda-list
-          ,@(when in `(:in ',(cdr in)))
-          ,@(when out `(:out ',(cdr out)))
-          ,@(when values `(:values ',(cdr values))))))))
+(defmacro %define-interface-generic (time interface-argument interface name lambda-list &rest options)
+  (let ((full-lambda-list `(,@(when interface-argument `(,interface-argument)) ,@lambda-list)))
+    (ecase time
+      (:register
+       (let ((in (find-unique-clos-option :in options))
+	     (out (find-unique-clos-option :out options))
+	     (values (find-unique-clos-option :values options)))
+	 `(eval-when (:compile-toplevel :load-toplevel :execute)
+	    (register-interface-generic
+	     ',interface ',name
+	     :lambda-list ',full-lambda-list
+	     ,@(when in `(:in ',(cdr in)))
+	     ,@(when out `(:out ',(cdr out)))
+	     ,@(when values `(:values ',(cdr values)))))))
+      (:define
+       (let ((generic-options
+	       (remove-keyed-clos-options
+		`(,@(when interface-argument '(:method>)) :in :out :values) options))
+	     (methods> (when interface-argument (find-multiple-clos-options :method> options))))
+	 `(defgeneric ,name ,full-lambda-list
+	    ,@generic-options
+	    ,@(loop :for (() . spec) :in methods> :collect
+		    `(:method ,@(apply 'expand-interface-method>
+				 (list interface-argument interface) name spec)))))))))
 
 (defmacro define-interface (interface super-interfaces slots &rest options)
   (let ((class-options
@@ -312,9 +315,13 @@
        ,@(when singleton `((eval-when (:compile-toplevel :load-toplevel :execute)
 			     (defvar ,interface (,interface)))))
        ,@(loop :for (() . gf) :in gfs :collect
-           `(define-interface-generic ,interface ,@gf))
+           `(define-interface-generic :register ,interface ,@gf))
        ,@(loop :for (() . gf>) :in gfs> :collect
-           `(define-interface-generic> ,interface ,@gf>))
+           `(define-interface-generic> :register ,interface ,@gf>))
+       ,@(loop :for (() . gf) :in gfs :collect
+           `(define-interface-generic :define ,interface ,@gf))
+       ,@(loop :for (() . gf>) :in gfs> :collect
+           `(define-interface-generic> :define ,interface ,@gf>))
        ,@(when methods>
            `((define-interface-methods (,interface ,interface) ,@methods>)))
        ,@(mapcar #'(lambda (x) `(defmethod ,@(rest x))) methods)
