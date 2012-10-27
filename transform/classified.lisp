@@ -14,7 +14,29 @@
     #:define-classified-interface-class
     #:class-interface
     #:interface ;; for the slot name
-    #:box!))
+    #:box!)
+  (:export
+   #:object-box
+   #:>map<
+   #:>number-map<
+   ;; map interface functions
+   #:lookup
+   #:insert
+   #:drop
+   #:first-key-value
+   #:decons
+   #:fold-left
+   #:fold-right
+   #:join
+   #:divide
+   #:size
+   #:join/list
+   #:divide/list
+   #:update-key
+   #:map/2
+   #:convert
+   #:check-invariant
+   #:encode-key #:decode-key))
 
 (defpackage :posh
   (:documentation "Pure Object-Oriented Structure Hierarchy, classy APIs for pure LIL data structure")
@@ -23,7 +45,30 @@
     #:define-classified-interface-class
     #:class-interface
     #:interface ;; for the slot name
-    #:simple-value-box))
+    #:simple-value-box)
+  (:export
+   #:object-box
+   #:>map<
+   #:>hash-table<
+   #:>number-map<
+   ;; map interface functions
+   #:lookup
+   #:insert
+   #:drop
+   #:first-key-value
+   #:decons
+   #:fold-left
+   #:fold-right
+   #:join
+   #:divide
+   #:size
+   #:join/list
+   #:divide/list
+   #:update-key
+   #:map/2
+   #:convert
+   #:check-invariant
+   #:encode-key #:decode-key))
 
 (in-package :classy)
 
