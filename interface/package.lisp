@@ -24,13 +24,16 @@
 
    ;;; General purpose gfs
    #:check-invariant
-   #:make
    #:update
    #:base-interface
    #:instantiate
    #:convert
    #:size #:size<=n-p
    #:for-each
+
+   ;;; Make, Copy
+   #:<makeable> #:make
+   #:<copyable> #:copy
 
    ;;; Empty?
    #:<emptyable> #:empty #:empty-p
@@ -86,10 +89,11 @@
    #:empty-object #:make-empty-object #:empty-object-p
 
    ;; simple mixins
-   #:<sizable-size<=n-p-from-size>
+   #:<copy-is-identity>
    #:<map-for-each-from-fold-left>
    #:<map-fold-right-from-fold-left>
    #:<map-size-from-fold-left>
+   #:<sizable-size<=n-p-from-size>
 
    ;; linearize
    #:define-linearized-interface #:define-linearized-method #:stateful-interface

@@ -6,7 +6,8 @@
 (in-package :pure)
 
 (define-interface <alist>
-    (<map-empty-is-nil>
+    (<copy-is-identity>
+     <map-empty-is-nil>
      <map-decons-from-first-key-value-drop>
      <map-update-key-from-lookup-insert-drop>
      <map-divide/list-from-divide>

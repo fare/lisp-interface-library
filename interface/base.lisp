@@ -8,12 +8,6 @@
 (define-interface <type> (<interface>) ()
   (:documentation "An interface encapsulating a particular type of objects")
   (:abstract)
-  #| ;; This should be moved to <makable>
-  (:generic> make (&key #+sbcl &allow-other-keys)
-   (:values object) (:out 0)
-   ;; the #+sbcl works around SBCL bug https://bugs.launchpad.net/sbcl/+bug/537711
-   (:documentation "Given a <type>, create an object conforming to the interface
-based on provided initarg keywords, returning the object."))|#
   (:generic> check-invariant (object &key #+sbcl &allow-other-keys)
    (:in 1) (:values object) (:out nil) ;; :out nil because normal methods don't return anything!
    (:documentation "Check whether an OBJECT fulfills the invariant(s) required
@@ -27,6 +21,25 @@ On success the OBJECT itself is returned. On failure an error is signalled.")
    (:documentation "Convert an OBJECT following interface <ORIGIN>
     into a new object following interface <DESTINATION>.")))
 
+(define-interface <copyable> (<type>) ()
+  (:documentation "A type of objects that can be copied")
+  (:abstract)
+  (:generic> copy (object)
+   (:in 1) (:values object) (:out 0)
+   (:documentation "Copy an OBJECT, returning a fresh object with
+equivalent contains.
+Beware: how deep the copy goes depends on the interface;
+copying a data structure may lead to identical objects rather than copies
+being left at leaves; or it may not.
+If you work in a stateful style, then this matters a lot
+because your side-effects may or may not be seen by more or fewer copies
+than you think. Please consult the documentation of appropriate methods.")))
+
+(define-interface <copy-is-identity> (<copyable>) ()
+  (:abstract)
+  (:method> copy (x)
+    x)
+  (:documentation "Pure Persistent Data Structures have trivial copying"))
 
 ;;; This one is only colloquial for use in pure datastructure. TODO: Move it to pure-?
 (defgeneric update (<type> object &key)
@@ -36,10 +49,17 @@ with those specified as initarg keywords, returning a new object."))
 (defgeneric base-interface (<interface>)
   (:documentation "from the parametric variant of a mixin, extract the base interface"))
 
+;;; Makeable
+(define-interface <makeable> (<type>) ()
+  (:generic> make (&key #+sbcl &allow-other-keys)
+   (:values object) (:out 0)
+   ;; the #+sbcl works around SBCL bug https://bugs.launchpad.net/sbcl/+bug/537711
+   (:documentation "Given a <type>, create an object conforming to the interface
+based on provided initarg keywords, returning the object.")))
 
 ;;; Classy Interface (i.e. has some associated class)
 
-(define-interface <classy> (<type>)
+(define-interface <classy> (<makeable>)
   ((class :reader interface-class :allocation :class)))
 
 (defmethod make ((i <classy>) &rest keys &key #+sbcl &allow-other-keys)

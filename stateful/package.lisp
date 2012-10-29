@@ -34,6 +34,7 @@
    #:<number-map> #:<nm>
    #:<hash-table>
    #:<encoded-key-map>
+   #:<map-copy-from-join-empty>
    #:<map-empty-is-empty-object> #:empty-object
    #:<map-decons-from-first-key-value-drop>
    #:<map-update-key-from-lookup-insert-drop>

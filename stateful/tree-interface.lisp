@@ -16,6 +16,7 @@
 (define-interface <binary-tree>
     (<tree>
      interface::<binary-tree>
+     <map-copy-from-join-empty>
      <map-empty-is-empty-object> ;; handles all the empty-object cases so we don't have to.
      <map-decons-from-first-key-value-drop>
      <map-update-key-from-lookup-insert-drop>

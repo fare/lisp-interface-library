@@ -6,7 +6,8 @@
 (in-package :stateful)
 
 (define-interface <hash-table>
-    (<map-decons-from-first-key-value-drop>
+    (<map-copy-from-join-empty>
+     <map-decons-from-first-key-value-drop>
      <map-divide-from-for-each>
      <map-divide/list-from-divide>
      <map-first-key-value-from-for-each>

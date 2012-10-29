@@ -5,7 +5,7 @@
 
 (in-package :interface)
 
-(define-interface <map> (<sizable> <emptyable>) ()
+(define-interface <map> (<sizable> <emptyable> <copyable>) ()
   (:abstract)
   (:generic> lookup (map key) (:in 1) (:values value foundp)
    (:documentation "Lookup what map associates to a key,

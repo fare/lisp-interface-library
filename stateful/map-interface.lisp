@@ -77,6 +77,14 @@ we could have a
 (defgeneric monoid-fold (i map m-null m-singleton m-join m-join/list))
 |#
 
+(define-interface <map-copy-from-join-empty> (<map>) ()
+  (:abstract)
+  (:documentation "Beware that join must be non-destructive of its second argument")
+  (:method> copy (map)
+    (let ((new (empty)))
+      (join new map)
+      new)))
+
 ;;; Mixins implementing simple cases for a lot of the above functions
 (define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
 (define-interface <map-divide-from-for-each> (<map>) () (:abstract))
