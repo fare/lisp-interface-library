@@ -21,12 +21,13 @@ A short introduction on our "Interface-Passing Style" of programming, is also at
 Features:
 
 * LIL sports both pure (persistent) and stateful (ephemeral) variants
- of data structures, with a common core for read-only operations,
- and automatic transforms to go from stateful to pure and back,
- in the respective packages PURE and STATEFUL.
+ of data structures in Interface-Passing Style,
+ in the respective packages PURE and STATEFUL,
+ with a common core for read-only operations
+ and automatic transforms to go from stateful to pure and back.
 
 * LIL supports data structures in traditional Object-Oriented Style,
- in both stateful (the usual OO kind) and pure variants,
- in they respective packages POSH and CLASSY,
+ in both stateful (the usual Object-Oriented kind) and pure variants,
+ in the respective packages POSH and CLASSY,
  with automatic transforms to go from Interface-Passing Style to
  traditional Object-Oriented Style and back.
