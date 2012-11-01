@@ -1,19 +1,14 @@
 ;;;;-*- Lisp -*-
 #|
-* oconnore:
-** review article
-** implement functional arrays -- use RRB-trees?
-  http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
-
-* ebzzry:
-** implement Red-Black trees?
-
 * fare:
 
 * Unassigned:
 ** Some bootstrapped datastructure from Okasaki
 ** More from
  http://planet.plt-scheme.org/display.ss?package=pfds.plt&owner=krhari
+** implement functional arrays -- use RRB-trees?
+  http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
+** implement red-black trees
 ** Import functionality from cl-containers?
 ** Add "Minimal Viable Snippet" for the library and each of its major features.
 *** Initial: some treesort ?
@@ -40,6 +35,9 @@
 ** Document the interface transformers.
 ** Add :pre and :post pure compositional analogues to :before and :after --
  preprocess arguments and post-process results.
+** Invalidate interface constructor memoization caches
+ when the interface definition changes.
+ Suggestion: make it based on a sxhash of the definition SEXP.
 
 * send mail to the maintainers of each and every datastructure library,
  and offer to merge into lil.
