@@ -204,8 +204,11 @@
             (let ((pure-effects (getf (search-gf-options all-pure-interfaces pure-gf) :effects))))
             ;; methods that have registered effects as expressible and expressed in our trivial language
             (when pure-effects)
-            (let* ((stateful-gf (gethash (symbol-name pure-gf) stateful-gfs-hash))
-                   (stateful-effects (getf (search-gf-options all-stateful-interfaces stateful-gf) :effects)))
-              (assert stateful-effects))
+            (let ((stateful-gf (gethash (symbol-name pure-gf) stateful-gfs-hash)))
+            (when stateful-gf))
+            (let (stateful-effects (getf (search-gf-options all-stateful-interfaces stateful-gf) :effects))
+              (assert stateful-effects ()
+                      "No stateful effects while transforming ~S to ~S for ~S"
+                      stateful-gf pure-gf name))
             `((define-linearized-method ,name ,pure-interfaces ,stateful-interfaces
                                         ,pure-gf ,stateful-gf)))))))

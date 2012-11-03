@@ -213,6 +213,8 @@
             (let ((pure-gf (gethash (symbol-name stateful-gf) pure-gfs-hash))))
             (when pure-gf)
             (let ((pure-effects (getf (search-gf-options all-pure-interfaces pure-gf) :effects)))
-              (assert pure-effects))
+              (assert pure-effects ()
+                      "No pure effects while transforming ~S to ~S for ~S"
+                      pure-gf stateful-gf name))
             `((define-mutating-method ,name ,stateful-interfaces ,pure-interfaces
                                       ,stateful-gf ,pure-gf)))))))
