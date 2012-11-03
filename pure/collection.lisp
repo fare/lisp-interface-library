@@ -17,9 +17,22 @@
 
 (define-interface <finite-collection> (interface::<finite-collection> <empty!able>) ()
   (:abstract)
-  (:generic> conj (collection entry) (:in 1) (:values collection) (:out 0))
-  (:generic> drop-key (collection key) (:in 1) (:values collection entry foundp) (:out 0))
-  (:generic> deconj (collection) (:in 1) (:values collection entry foundp) (:out 0))
+  (:generic> conj (collection entry) (:in 1) (:values collection) (:out 0)
+   (:documentation "Add an ENTRY to a COLLECTION.
+How the entry is combined with any existing entry of same key depends on the specific interface.
+Return a new COLLECTION."))
+  (:generic> disj (collection key) (:in 1) (:values collection entry foundp) (:out 0)
+   (:documentation "Drop from the COLLECTION an entry matching the key, if any.
+Return three values:
+1- a new COLLECTION without that entry,
+2- the ENTRY that was dropped if any, and
+3- a boolean FOUNDP that is true iff an entry was found."))
+  (:generic> deconj (collection) (:in 1) (:values collection entry foundp) (:out 0)
+   (:documentation "Drop from the COLLECTION the first ENTRY, if any.
+Return three values:
+1- a new COLLECTION without that entry,
+2- the ENTRY that was dropped if any, and
+3- a boolean FOUNDP that is true iff an entry was found."))
   (:generic> join (collection1 collection2) (:in 1 2) (:values collection1) (:out 0 nil)
    (:documentation "Join two collections, returning a new joined collection.
 How entries are combined depends on the specific interface.
