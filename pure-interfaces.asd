@@ -10,6 +10,7 @@
 	     (:file "iterator-interface" :depends-on ("package"))
 	     (:file "collection" :depends-on ("iterator-interface"))
 	     (:file "map-interface" :depends-on ("collection"))
+	     (:file "set-interface" :depends-on ("map-interface"))
 	     (:file "alist-interface" :depends-on ("map-interface"))
 	     (:file "tree-interface" :depends-on ("map-interface"))
 	     (:file "hash-table-interface" :depends-on ("tree-interface"))

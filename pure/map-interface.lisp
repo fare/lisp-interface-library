@@ -5,7 +5,7 @@
 
 (in-package :pure)
 
-(define-interface <map> (interface::<map> <empty!able> <fount> <sink>) ()
+(define-interface <map> (interface::<map> <finite-collection> <fount> <sink>) ()
   (:abstract)
   (:generic> insert (map key value) (:in 1) (:values map) (:out 0)
    (:documentation "Add a key-value pair to a map,
@@ -25,25 +25,6 @@ returning four values:
 3- a key
 4- a value.
 Which association is dropped is the same as per first-key-value."))
-  (:generic> join (map1 map2) (:in 1 2) (:values map1) (:out 0 nil)
-   (:documentation "Join two maps, returning a new joined map.
-Mappings from MAP1 override those from MAP2."))
-  (:generic> divide (map) (:in 1) (:values map2 map) (:out 1 0)
-   (:documentation "Divide a map in two,
-returning two maps MAP1 and MAP2 that each have strictly
-fewer associations than MAP unless MAP is of size zero or one,
-at which point MAP2 is empty."))
-  (:generic> join/list (list) #|(:in #|((1 list))|#) (:values map) (:out 0)|#
-   (:documentation "Join a list of maps,
-returning a new joined map where mappings from
-earlier mappings override those from latter mappings."))
-  (:generic> divide/list (map) #|(:in 1) (:values list) (:out t #|((0 list))|#)|#
-   (:documentation "Divide a map in a list of several submaps and return that list,
-such that merging those maps with join/list
-will return a map similar to the original one,
-that the returned list is empty iff the initial map is empty,
-that the returned list is of length one iff the initial map is a singleton,
-and that otherwise, each element of the list is non-empty."))
   (:generic> update-key (map key fun) (:in 1) (:values map) (:out 0)
    (:documentation "Update the association of a map for a given key and
 return a new updated map

@@ -41,7 +41,7 @@
    #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
    #:<makeable> #:make
    #:<sizable> #:size #:size<=n-p
-   #:<finite-collection> #:singleton-p #:singleton #:singleton* #:first-entry #:entry-values
+   #|#:<finite-collection>|# #:singleton-p #:singleton #:singleton* #:first-entry #:entry-values
    #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
 
    ;;; eq

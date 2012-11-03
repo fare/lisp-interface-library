@@ -14,3 +14,30 @@
     (:documentation
      "This function is pretty useless to call, but allows for
       automatic generation of mutating interface wrappers.")))
+
+(define-interface <finite-collection> (interface::<finite-collection> <empty!able>) ()
+  (:abstract)
+  (:generic> conj (collection entry) (:in 1) (:values collection) (:out 0))
+  (:generic> drop-key (collection key) (:in 1) (:values collection entry foundp) (:out 0))
+  (:generic> deconj (collection) (:in 1) (:values collection entry foundp) (:out 0))
+  (:generic> join (collection1 collection2) (:in 1 2) (:values collection1) (:out 0 nil)
+   (:documentation "Join two collections, returning a new joined collection.
+How entries are combined depends on the specific interface.
+Typically, entries from the first override entries from the second."))
+  (:generic> divide (collection) (:in 1) (:values collection2 collection) (:out 1 0)
+   (:documentation "Divide a COLLECTION in two,
+returning two collections COLLECTION1 and COLLECTION2 that each have strictly
+fewer entries than COLLECTION unless COLLECTION is of size zero or one,
+at which point COLLECTION2 is empty."))
+  (:generic> join/list (list) #|(:in #|((1 list))|#) (:values collection) (:out 0)|#
+   (:documentation "Join a list of COLLECTIONS, returning a new joined COLLECTION.
+earlier entries override those from latter entries.
+How entries are combined depends on the specific interface.
+Typically, entries from earlier collections override entries from latter ones."))
+  (:generic> divide/list (collection) #|(:in 1) (:values list) (:out (or null (cons map list)))|#
+   (:documentation "Divide a collection in a list of several subcollections and return that list,
+such that merging those collections with join/list
+will return a collection similar to the original one,
+that the returned list is empty iff the initial collection is empty,
+that the returned list is of length one iff the initial collection is a singleton,
+and that otherwise, each element of the list is non-empty.")))

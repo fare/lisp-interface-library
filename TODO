@@ -45,6 +45,9 @@
 * send mail to the maintainers of each and every datastructure library,
  and offer to merge into lil.
 
+* Reuse the design from the Haskell collections API?
+ http://hackage.haskell.org/packages/archive/collections-api/1.0.0.0/doc/html/doc-index.html
+
 * Low Priority:
 ** Remember functions that were built with explicit->implicit adapter,
  and optimize away indirection through interface in any implicit->explicit transformation back.
