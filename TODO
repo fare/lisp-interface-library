@@ -38,6 +38,9 @@
 ** Invalidate interface constructor memoization caches
  when the interface definition changes.
  Suggestion: make it based on a sxhash of the definition SEXP.
+** Integrate with typep.
+ Recognizers, like constructors, require special treatment in OO style.
+ Enhance the linear typesystem to handle this case.
 
 * send mail to the maintainers of each and every datastructure library,
  and offer to merge into lil.
