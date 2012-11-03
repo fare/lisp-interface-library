@@ -11,6 +11,7 @@
    "interface/order"
    "interface/iterator"
    "interface/map-interface"
+   "interface/set-interface"
    "interface/tree-interface"
    "pure/package"
    "pure/iterator"

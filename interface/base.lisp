@@ -21,6 +21,35 @@ On success the OBJECT itself is returned. On failure an error is signalled.")
    (:documentation "Convert an OBJECT following interface <ORIGIN>
     into a new object following interface <DESTINATION>.")))
 
+(define-interface <any> (<type>) ()
+  (:singleton)
+  (:documentation "Interface for any object")
+  (:method> check-invariant (object &key) (declare (ignore object)) (values))
+  (:method> convert (<origin> object) (declare (ignore <origin>)) object))
+
+(define-interface <magma> (<type>) ()
+  (:abstract)
+  (:generic> op (x y))) ; x * y
+(define-interface <semigroup> (<magma>) () ;; associativity: (== (op (op x y) z) (op x (op y z)))
+  (:abstract)
+  (:generic> op/list (list))) ; if not a monoid, the list must be non-empty
+(define-interface <identity> (<magma>) () ;; identity: (== x (op id x) (op x id))
+  (:abstract)
+  (:generic> id ()))
+(define-interface <monoid> (<semigroup> <identity>) () ;; associativity, identity
+  (:abstract))
+#|
+(define-interface <quasigroup> (<magma>) () ;; division
+  (:abstract)
+  (:generic> left-division (x y)) ; x \ y  (== (op x (left-division x y)) y)
+  (:generic> right-division (x y))) ; x / y  (== x (op (right-division x y) y))
+(define-interface <loop> (<quasigroup> <identity>) () ;; division, identity
+(define-interface <group> (<monoid> #|<quasigroup>|#) () ;; associativity, identity, division
+  (:generic> inverse (x)))
+(define-interface <semiring> (<group>) ()
+  (:generic> multiplicative-operation ()))
+|#
+
 (define-interface <copyable> (<type>) ()
   (:documentation "A type of objects that can be copied")
   (:abstract)
@@ -38,30 +67,36 @@ than you think. Please consult the documentation of appropriate methods.")))
 (define-interface <foldable> (<type>) ()
   (:documentation "A type of objects that can be folded")
   (:abstract)
-  (:generic> fold-left (foldable f seed) (:in 1) (:values value)
-   (:documentation "Fold an object with a function,
+  (:generic> monoid-fold (<monoid> foldable function) (:in 2) (:values value)
+   (:documentation "Fold the FOLDABLE according to a <MONOID> interface,
+where each entry is mapped to the monoid using the provided function"))
+  (:generic> monoid-fold* (<monoid> foldable function) (:in 2) (:values value)
+   (:documentation "Fold the FOLDABLE according to a <MONOID> interface,
+where each entry's values are mapped to the monoid using the provided function"))
+  (:generic> fold-left (foldable function seed) (:in 1) (:values value)
+   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
 iterating on the contents from a notional left to a notional right.
 The function takes as parameters
 an accumulated value followed by
 a single value for the content of each iteration
 and returns a new accumulated value."))
-  (:generic> fold-left* (map f seed) (:in 1) (:values value)
-   (:documentation "Fold an object with a function,
+  (:generic> fold-left* (foldable function seed) (:in 1) (:values value)
+   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
 iterating on the contents from a notional left to a notional right.
 The function takes as parameters
 an accumulated value followed by
 as many values as make sense for the specific interface, i.e.
 element for a set, element and count for a multi-set, key and value for a map,
 and returns a new accumulated value."))
-  (:generic> fold-right (foldable f seed) (:in 1) (:values value)
-   (:documentation "Fold an object with a function,
+  (:generic> fold-right (foldable function seed) (:in 1) (:values value)
+   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
 iterating on the contents from a notional right to a notional left.
 The function takes as parameters
 a single value for the content of each iteration
 followed by an accumulated value
 and returns a new accumulated value."))
-  (:generic> fold-right* (map f seed) (:in 1) (:values value)
-   (:documentation "Fold an object with a function,
+  (:generic> fold-right* (map function seed) (:in 1) (:values value)
+   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
 iterating on the contents from a notional right to a notional left.
 The function takes as parameters
 as many values as make sense for the specific interface,
@@ -86,13 +121,6 @@ with those specified as initarg keywords, returning a new object."))
 
 (defgeneric base-interface (<interface>)
   (:documentation "from a functor, extract the base interface parameter"))
-
-(defgeneric key-interface (<map>)
-  (:documentation "Interface for the type of keys of a map"))
-
-(defgeneric value-interface (<map>)
-  (:documentation "Interface for the type of values of a map"))
-
 
 ;;; Makeable
 (define-interface <makeable> (<type>) ()
@@ -131,6 +159,12 @@ A constant one is pure, a new one if stateful."))
 
 (define-interface <finite-collection> (<sizable> <foldable> <copyable> <emptyable>) ()
   (:abstract)
+  (:generic> key-interface () (:values interface)
+   (:documentation "Interface for the type of keys of a collection"))
+  (:generic> singleton-p (collection) (:in 1) (:values boolean)
+   (:documentation "Is the collection a singleton?"))
+  (:generic> singleton (entry) (:out 0) (:values collection)
+   (:documentation "Make a singleton from a single entry"))
   (:generic> first-entry (collection) (:in 1) (:values entry foundp)
    (:documentation "Return two values:
 1- a single value for an entry
@@ -141,6 +175,21 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
   (:generic> entry-values (entry)
    (:documentation "Take one entry value, return as many values as makes sense for the entry.")))
 
+
+(define-interface <encoded-key-collection> (<finite-collection>) ()
+  (:generic> encode-key (plain-key)
+     (:documentation "encode user-visible key into internal key"))
+  (:generic> decode-key (encoded-key)
+     (:documentation "decode user-visible key from internal key")))
+
+(define-interface <parametric-encoded-key-collection> (<encoded-key-collection>)
+  ((base-interface :initarg :base-interface :reader base-interface) ;; internal map representation
+   (key-encoder :initarg :key-encoder :reader key-encoder) ;; from key-interface to (key-interface base-interface)
+   (key-decoder :initarg :key-decoder :reader key-decoder)) ;; from (key-interface base-interface) to key-interface
+ (:method encode-key ((i <parametric-encoded-key-collection>) k)
+  (funcall (key-encoder i) k))
+ (:method decode-key ((i <parametric-encoded-key-collection>) k)
+  (funcall (key-decoder i) k)))
 
 ;;;
 ;;; Simple Mixins
@@ -168,6 +217,25 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
     nil)
   (:method> empty-p (object)
     (null object)))
+
+(define-interface <foldable-*-from> (<foldable>) ()
+  (:abstract)
+  (:method> monoid-fold* (<monoid> map function)
+    (monoid-fold <monoid> map function))
+  (:method> fold-left* (map function seed)
+    (fold-left map function seed))
+  (:method> fold-right* (map function seed)
+    (fold-right map function seed))
+  (:method> for-each* (map function)
+    (for-each map function)))
+
+(define-interface <foldable-monoid-fold-from-fold-left> (<foldable>) ()
+  (:abstract)
+  (:method> monoid-fold (<monoid> map fun)
+    (fold-left
+     map
+     #'(lambda (acc entry) (op <monoid> acc (funcall fun entry)))
+     (id <monoid>))))
 
 (define-interface <foldable-fold-right-from-fold-left> (<foldable>) ()
   (:abstract)

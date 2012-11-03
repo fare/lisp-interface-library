@@ -1,19 +1,9 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional mapping of keys to values
 
-#+xcvb (module (:depends-on ("interface/map-interface" "pure/iterator-interface")))
+#+xcvb (module (:depends-on ("interface/map-interface" "pure/collection")))
 
 (in-package :pure)
-
-(define-interface <empty!able> (<emptyable>) ()
-  (:generic> empty! (ignored) (:in 1)
-    (:values empty) (:out 0)
-    (:method> (ignored)
-       (declare (ignorable ignored))
-       (empty))
-    (:documentation
-     "This function is pretty useless to call, but allows for
-      automatic generation of mutating interface wrappers.")))
 
 (define-interface <map> (interface::<map> <empty!able> <fount> <sink>) ()
   (:abstract)
@@ -71,12 +61,6 @@ V2 and F2 are the value and found flag for MAP2,
 and FUN returns value V and found flag F,
 that correspond the lookup for K in the result.")))
 
-#|
-Instead of divide and divide/list and in the spirit of fold-left and fold-right,
-we could have a
-(defgeneric monoid-fold (i map m-null m-singleton m-join m-join/list))
-|#
-
 ;;; Mixins implementing simple cases for a lot of the above functions
 (define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
 (define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
@@ -84,6 +68,10 @@ we could have a
 (define-interface <map-join-from-fold-left*-insert> (<map>) () (:abstract))
 (define-interface <map-join/list-from-join> (<map>) () (:abstract))
 (define-interface <map-map/2-from-fold-left*-lookup-insert-drop> (<map>) () (:abstract))
+(define-interface <map-monoid-fold*-from-divide> (<foldable>) () (:abstract))
+(define-interface <map-monoid-fold*-from-divide/list> (<foldable>) () (:abstract))
 (define-interface <map-size<=n-p-from-decons> (<map>) () (:abstract))
 (define-interface <map-update-key-from-lookup-insert-drop> (<map>) () (:abstract))
 (define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
+(define-interface <map-singleton-from-insert> (<map>) () (:abstract))
+(define-interface <map-singleton-p-from-decons> (<map>) () (:abstract))

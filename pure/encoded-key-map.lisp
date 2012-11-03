@@ -66,14 +66,9 @@
   (defmethod map/2 ((i <encoded-key-map>) fun map1 map2)
     (map/2 (bi) #'(lambda (k v1 f1 v2 f2)
                     (funcall fun (decode-key i k) v1 f1 v2 f2))
-           map1 map2)))
+           map1 map2))
+  (defmethod singleton-p ((i <encoded-key-map>) map)
+    (singleton-p (bi) map)))
 
-(defun <encoded-key-map> (&key base-interface key-encoder key-decoder)
-  (<parametric-encoded-key-map>
-   :base-interface base-interface :key-encoder key-encoder :key-decoder key-decoder))
-
-(defmethod encode-key ((i <parametric-encoded-key-map>) k)
-  (funcall (key-encoder i) k))
-
-(defmethod decode-key ((i <parametric-encoded-key-map>) k)
-  (funcall (key-decoder i) k))
+(defun <encoded-key-map> (&rest keys)
+  (apply '<parametric-encoded-key-map> keys))

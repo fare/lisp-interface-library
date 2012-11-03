@@ -20,6 +20,7 @@
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-map/2-from-fold-left*-lookup-insert-drop>
+     <map-monoid-fold*-from-divide/list>
      <map-update-key-from-lookup-insert-drop>)
   ()
   (:abstract)

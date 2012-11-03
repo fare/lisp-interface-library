@@ -18,16 +18,19 @@
      <map-empty-is-nil>
      <map-decons-from-first-key-value-drop>
      <map-divide/list-from-divide>
-     <map-foldable-from*>
+     <map-foldable-from-*>
      <map-for-each*-from-fold-left*>
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-map/2-from-fold-left*-lookup-insert-drop>
+     <map-monoid-fold*-from-divide>
      <map-update-key-from-lookup-insert-drop>
      <tree> <map>)
   ()
   (:singleton)
-  (:documentation "Fast Merge Integer Maps"))
+  (:documentation "Fast Merge Integer Maps")
+  (:method> key-interface () <integer>)
+  (:method> value-interface () <any>))
 
 ;;; (big-endian) patricia tree (aka trie)
 (defclass trie-head (simple-value-box)

@@ -24,15 +24,25 @@
    #:update
    #:base-interface #:key-interface #:value-interface
 
-   ;;; Base
+   ;; Base
    #:<type> #:check-invariant #:convert
+   #:<any>
    #:<classy>
+
+   ;;; Algebra
+   #:<magma> #:op
+   #:<semigroup> #:op/list
+   #:<monoid> #:id
+   #:<group> #:inverse
+
+   ;; Base Collections
    #:<copyable> #:copy
    #:<emptyable> #:empty #:empty-p
-   #:<foldable> #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
+   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
    #:<makeable> #:make
    #:<sizable> #:size #:size<=n-p
-   #:<finite-collection> #:first-entry #:entry-values
+   #:<finite-collection> #:singleton-p #:singleton #:singleton* #:first-entry #:entry-values
+   #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
 
    ;;; eq
    #:<eq> #:== #:eq-function
@@ -68,8 +78,8 @@
    ;; #:<map> #:<alist> #:<tree> #:<binary-tree> #:<avl-tree> #:<number-map> #:<nm> #:<fmim>
    ;; DO export the accessors, because pure and stateful use them.
    #|#:<map>|# #:lookup #:first-key-value #:map-alist #:alist-map
-   #|#:<set>|# #:set-list #:list-set
-   #|#:<multiset>|# #:multiset-list #:list-multiset
+   #|#:<set>|# #:member-p #:set-list #:list-set
+   #|#:<multiset>|# #:member-count #:multiset-list #:list-multiset
    #|#:<sequence>|# #:sequence-list #:list-sequence
    #:node-class
    #:node #:node-key #:node-value #:left #:right #:node-balance #:node-height
@@ -86,12 +96,15 @@
    #:<copy-is-identity>
    #:<empty-is-nil>
    #:<empty-is-empty-object> #:empty-object #:make-empty-object #:empty-object-p
+   #:<foldable-*-from>
+   #:<foldable-fold-monoid-from-fold-left>
    #:<foldable-fold-right-from-fold-left>
    #:<foldable-for-each-from-fold-left>
    #:<foldable-size-from-fold-left>
-   #:<map-foldable-from*>
+   #:<map-foldable-from-*>
    #:<map-for-each*-from-fold-left*>
    #:<map-fold-right*-from-fold-left*>
+   #:<map-monoid-fold*-from-fold-left*>
    #:<sizable-size<=n-p-from-size>
 
    ;; linearize

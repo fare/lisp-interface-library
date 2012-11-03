@@ -90,9 +90,9 @@
     ((funcall lessp y x) 1)
     (t 0)))
 
-(macrolet ((builtin (name prefix)
+(macrolet ((builtin (name super prefix)
              `(progn
-                (define-interface ,name (<order>) () (:singleton))
+                (define-interface ,name (,@super <order>) () (:singleton))
                 ,@(loop :for n :in '(< <= > >=) :collect
                     `(defmethod ,(symbolicate :order n) ((i ,name) x y)
                        (,(symbolicate prefix n) x y)))
@@ -104,9 +104,15 @@
                     ((,(symbolicate prefix '>) x y) 1)
                     (t 0))))))
   ;;(builtin function call)
-  (builtin <number> "")
-  (builtin <char> char)
-  (builtin <string> string))
+  (builtin <number> (<monoid>) "")
+  (builtin <char> () char)
+  (builtin <string> () string))
+
+(define-interface-methods <number>
+  (:method> op (x y) (+ x y))
+  (:method> op/list (list) (reduce #'+ list :initial-value 0))
+  (:method> id () 0)
+  (:method> inverse (x) (- x)))
 
 (define-interface <integer> (<number>) ()
   (:singleton))

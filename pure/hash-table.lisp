@@ -73,6 +73,13 @@
         (first-key-value (bucketmap-interface i) bucket)
         (values nil nil nil))))
 
+(defmethod monoid-fold* ((i <hash-table>) <monoid> map f)
+  (monoid-fold*
+   (hashmap-interface i) <monoid> map
+   #'(lambda (hash bucket)
+       (declare (ignore hash))
+       (monoid-fold* (bucketmap-interface i) <monoid> bucket f))))
+
 (defmethod fold-left* ((i <hash-table>) map f seed)
   (fold-left* (hashmap-interface i) map
              #'(lambda (a h bucket)
@@ -120,6 +127,11 @@
              (list a))
             (t
              (list a b)))))))
+
+(defmethod singleton ((i <hash-table>) pair)
+  (let* ((key (car pair)) (value (cdr pair)) (hash (hash (key-interface i) key)))
+    (singleton (hashmap-interface i) hash
+	       (singleton (bucketmap-interface i) key value))))
 
 (defmethod size ((i <hash-table>) map)
   (fold-left* (hashmap-interface i) map

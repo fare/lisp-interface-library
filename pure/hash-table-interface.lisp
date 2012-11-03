@@ -14,24 +14,27 @@
 
 (define-interface <hash-table>
     (<copy-is-identity>
-     <map-foldable-from*>
+     <map-foldable-from-*>
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-update-key-from-lookup-insert-drop>
      <map-map/2-from-fold-left*-lookup-insert-drop>
+     <map-singleton-from-insert>
      <map>)
-  ((key-interface
-    :type <hashable>
-    :reader key-interface :initarg :key)
-   (hashmap-interface
-    :type <map>
-    :reader hashmap-interface :initarg :hashmap)
-   (bucketmap-interface
-    :type <map>
-    :reader bucketmap-interface :initarg :bucketmap))
-  (:parametric (&key (key <equal>)
-                     (hashmap <number-map>)
-                     (bucketmap (<alist> key)))
-               (make-interface :key key :hashmap hashmap :bucketmap bucketmap))
+  ((key-interface :type <hashable>
+    :reader key-interface :initarg :key-interface)
+   (value-interface :type <type>
+    :reader value-interface :initarg :value-interface)
+   (hashmap-interface :type <map>
+    :reader hashmap-interface :initarg :hashmap-interface)
+   (bucketmap-interface :type <map>
+    :reader bucketmap-interface :initarg :bucketmap-interface))
+  (:parametric (&key (key-interface <equal>) (value-interface <any>)
+		     (hashmap-interface <number-map>)
+		     (bucketmap-interface (<alist> key-interface value-interface)))
+     (make-interface :key-interface key-interface
+		     :value-interface value-interface
+		     :hashmap-interface hashmap-interface
+		     :bucketmap-interface bucketmap-interface))
   (:singleton)
   (:documentation "pure hash table"))

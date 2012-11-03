@@ -29,6 +29,32 @@
        (t
         map)))))
 
+(defmethod monoid-fold* ((<i> <map-monoid-fold*-from-divide>) <monoid> map fun)
+  (with-interface (<i> <map>)
+    (with-interface (<monoid> <monoid>)
+      (cond
+	((empty-p map)
+	 (id))
+	((singleton-p map)
+	 (multiple-value-bind (key value) (first-key-value map)
+	   (funcall fun key value)))
+	(t
+	 (multiple-value-bind (map1 map2) (divide map)
+	   (op (monoid-fold* <monoid> map1) (monoid-fold* <monoid> map2))))))))
+
+(defmethod monoid-fold* ((<i> <map-monoid-fold*-from-divide/list>) <monoid> map fun)
+  (with-interface (<i> <map>)
+    (with-interface (<monoid> <monoid>)
+      (let ((list (divide/list map)))
+	(cond
+	  ((null list)
+	   (id))
+	  ((null (cdr list))
+	   (multiple-value-bind (key value) (first-key-value map)
+	     (funcall fun key value)))
+	  (t
+	   (op/list (mapcar #'(lambda (map) (monoid-fold* <monoid> map)) list))))))))
+
 ;; <map-join-from-fold-left*-insert>
 (defmethod join ((<i> <map-join-from-fold-left*-insert>) map1 map2)
   (fold-left* <i> map1 #'(lambda (m k v) (insert <i> m k v)) map2))
@@ -60,6 +86,17 @@
     (destructuring-bind (mm . m2)
         (fold-left* i map1 #'join1 (cons (empty i) map2))
       (fold-left* i m2 #'join2 mm))))
+
+(defmethod singleton ((<i> <map-singleton-from-insert>) pair)
+  (with-interface (<i> <map>)
+    (insert (empty) (car pair) (cdr pair))))
+
+(defmethod singleton-p ((<i> <map-singleton-p-from-decons>) map)
+  (with-interface (<i> <map>)
+    (multiple-value-bind (empty-p map key value) (decons map)
+      (declare (ignore key value))
+      (and (not empty-p)
+	   (empty-p map)))))
 
 ;;; Functional maps as founts: trivial!
 (defmethod iterator ((<map> <map>) map)

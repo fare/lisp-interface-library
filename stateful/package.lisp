@@ -42,7 +42,7 @@
    #:<map-join/list-from-join>
    #:<map-divide/list-from-divide>
    #:<map-map/2-from-for-each*-lookup-insert-drop>
-   #:<map-foldable-from*>
+   #:<map-foldable-from-*>
    #:<map-fold-left*-from-each*>
    #:<map-fold-right*-from-fold-left*>
    #:<map-for-each*-from-fold-left*>

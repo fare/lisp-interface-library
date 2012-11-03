@@ -49,7 +49,7 @@
 (define-interface <binary-tree>
     (<tree>
      <foldable-size-from-fold-left>
-     <map-foldable-from*>
+     <map-foldable-from-*>
      <map>) ()
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
