@@ -17,11 +17,10 @@
     (<tree>
      <map-decons-from-first-key-value-drop>
      <map-empty-is-nil> ;; handles all the null cases so we don't have to.
-     <map-join-from-fold-left-insert>
+     <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
-     <map-map/2-from-fold-left-lookup-insert-drop>
-     <map-update-key-from-lookup-insert-drop>
-     <map-size-from-fold-left>)
+     <map-map/2-from-fold-left*-lookup-insert-drop>
+     <map-update-key-from-lookup-insert-drop>)
   ()
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))

@@ -46,27 +46,27 @@
   "Return key and value with the least key"
   (leftmost i map))
 
-(defmethod fold-left ((i <binary-tree>) node f seed)
+(defmethod fold-left* ((i <binary-tree>) node f seed)
   (if (empty-p i node)
       seed
-      (fold-left i (right node) f
-                      (funcall f
-                               (fold-left i (left node) f seed)
-                               (node-key node) (node-value node)))))
+      (fold-left* i (right node) f
+		  (funcall f
+			   (fold-left* i (left node) f seed)
+			   (node-key node) (node-value node)))))
 
-(defmethod fold-right ((i <binary-tree>) node f seed)
+(defmethod fold-right* ((i <binary-tree>) node f seed)
   (if (empty-p i node)
       seed
-      (fold-right i (left node) f
-                       (funcall f
-                                (node-key node) (node-value node)
-                                (fold-right i (right node) f seed)))))
+      (fold-right* i (left node) f
+		   (funcall f
+			    (node-key node) (node-value node)
+			    (fold-right* i (right node) f seed)))))
 
-(defmethod for-each ((i <binary-tree>) node f)
+(defmethod for-each* ((i <binary-tree>) node f)
   (unless (empty-p i node)
-    (for-each i (left node) f)
+    (for-each* i (left node) f)
     (funcall f (node-key node) (node-value node))
-    (for-each i (right node) f))
+    (for-each* i (right node) f))
   (values))
 
 (defmethod node-key-value ((i <binary-tree>) (node binary-tree-node))

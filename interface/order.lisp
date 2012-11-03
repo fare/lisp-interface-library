@@ -108,6 +108,9 @@
   (builtin <char> char)
   (builtin <string> string))
 
+(define-interface <integer> (<number>) ()
+  (:singleton))
+
 (define-interface <case-insensitive-string> (<order-from-lessp>) ()
   (:singleton)
   (:method> order< (x y)
@@ -132,6 +135,13 @@
                        (,name (order-interface i) x y))))))
   (delegate order< order<= order> order>= == compare))
 
+(define-interface <boolean> (<eql> <equal> <order>) () ;; uses EQL for comparison, yet sxhash for hash.
+  (:singleton)
+  (:method> order< (x y) (and y (not x)))
+  (:method> order<= (x y) (or y (not x)))
+  (:method> order> (x y) (and x (not y)))
+  (:method> order>= (x y) (or x (not y)))
+  (:method> compare (x y) (cond ((eq x y) 0) (x -1) (t 1))))
 
 ;;; simple algorithm using order
 (defun sorted-list-differences (list1 list2 &key (order <number>))

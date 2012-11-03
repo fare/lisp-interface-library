@@ -29,9 +29,9 @@
        (t
         map)))))
 
-;; <map-join-from-fold-left-insert>
-(defmethod join ((<i> <map-join-from-fold-left-insert>) map1 map2)
-  (fold-left <i> map1 #'(lambda (m k v) (insert <i> m k v)) map2))
+;; <map-join-from-fold-left*-insert>
+(defmethod join ((<i> <map-join-from-fold-left*-insert>) map1 map2)
+  (fold-left* <i> map1 #'(lambda (m k v) (insert <i> m k v)) map2))
 
 ;; <map-join/list-from-join>
 (defmethod join/list ((<i> <map-join/list-from-join>) maplist)
@@ -44,8 +44,8 @@
     ((empty-p <i> (nth-value 1 (decons <i> map))) (list map))
     (t (multiple-value-list (divide <i> map)))))
 
-;; <map-map/2-from-fold-left-lookup-insert-drop>
-(defmethod map/2 ((i <map-map/2-from-fold-left-lookup-insert-drop>) fun map1 map2)
+;; <map-map/2-from-fold-left*-lookup-insert-drop>
+(defmethod map/2 ((i <map-map/2-from-fold-left*-lookup-insert-drop>) fun map1 map2)
   (labels ((join1 (a k v1)
              (let ((mm (car a))
                    (m2 (cdr a)))
@@ -58,8 +58,8 @@
              (multiple-value-bind (v f) (funcall fun k nil nil v2 t)
                (if f (insert i mm k v) mm))))
     (destructuring-bind (mm . m2)
-        (fold-left i map1 #'join1 (cons (empty i) map2))
-      (fold-left i m2 #'join2 mm))))
+        (fold-left* i map1 #'join1 (cons (empty i) map2))
+      (fold-left* i m2 #'join2 mm))))
 
 ;;; Functional maps as founts: trivial!
 (defmethod iterator ((<map> <map>) map)
@@ -82,8 +82,8 @@
 ;;; Converting a map to another one...
 (defmethod convert ((i2 <map>) (i1 <map>) map1)
   ;; Using iterators: (flow i1 i2 map1 (empty i2))
-  ;; Assuming fold-right preserves any insertion order:
-  (fold-right
+  ;; Assuming fold-right* preserves any insertion order:
+  (fold-right*
    i1 map1
    #'(lambda (k v map2) (insert i2 map2 k v))
    (empty i2)))

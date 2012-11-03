@@ -35,6 +35,44 @@ If you work in a stateful style, then this matters a lot
 because your side-effects may or may not be seen by more or fewer copies
 than you think. Please consult the documentation of appropriate methods.")))
 
+(define-interface <foldable> (<type>) ()
+  (:documentation "A type of objects that can be folded")
+  (:abstract)
+  (:generic> fold-left (foldable f seed) (:in 1) (:values value)
+   (:documentation "Fold an object with a function,
+iterating on the contents from a notional left to a notional right.
+The function takes as parameters
+an accumulated value followed by
+a single value for the content of each iteration
+and returns a new accumulated value."))
+  (:generic> fold-left* (map f seed) (:in 1) (:values value)
+   (:documentation "Fold an object with a function,
+iterating on the contents from a notional left to a notional right.
+The function takes as parameters
+an accumulated value followed by
+as many values as make sense for the specific interface, i.e.
+element for a set, element and count for a multi-set, key and value for a map,
+and returns a new accumulated value."))
+  (:generic> fold-right (foldable f seed) (:in 1) (:values value)
+   (:documentation "Fold an object with a function,
+iterating on the contents from a notional right to a notional left.
+The function takes as parameters
+a single value for the content of each iteration
+followed by an accumulated value
+and returns a new accumulated value."))
+  (:generic> fold-right* (map f seed) (:in 1) (:values value)
+   (:documentation "Fold an object with a function,
+iterating on the contents from a notional right to a notional left.
+The function takes as parameters
+as many values as make sense for the specific interface,
+i.e. element for a set, element and count for a multi-set, key and value for a map,
+followed by an accumulated value
+and returns a new accumulated value."))
+  (:generic> for-each (iterator f) (:in 1) (:values result)
+   (:documentation "For every step in iterator, apply f to one entry"))
+  (:generic> for-each* (iterator f) (:in 1) (:values result)
+   (:documentation "For every step in iterator, apply f to multiple values")))
+
 (define-interface <copy-is-identity> (<copyable>) ()
   (:abstract)
   (:method> copy (x)
@@ -47,7 +85,14 @@ than you think. Please consult the documentation of appropriate methods.")))
 with those specified as initarg keywords, returning a new object."))
 
 (defgeneric base-interface (<interface>)
-  (:documentation "from the parametric variant of a mixin, extract the base interface"))
+  (:documentation "from a functor, extract the base interface parameter"))
+
+(defgeneric key-interface (<map>)
+  (:documentation "Interface for the type of keys of a map"))
+
+(defgeneric value-interface (<map>)
+  (:documentation "Interface for the type of values of a map"))
+
 
 ;;; Makeable
 (define-interface <makeable> (<type>) ()
@@ -69,7 +114,7 @@ based on provided initarg keywords, returning the object.")))
 (define-interface <sizable> (<type>) ()
   (:abstract)
   (:generic> size (object) (:in 1) (:values size) (:out nil)
-   (:documentation "Size the object, e.g. number of elements in a map"))
+   (:documentation "Size the object, e.g. number of elements in a collection"))
   (:generic> size<=n-p (object n) (:in 1) (:values boolean) (:out nil)
    (:documentation "Is the size of the object less or equal to integer n?")))
 
@@ -84,15 +129,22 @@ A constant one is pure, a new one if stateful."))
    (:in 1) (:values boolean)
    (:documentation "Return a boolean indicating whether the object is empty")))
 
-(define-interface <empty-is-nil> (<emptyable>) ()
+(define-interface <finite-collection> (<sizable> <foldable> <copyable> <emptyable>) ()
   (:abstract)
-  (:method> check-invariant ((m null) &key &allow-other-keys)
-    (values))
-  (:method> empty ()
-    nil)
-  (:method> empty-p (object)
-    (null object)))
+  (:generic> first-entry (collection) (:in 1) (:values entry foundp)
+   (:documentation "Return two values:
+1- a single value for an entry
+2- a boolean a boolean indicating whether the collection was already empty.
+What 'first' means here may depend on the particular collection interface,
+but generally means the element most easily accessible;
+it is also the first (leftmost) key and value as used by fold-left and fold-right."))
+  (:generic> entry-values (entry)
+   (:documentation "Take one entry value, return as many values as makes sense for the entry.")))
 
+
+;;;
+;;; Simple Mixins
+;;;
 (defclass empty-object () ())
 (defun make-empty-object ()
   (make-instance 'empty-object))
@@ -108,11 +160,44 @@ A constant one is pure, a new one if stateful."))
   (:method> empty-p (object)
     (empty-object-p object)))
 
-;;; Iteration
-(defgeneric for-each (<interface> iterator f)
-  (:documentation "For every step in iterator, apply f to values"))
+(define-interface <empty-is-nil> (<emptyable>) ()
+  (:abstract)
+  (:method> check-invariant ((m null) &key &allow-other-keys)
+    (values))
+  (:method> empty ()
+    nil)
+  (:method> empty-p (object)
+    (null object)))
+
+(define-interface <foldable-fold-right-from-fold-left> (<foldable>) ()
+  (:abstract)
+  (:method> fold-right (map right-function seed)
+    (funcall
+     (fold-left
+      map
+      #'(lambda (f entry) #'(lambda (accumulator) (funcall f (funcall right-function entry accumulator))))
+      #'identity)
+     seed)))
+
+(define-interface <foldable-for-each-from-fold-left> (<foldable>) ()
+  (:abstract)
+  (:method> for-each (map fun)
+    (fold-left
+     map
+     #'(lambda (s e) (declare (ignore s)) (funcall fun e))
+     nil)
+    (values)))
+
+(define-interface <foldable-size-from-fold-left> (<foldable>) ()
+  (:abstract)
+  (:method> size (map)
+    (fold-left map #'(lambda (x e) (declare (ignore e)) (1+ x)) 0)))
+
+(define-interface <sizable-size<=n-p-from-size> (<sizable>) ()
+  (:abstract)
+  (:method> size<=n-p (map n)
+    (<= (size map) n)))
 
 ;;; TODO: move this somewhere else!
 (defun boolean-integer (bool)
   (if bool 1 0))
-

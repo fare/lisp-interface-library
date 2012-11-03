@@ -8,14 +8,15 @@
 (define-interface <hash-table>
     (<map-copy-from-join-empty>
      <map-decons-from-first-key-value-drop>
-     <map-divide-from-for-each>
+     <map-divide-from-for-each*>
      <map-divide/list-from-divide>
-     <map-first-key-value-from-for-each>
-     <map-fold-left-from-for-each>
-     <map-fold-right-from-fold-left>
-     <map-join-from-for-each-lookup-insert>
+     <map-first-key-value-from-for-each*>
+     <map-foldable-from*>
+     <map-fold-left*-from-for-each*>
+     <map-fold-right*-from-fold-left*>
+     <map-join-from-for-each*-lookup-insert>
      <map-join/list-from-join>
-     <map-map/2-from-for-each-lookup-insert-drop>
+     <map-map/2-from-for-each*-lookup-insert-drop>
      <map-update-key-from-lookup-insert-drop>
      <sizable-size<=n-p-from-size>
      <map>)

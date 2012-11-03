@@ -34,15 +34,15 @@
 (defmethod first-key-value ((i <alist>) map)
   (values (caar map) (cdar map) (not (null map))))
 
-(defmethod fold-left ((i <alist>) map f seed)
+(defmethod fold-left* ((i <alist>) map f seed)
   (reduce #'(lambda (acc pair) (funcall f acc (car pair) (cdr pair)))
           map :initial-value seed))
 
-(defmethod fold-right ((i <alist>) map f seed)
+(defmethod fold-right* ((i <alist>) map f seed)
   (reduce #'(lambda (pair acc) (funcall f (car pair) (cdr pair) acc))
           map :initial-value seed :from-end t))
 
-(defmethod for-each ((<i> <alist>) map f)
+(defmethod for-each* ((<i> <alist>) map f)
   (declare (ignorable <i>))
   (loop :for (key . val) :in map :do (funcall f key val))
   (values))
@@ -58,7 +58,7 @@
   (length map))
 
 (defmethod map-alist ((<i> interface::<map>) map)
-  (fold-right <i> map #'(lambda (k v acc) (acons k v acc)) '()))
+  (fold-right* <i> map #'(lambda (k v acc) (acons k v acc)) '()))
 
 (defmethod convert ((<to> <alist>) (<from> interface::<map>) map)
   (declare (ignorable <to>))

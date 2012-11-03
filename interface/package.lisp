@@ -12,8 +12,6 @@
    ;;; Classes
    #:interface-class
    #:<interface>
-   #:<type>
-   #:<classy>
 
    ;;; Macros
    #:define-interface
@@ -23,22 +21,18 @@
    #:define-interface-methods
 
    ;;; General purpose gfs
-   #:check-invariant
    #:update
-   #:base-interface
-   #:instantiate
-   #:convert
-   #:size #:size<=n-p
-   #:for-each
+   #:base-interface #:key-interface #:value-interface
 
-   ;;; Make, Copy
-   #:<makeable> #:make
+   ;;; Base
+   #:<type> #:check-invariant #:convert
+   #:<classy>
    #:<copyable> #:copy
-
-   ;;; Empty?
    #:<emptyable> #:empty #:empty-p
-   #:<empty-is-nil>
-   #:<empty-is-empty-object>
+   #:<foldable> #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
+   #:<makeable> #:make
+   #:<sizable> #:size #:size<=n-p
+   #:<finite-collection> #:first-entry #:entry-values
 
    ;;; eq
    #:<eq> #:== #:eq-function
@@ -47,11 +41,11 @@
    #:<eq-from-==> #:<eq-from-eq-function>
 
    ;;; order
-   #:<order> #:<number> #:<string> #:<char> #:<case-insensitive-string>
-   #:<order-from-lessp> #:<lessp>
+   #:<order> #:<order-from-lessp> #:<lessp>
    #:<order-from-compare> #:<compare>
    #:order< #:order<= #:order> #:order>= #:== #:compare
    #:<order-parameter> #:order-interface
+   #:<number> #:<integer> #:<char> #:<string> #:<case-insensitive-string>
 
    ;;; Boxes!
    #:box #:box-ref #:box-set!
@@ -73,10 +67,13 @@
    ;; Do NOT export these interfaces, because pure and stateful branch them.
    ;; #:<map> #:<alist> #:<tree> #:<binary-tree> #:<avl-tree> #:<number-map> #:<nm> #:<fmim>
    ;; DO export the accessors, because pure and stateful use them.
-   #:lookup #:first-key-value #:fold-left #:fold-right #:map-alist #:alist-map
-   #:node #:node-key #:node-value #:left #:right #:node-height #:node-balance
-   #:locate #:node-key-value #:leftmost-node #:rightmost-node #:leftmost #:rightmost
-   #:key-interface #:value-interface
+   #|#:<map>|# #:lookup #:first-key-value #:map-alist #:alist-map
+   #|#:<set>|# #:set-list #:list-set
+   #|#:<multiset>|# #:multiset-list #:list-multiset
+   #|#:<sequence>|# #:sequence-list #:list-sequence
+   #:node-class
+   #:node #:node-key #:node-value #:left #:right #:node-balance #:node-height
+   #:locate #:node-key-value #:leftmost-node #:rightmost-node #:leftmost #:rightmost #:leftmost-entry #:rightmost-entry
 
    ;; number iterators
    #:make-number-iterator
@@ -85,14 +82,16 @@
    ;; TODO: move this somewhere else
    #:boolean-integer
 
-   #:node-class
-   #:empty-object #:make-empty-object #:empty-object-p
-
    ;; simple mixins
    #:<copy-is-identity>
-   #:<map-for-each-from-fold-left>
-   #:<map-fold-right-from-fold-left>
-   #:<map-size-from-fold-left>
+   #:<empty-is-nil>
+   #:<empty-is-empty-object> #:empty-object #:make-empty-object #:empty-object-p
+   #:<foldable-fold-right-from-fold-left>
+   #:<foldable-for-each-from-fold-left>
+   #:<foldable-size-from-fold-left>
+   #:<map-foldable-from*>
+   #:<map-for-each*-from-fold-left*>
+   #:<map-fold-right*-from-fold-left*>
    #:<sizable-size<=n-p-from-size>
 
    ;; linearize

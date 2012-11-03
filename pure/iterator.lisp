@@ -59,5 +59,5 @@
   (declare (ignorable <for-each> fun))
   nil)
 
-(defmethod for-each ((<fount> <fount>) fount fun)
+(defmethod for-each* ((<fount> <fount>) fount fun)
   (flow <fount> (<for-each>) fount fun))

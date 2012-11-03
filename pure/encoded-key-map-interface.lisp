@@ -4,7 +4,7 @@
 
 (in-package :pure)
 
-(define-interface <encoded-key-map> (<map>) ()
+(define-interface <encoded-key-map> (<map-foldable-from*> <map>) ()
   (:abstract))
 
 (define-interface <parametric-encoded-key-map> (<encoded-key-map>)

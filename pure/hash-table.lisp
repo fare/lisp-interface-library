@@ -7,7 +7,7 @@
 
 (defmethod check-invariant ((i <hash-table>) map &key)
   (check-invariant (hashmap-interface i) map)
-  (for-each
+  (for-each*
    (hashmap-interface i) map
    #'(lambda (hash bucket)
        (declare (ignore hash))
@@ -73,26 +73,26 @@
         (first-key-value (bucketmap-interface i) bucket)
         (values nil nil nil))))
 
-(defmethod fold-left ((i <hash-table>) map f seed)
-  (fold-left (hashmap-interface i) map
+(defmethod fold-left* ((i <hash-table>) map f seed)
+  (fold-left* (hashmap-interface i) map
              #'(lambda (a h bucket)
                  (declare (ignore h))
-                 (fold-left (bucketmap-interface i) bucket f a))
+                 (fold-left* (bucketmap-interface i) bucket f a))
              seed))
 
-(defmethod fold-right ((i <hash-table>) map f seed)
-  (fold-right (hashmap-interface i) map
-              #'(lambda (h bucket a)
-                  (declare (ignore h))
-                  (fold-right (bucketmap-interface i) bucket f a))
-              seed))
+(defmethod fold-right* ((i <hash-table>) map f seed)
+  (fold-right* (hashmap-interface i) map
+	       #'(lambda (h bucket a)
+		   (declare (ignore h))
+		   (fold-right* (bucketmap-interface i) bucket f a))
+	       seed))
 
-(defmethod for-each ((i <hash-table>) map f)
-  (for-each
+(defmethod for-each* ((i <hash-table>) map f)
+  (for-each*
    (hashmap-interface i) map
    #'(lambda (hash bucket)
        (declare (ignore hash))
-       (for-each (bucketmap-interface i) bucket f))))
+       (for-each* (bucketmap-interface i) bucket f))))
 
 (defmethod divide ((i <hash-table>) map)
   (if (empty-p (hashmap-interface i) map)
@@ -122,7 +122,7 @@
              (list a b)))))))
 
 (defmethod size ((i <hash-table>) map)
-  (fold-left (hashmap-interface i) map
-             #'(lambda (acc hash bucket) (declare (ignore hash))
-                       (+ acc (size (bucketmap-interface i) bucket)))
-             0))
+  (fold-left* (hashmap-interface i) map
+	      #'(lambda (acc hash bucket) (declare (ignore hash))
+		  (+ acc (size (bucketmap-interface i) bucket)))
+	      0))

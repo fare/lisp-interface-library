@@ -20,7 +20,7 @@
    #:flow
    #:<devnull>
    #:make-number-iterator
-   #:<for-each> #:for-each
+   #:<for-each> #:for-each #:for-each*
 
    ;; #:boolean-integer
 
@@ -33,16 +33,18 @@
    #:<number-map> #:<nm>
    #:<hash-table>
    #:<fmim> #:<encoded-key-map>
+
+   ;; mixins
+   #:<foldable-size-from-fold-left*>
    #:<map-empty-is-nil>
    #:<map-decons-from-first-key-value-drop>
-   #:<map-update-key-from-lookup-insert-drop>
-   #:<map-join-from-fold-left-insert>
-   #:<map-join/list-from-join>
-   #:<map-map/2-from-fold-left-lookup-insert-drop>
    #:<map-divide/list-from-divide>
-   #:<map-fold-right-from-fold-left>
-   #:<map-for-each-from-fold-left>
-   #:<map-size-from-fold-left>
+   #:<map-fold-right*-from-fold-left*>
+   #:<map-for-each*-from-fold-left*>
+   #:<map-join-from-fold-left*-insert>
+   #:<map-join/list-from-join>
+   #:<map-map/2-from-fold-left*-lookup-insert-drop>
+   #:<map-update-key-from-lookup-insert-drop>
    #:<map-size<=n-p-from-decons>
 
    ;;; Trees
@@ -58,8 +60,7 @@
    #:drop
    #:first-key-value
    #:decons
-   #:fold-left
-   #:fold-right
+   #:fold-left #:fold-right #:fold-left* #:fold-right*
    #:join
    #:divide
    #:size

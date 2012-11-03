@@ -72,12 +72,21 @@
        (with-map (m i '((20 . "20") (30 . "30")))
          (fold-left
           i (alist-map* i (make-alist 2))
+          #'(lambda (n e) (declare (ignore n)) (insert i m (car e) (cdr e)))
+          nil))))
+
+  (X 'fold-left*)
+  (is (equal-alist
+       '((2 . "2") (1 . "1") (20 . "20") (30 . "30"))
+       (with-map (m i '((20 . "20") (30 . "30")))
+         (fold-left*
+          i (alist-map* i (make-alist 2))
           #'(lambda (n k v) (declare (ignore n)) (insert i m k v))
           nil))))
 
-  (X 'fold-left-and-size)
+  (X 'fold-left*-and-size)
   (with-map (m i *alist-100-latin*)
-    (fold-left i (alist-map* i *alist-100-decimal*)
+    (fold-left* i (alist-map* i *alist-100-decimal*)
                #'(lambda (n k v) (declare (ignore n)) (insert i m k v))
                nil)
     (is (= 100 (size i m))))
@@ -85,10 +94,14 @@
   (X 'fold-right)
   (is (eql nil (fold-right i (empty i) (constantly t) nil)))
   (is (eql t (fold-right i (empty i) (constantly t) t)))
+
+  (X 'fold-right*)
+  (is (eql nil (fold-right* i (empty i) (constantly t) nil)))
+  (is (eql t (fold-right* i (empty i) (constantly t) t)))
   (is (equal-alist
        '((1 . "1") (2 . "2") (20 . "20") (30 . "30"))
        (with-map (m i '((20 . "20") (30 . "30")))
-         (fold-right
+         (fold-right*
           i (alist-map* i (make-alist 2))
           #'(lambda (k v n) (declare (ignore n)) (insert i m k v))
           nil))))

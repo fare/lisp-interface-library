@@ -46,7 +46,11 @@
 
 ;;; Vanilla Binary Tree
 
-(define-interface <binary-tree> (<tree> <map>) ()
+(define-interface <binary-tree>
+    (<tree>
+     <foldable-size-from-fold-left>
+     <map-foldable-from*>
+     <map>) ()
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
 

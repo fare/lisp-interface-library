@@ -19,7 +19,7 @@
    #:flow
    #:<devnull>
    #:make-number-iterator
-   #:<for-each> #:for-each
+   #:<for-each> #:for-each #:for-each*
 
    ;; #:boolean-integer
 
@@ -38,17 +38,17 @@
    #:<map-empty-is-empty-object> #:empty-object
    #:<map-decons-from-first-key-value-drop>
    #:<map-update-key-from-lookup-insert-drop>
-   #:<map-join-from-for-each-lookup-insert>
+   #:<map-join-from-for-each*-lookup-insert>
    #:<map-join/list-from-join>
    #:<map-divide/list-from-divide>
-   #:<map-map/2-from-for-each-lookup-insert-drop>
-   #:<map-fold-right-from-fold-left>
-   #:<map-for-each-from-fold-left>
-   #:<map-fold-left-from-each>
+   #:<map-map/2-from-for-each*-lookup-insert-drop>
+   #:<map-foldable-from*>
+   #:<map-fold-left*-from-each*>
+   #:<map-fold-right*-from-fold-left*>
+   #:<map-for-each*-from-fold-left*>
    #:<map-size-from-fold-left>
-   #:<map-divide-from-for-each>
-   #:<map-fold-left-from-for-each>
-   #:<map-first-key-value-from-for-each>
+   #:<map-divide-from-for-each*>
+   #:<map-first-key-value-from-for-each*>
 
    ;;; Stateful Maps and Containers: Generic Functions
    #:empty
@@ -59,8 +59,7 @@
    #:drop
    #:first-key-value
    #:decons
-   #:fold-left
-   #:fold-right
+   #:fold-left #:fold-right #:fold-left* #:fold-right*
    #:join
    #:divide
    #:size

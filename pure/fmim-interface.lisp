@@ -14,15 +14,16 @@
 
 (define-interface <fmim>
     (<copy-is-identity>
+     <foldable-size-from-fold-left>
      <map-empty-is-nil>
      <map-decons-from-first-key-value-drop>
-     <map-update-key-from-lookup-insert-drop>
-     <map-size-from-fold-left>
-     <map-for-each-from-fold-left>
-     <map-map/2-from-fold-left-lookup-insert-drop>
-     <map-join-from-fold-left-insert>
-     <map-join/list-from-join>
      <map-divide/list-from-divide>
+     <map-foldable-from*>
+     <map-for-each*-from-fold-left*>
+     <map-join-from-fold-left*-insert>
+     <map-join/list-from-join>
+     <map-map/2-from-fold-left*-lookup-insert-drop>
+     <map-update-key-from-lookup-insert-drop>
      <tree> <map>)
   ()
   (:singleton)

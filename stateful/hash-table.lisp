@@ -41,7 +41,7 @@
     (remhash key map)
     (values value foundp)))
 
-(defmethod for-each ((i <hash-table>) map f)
+(defmethod for-each* ((i <hash-table>) map f)
   (loop :for key :being :the :hash-keys :of map :using (:hash-value value)
     :do (funcall f key value)))
 

@@ -14,10 +14,11 @@
 
 (define-interface <hash-table>
     (<copy-is-identity>
-     <map-join-from-fold-left-insert>
+     <map-foldable-from*>
+     <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-update-key-from-lookup-insert-drop>
-     <map-map/2-from-fold-left-lookup-insert-drop>
+     <map-map/2-from-fold-left*-lookup-insert-drop>
      <map>)
   ((key-interface
     :type <hashable>

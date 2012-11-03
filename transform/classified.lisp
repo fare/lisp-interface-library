@@ -25,8 +25,7 @@
    #:drop
    #:first-key-value
    #:decons
-   #:fold-left
-   #:fold-right
+   #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
    #:join
    #:divide
    #:size
@@ -57,8 +56,7 @@
    #:drop
    #:first-key-value
    #:decons
-   #:fold-left
-   #:fold-right
+   #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
    #:join
    #:divide
    #:size

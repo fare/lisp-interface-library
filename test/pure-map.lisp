@@ -60,25 +60,33 @@
   (is (eql nil (fold-left i (empty i) (constantly t) nil)))
   (is (eql t (fold-left i (empty i) (constantly t) t)))
 
+  (X 'fold-left*)
+  (is (eql nil (fold-left* i (empty i) (constantly t) nil)))
+  (is (eql t (fold-left* i (empty i) (constantly t) t)))
+
   (X 'fold-right)
   (is (eql nil (fold-right i (empty i) (constantly t) nil)))
   (is (eql t (fold-right i (empty i) (constantly t) t)))
+
+  (X 'fold-right*)
+  (is (eql nil (fold-right* i (empty i) (constantly t) nil)))
+  (is (eql t (fold-right* i (empty i) (constantly t) t)))
 
   (X 'size)
   (is (= 0 (size i (empty i))))
   (is (= 100 (size i (alist-map* i *alist-100-decimal*))))
 
   (X 'for-each)
-  (is (eql nil (while-collecting (c)
-                 (for-each i (empty i) #'(lambda (k v) (c (cons k v)))))))
   (is (equal-alist
        *alist-10-latin*
        (while-collecting (c)
-         (with-output-to-string (o)
-           (for-each i (alist-map* i *alist-10-latin*)
-                     #'(lambda (k v) (c (cons k v))))))))
+	 (for-each i (alist-map* i *alist-10-latin*) #'c))))
+
+  (X 'for-each*)
+  (is (eql nil (while-collecting (c)
+                 (for-each* i (empty i) #'(lambda (k v) (c (cons k v)))))))
   (is (= 1129 (length (with-output-to-string (o)
-                        (for-each i (alist-map* i *alist-100-english*)
+                        (for-each* i (alist-map* i *alist-100-english*)
                                   #'(lambda (x y)
                                       (format o "~A~A" x y)))))))
 
@@ -138,27 +146,27 @@
                (multiple-value-list (lookup i m k))))
     (is (= (size i m) 9)))
 
-  (X 'fold-left)
+  (X 'fold-left*)
   (is (equal-alist
        '((2 . "2") (1 . "1") (20 . "20") (30 . "30"))
        (map-alist* i
-		   (fold-left
+		   (fold-left*
 		    i (alist-map* i (make-alist 2))
 		    #'(lambda (m k v) (insert i m k v))
 		    (alist-map* i '((20 . "20") (30 . "30")))))))
 
-  (X 'fold-left-and-size)
+  (X 'fold-left*-and-size)
   (is (= 100
          (size i
-               (fold-left i (alist-map* i *alist-100-decimal*)
-                          #'(lambda (m k v) (insert i m k v))
-                          (alist-map* i *alist-100-latin*)))))
+               (fold-left* i (alist-map* i *alist-100-decimal*)
+			   #'(lambda (m k v) (insert i m k v))
+			   (alist-map* i *alist-100-latin*)))))
 
-  (X 'fold-right)
+  (X 'fold-right*)
   (is (equal-alist
        '((1 . "1") (2 . "2") (20 . "20") (30 . "30"))
        (map-alist* i
-		   (fold-right
+		   (fold-right*
 		    i (alist-map* i (make-alist 2))
 		    #'(lambda (k v m) (insert i m k v))
 		    (alist-map* i '((20 . "20") (30 . "30")))))))

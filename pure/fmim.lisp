@@ -231,7 +231,7 @@
 (defmethod first-key-value ((i <fmim>) map)
   (leftmost i map))
 
-(defmethod fold-left ((i <fmim>) map f seed)
+(defmethod fold-left* ((i <fmim>) map f seed)
   (if (null map)
       seed
       (trie-fold-left (box-ref map) (node-height map) 0 f seed)))
@@ -253,7 +253,7 @@
             (trie-fold-left
              (left trie) pos key f seed)))))))
 
-(defmethod fold-right ((i <fmim>) map f seed)
+(defmethod fold-right* ((i <fmim>) map f seed)
   (if (null map)
       seed
       (trie-fold-right (box-ref map) (node-height map) 0 f seed)))
