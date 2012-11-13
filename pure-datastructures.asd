@@ -9,6 +9,7 @@
 	    :components
 	    ((:file "iterator")
              (:file "map")
+	     (:file "set")
              (:file "alist")
 	     (:file "tree")
 	     (:file "hash-table")

@@ -20,6 +20,7 @@
      <map-divide/list-from-divide>
      <map-foldable-from-*>
      <map-for-each*-from-fold-left*>
+     <map-has-key-p-from-lookup>
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-map/2-from-fold-left*-lookup-insert-drop>

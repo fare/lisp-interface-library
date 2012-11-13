@@ -41,7 +41,8 @@
    #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
    #:<makeable> #:make
    #:<sizable> #:size #:size<=n-p
-   #|#:<finite-collection>|# #:singleton-p #:singleton #:singleton* #:first-entry #:entry-values
+   #|#:<finite-collection>|# #:get-entry #:has-key-p #:first-entry #:entry-values
+                             #:singleton-p #:singleton #:singleton*
    #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
 
    ;;; eq
@@ -93,6 +94,7 @@
    #:boolean-integer
 
    ;; simple mixins
+   #:<collection-has-key-p-from-get-entry>
    #:<copy-is-identity>
    #:<empty-is-nil>
    #:<empty-is-empty-object> #:empty-object #:make-empty-object #:empty-object-p
@@ -104,6 +106,7 @@
    #:<map-foldable-from-*>
    #:<map-for-each*-from-fold-left*>
    #:<map-fold-right*-from-fold-left*>
+   #:<map-has-key-p-from-lookup>
    #:<map-monoid-fold*-from-fold-left*>
    #:<sizable-size<=n-p-from-size>
 

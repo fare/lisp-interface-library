@@ -159,6 +159,12 @@ A constant one is pure, a new one if stateful."))
 
 (define-interface <finite-collection> (<sizable> <foldable> <copyable> <emptyable>) ()
   (:abstract)
+  (:generic> get-entry (collection key) (:in 1) (:values entry foundp)
+   (:documentation "Return two values:
+1- a single value for an entry
+2- a boolean a boolean indicating whether the entry was found."))
+  (:generic> has-key-p (collection key) (:in 1) (:values foundp)
+   (:documentation "Return a boolean indicating whether an entry was found for that key."))
   (:generic> key-interface () (:values interface)
    (:documentation "Interface for the type of keys of a collection"))
   (:generic> singleton-p (collection) (:in 1) (:values boolean)
@@ -175,6 +181,9 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
   (:generic> entry-values (entry)
    (:documentation "Take one entry value, return as many values as makes sense for the entry.")))
 
+(define-interface <collection-has-key-p-from-get-entry> (<finite-collection>) ()
+  (:method> has-key-p (collection key)
+     (nth-value 1 (get-entry collection key))))
 
 (define-interface <encoded-key-collection> (<finite-collection>) ()
   (:generic> encode-key (plain-key)

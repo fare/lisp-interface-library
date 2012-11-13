@@ -15,6 +15,7 @@
 (define-interface <hash-table>
     (<copy-is-identity>
      <map-foldable-from-*>
+     <map-has-key-p-from-lookup>
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-update-key-from-lookup-insert-drop>

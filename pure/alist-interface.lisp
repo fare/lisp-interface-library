@@ -11,6 +11,7 @@
      <map-decons-from-first-key-value-drop>
      <map-divide/list-from-divide>
      <map-foldable-from-*>
+     ;;<map-has-key-p-from-lookup>
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-map/2-from-fold-left*-lookup-insert-drop>

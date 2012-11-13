@@ -13,6 +13,6 @@
 	     (:file "set-interface" :depends-on ("map-interface"))
 	     (:file "alist-interface" :depends-on ("map-interface"))
 	     (:file "tree-interface" :depends-on ("map-interface"))
-	     (:file "hash-table-interface" :depends-on ("tree-interface"))
+	     (:file "hash-table-interface" :depends-on ("tree-interface" "alist-interface"))
 	     (:file "fmim-interface" :depends-on ("tree-interface"))
 	     (:file "encoded-key-map-interface" :depends-on ("map-interface"))))))

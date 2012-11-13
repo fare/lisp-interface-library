@@ -33,6 +33,8 @@ Return three values:
 1- a new COLLECTION without that entry,
 2- the ENTRY that was dropped if any, and
 3- a boolean FOUNDP that is true iff an entry was found."))
+  (:generic> restriction (predicate collection) (:in 2) (:values collection2) (:out 0)
+   (:documentation "Restriction of the collection to the keys that verify the predicate"))
   (:generic> join (collection1 collection2) (:in 1 2) (:values collection1) (:out 0 nil)
    (:documentation "Join two collections, returning a new joined collection.
 How entries are combined depends on the specific interface.

@@ -55,14 +55,6 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
       seed)))
 |#
 
-(define-interface <map-monoid-fold*-from-fold-left*> (<foldable>) ()
-  (:abstract)
-  (:method> monoid-fold* (<monoid> map fun)
-    (fold-left*
-     map
-     #'(lambda (acc k v) (op <monoid> acc (funcall fun k v)))
-     (id <monoid>))))
-
 (define-interface <map-fold-right*-from-fold-left*> (<foldable>) ()
   (:abstract)
   (:method> fold-right* (map fun seed)
@@ -91,3 +83,15 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
      #'(lambda (s k v) (declare (ignore s)) (funcall fun k v))
      nil)
     (values)))
+
+(define-interface <map-has-key-p-from-lookup> (<finite-collection>) ()
+  (:method> has-key-p (collection key)
+     (nth-value 2 (lookup collection key))))
+
+(define-interface <map-monoid-fold*-from-fold-left*> (<foldable>) ()
+  (:abstract)
+  (:method> monoid-fold* (<monoid> map fun)
+    (fold-left*
+     map
+     #'(lambda (acc k v) (op <monoid> acc (funcall fun k v)))
+     (id <monoid>))))

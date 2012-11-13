@@ -17,6 +17,7 @@
     (<tree>
      <map-decons-from-first-key-value-drop>
      <map-empty-is-nil> ;; handles all the null cases so we don't have to.
+     <map-has-key-p-from-lookup>
      <map-join-from-fold-left*-insert>
      <map-join/list-from-join>
      <map-map/2-from-fold-left*-lookup-insert-drop>
