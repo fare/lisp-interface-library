@@ -344,9 +344,28 @@
        ',interface)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun decompose-function-name (name)
+    (etypecase name
+      (symbol
+       (values name nil nil))
+      (cons
+       (assert (consp (cdr name)))
+       (let ((kind (first name))
+             (n2 (second name)))
+         (ecase kind
+           ((setf) (values n2 'setf nil))
+           #+sbcl ((sb-pcl::slot-accessor) (values (third name) kind (cons n2 (cdddr name)))))))))
   (defun make-local-name (name &key prefix package)
-    (intern (if prefix (strcat (string prefix) (string name)) (string name))
-            (or package *package*)))
+    (multiple-value-bind (symbol kind) (decompose-function-name name)
+      (flet ((local-symbol ()
+               (intern (if prefix (strcat (string prefix) (string symbol)) (string symbol))
+                       (case package
+                         ((nil) *package*)
+                         ((t) (symbol-package symbol))
+                         (otherwise package)))))
+        (ecase kind
+          ((nil) (values (local-symbol)))
+          ((setf) `(setf ,(local-symbol)))))))
   (defun collect-function-names (functions-spec)
     (remove-duplicates
      (loop :for spec :in (alexandria:ensure-list functions-spec)
