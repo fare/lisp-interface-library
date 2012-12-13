@@ -18,3 +18,11 @@
   ((:module "interface" :components
     ((:module "monad" :components ((:file "identity")))))))
 
+ (asdf:defsystem :interface/monad/test/monad
+   :depends-on
+   (:interface/monad)
+   :components
+   ((:module "interface" :components
+     ((:module "monad" :components
+       ((:module "test" :components ((:file "monad")))))))))
+
