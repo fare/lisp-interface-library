@@ -33,6 +33,7 @@ MLET*")
 
 (define-interface <monad> (<type>)
   ()
+  (:singleton)
   (:documentation
    "An INTERFACE with three functions, RESULT, BIND and FAIL.
 
