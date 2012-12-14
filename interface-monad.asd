@@ -11,6 +11,8 @@
   :components
   ((:module "interface" :components ((:file "monad")))))
 
+;; The Standard Monads
+
 (asdf:defsystem :interface/monad/identity
   :depends-on
   (:interface/monad)
@@ -18,7 +20,30 @@
   ((:module "interface" :components
     ((:module "monad" :components ((:file "identity")))))))
 
- (asdf:defsystem :interface/monad/test/monad
+(asdf:defsystem :interface/zero-plus
+  :depends-on
+  (:interface)
+  :components
+  ((:module "interface" :components ((:file "zero-plus")))))
+
+(asdf:defsystem :interface/monad/maybe
+  :depends-on
+  (:interface/zero-plus :interface/monad)
+  :components
+  ((:module "interface" :components
+    ((:module "monad" :components ((:file "maybe")))))))
+
+(asdf:defsystem :interface/monad/list
+  :depends-on
+  (:interface/monad)
+  :components
+  ((:module "interface" :components
+    ((:module "monad" :components ((:file "list")))))))
+
+
+;; The CHECK-INVARIANT test suite
+
+(asdf:defsystem :interface/monad/test/monad
    :depends-on
    (:interface/monad)
    :components
@@ -36,19 +61,6 @@
       ((:module "test" :components
         ((:module "monad" :components ((:file "identity")))))))))))
 
-(asdf:defsystem :interface/zero-plus
-  :depends-on
-  (:interface)
-  :components
-  ((:module "interface" :components ((:file "zero-plus")))))
-
-(asdf:defsystem :interface/monad/maybe
-  :depends-on
-  (:interface/zero-plus :interface/monad)
-  :components
-  ((:module "interface" :components
-    ((:module "monad" :components ((:file "maybe")))))))
-
 (asdf:defsystem :interface/monad/test/monad/maybe
    :depends-on
    (:interface/monad/test/monad :interface/monad :interface/monad/maybe)
@@ -58,9 +70,20 @@
        ((:module "test" :components
          ((:module "monad" :components ((:file "maybe")))))))))))
 
+(asdf:defsystem :interface/monad/test/monad/list
+   :depends-on
+   (:interface/monad/test/monad :interface/monad :interface/monad/list)
+   :components
+   ((:module "interface" :components
+     ((:module "monad" :components
+       ((:module "test" :components
+         ((:module "monad" :components ((:file "list")))))))))))
+
  (asdf:defsystem :interface/monad/test/monad/monads
    :depends-on
-   (:interface/monad/test/monad/maybe :interface/monad/test/monad/identity
+   (:interface/monad/test/monad/maybe
+    :interface/monad/test/monad/list
+    :interface/monad/test/monad/identity
     :interface/monad/test/monad)
    :components
    ((:module "interface" :components
