@@ -58,3 +58,13 @@
        ((:module "test" :components
          ((:module "monad" :components ((:file "maybe")))))))))))
 
+ (asdf:defsystem :interface/monad/test/monad/monads
+   :depends-on
+   (:interface/monad/test/monad/maybe :interface/monad/test/monad/identity
+    :interface/monad/test/monad)
+   :components
+   ((:module "interface" :components
+     ((:module "monad" :components
+       ((:module "test" :components
+         ((:module "monad" :components ((:file "monads")))))))))))
+
