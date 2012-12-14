@@ -36,3 +36,25 @@
       ((:module "test" :components
         ((:module "monad" :components ((:file "identity")))))))))))
 
+(asdf:defsystem :interface/zero-plus
+  :depends-on
+  (:interface)
+  :components
+  ((:module "interface" :components ((:file "zero-plus")))))
+
+(asdf:defsystem :interface/monad/maybe
+  :depends-on
+  (:interface/zero-plus :interface/monad)
+  :components
+  ((:module "interface" :components
+    ((:module "monad" :components ((:file "maybe")))))))
+
+(asdf:defsystem :interface/monad/test/monad/maybe
+   :depends-on
+   (:interface/monad/test/monad :interface/monad :interface/monad/maybe)
+   :components
+   ((:module "interface" :components
+     ((:module "monad" :components
+       ((:module "test" :components
+         ((:module "monad" :components ((:file "maybe")))))))))))
+
