@@ -6,6 +6,7 @@
   (:import-from :interface/monad/test/monad/maybe)
   (:import-from :interface/monad/test/monad/list)
   (:import-from :interface/monad/test/monad/state)
+  (:import-from :interface/monad/test/monad/continuation)
   (:export #:test-monads))
 (in-package :interface/monad/test/monad/monads)
 
@@ -14,7 +15,8 @@
                 (list interface/monad/identity:<identity>
                       interface/monad/maybe:<maybe>
                       interface/monad/list:<list>
-                      interface/monad/state:<state>)))
+                      interface/monad/state:<state>
+                      interface/monad/continuation:<continuation>)))
   (loop :for m :in monads
      :collect (list (interface:check-invariant interface/monad:<monad> m)
                     (interface:check-invariant m m))))
