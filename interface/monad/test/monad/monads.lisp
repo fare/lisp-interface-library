@@ -8,6 +8,7 @@
   (:import-from :interface/monad/test/monad/state)
   (:import-from :interface/monad/test/monad/continuation)
   (:import-from :interface/monad/test/monad/transformer)
+  (:import-from :interface/monad/test/monad/transformer/maybe)
   (:export #:test-monads))
 (in-package :interface/monad/test/monad/monads)
 
@@ -18,14 +19,28 @@
                       interface/monad/state:<state>
                       interface/monad/continuation:<continuation>))
 
-(defparameter *transformer-standard-monads* 
-  (list* interface/monad/transformer:<transformer>
-         (mapcar #'interface/monad/transformer:<transformer>
-                 *standard-monads*)))
-  
+(macrolet ((transformers (interface &optional prefix)
+             (let ((name
+                    (intern
+                     (string-upcase
+                      (concatenate
+                       'string
+                       "*"
+                       (or prefix "")
+                       (and prefix "-")
+                       "transformer-standard-monads*")))))
+               `(defparameter ,name
+                  (list* ,interface
+                         (mapcar (function ,interface)
+                                 *standard-monads*))))))
+  (transformers interface/monad/transformer:<transformer>)
+  (transformers interface/monad/transformer/maybe:<maybe-transformer>
+                "maybe"))
+
 (defun test-monads
-    (&optional (monads (append *standard-monads* 
-                               *transformer-standard-monads*)))
+    (&optional (monads (append *standard-monads*
+                               *transformer-standard-monads*
+                               *maybe-transformer-standard-monads*)))
   (loop :for m :in monads
      :collect (list (interface:check-invariant interface/monad:<monad> m)
                     (interface:check-invariant m m))))
