@@ -60,6 +60,15 @@
    ((:module "interface" :components
      ((:module "monad" :components ((:file "continuation")))))))
 
+;; The <TRASNFORMER>s
+
+(asdf:defsystem :interface/monad/transformer
+   :depends-on
+   (:interface/monad/identity :interface/monad)
+   :components
+   ((:module "interface" :components
+     ((:module "monad" :components ((:file "transformer")))))))
+
 ;; The CHECK-INVARIANT test suite
 
 (asdf:defsystem :interface/monad/test/monad
@@ -118,9 +127,19 @@
        ((:module "test" :components
          ((:module "monad" :components ((:file "continuation")))))))))))
 
-(asdf:defsystem :interface/monad/test/monad/monads
+ (asdf:defsystem :interface/monad/test/monad/transformer
    :depends-on
-   (:interface/monad/test/monad/continuation :interface/monad/test/monad/state
+   (:interface/monad/test/monad :interface/monad :interface/monad/transformer)
+   :components
+   ((:module "interface" :components
+     ((:module "monad" :components
+       ((:module "test" :components
+         ((:module "monad" :components ((:file "transformer")))))))))))
+
+ (asdf:defsystem :interface/monad/test/monad/monads
+   :depends-on
+   (:interface/monad/test/monad/transformer
+    :interface/monad/test/monad/continuation :interface/monad/test/monad/state
     :interface/monad/test/monad/list :interface/monad/test/monad/maybe
     :interface/monad/test/monad/identity :interface/monad/test/monad)
    :components
