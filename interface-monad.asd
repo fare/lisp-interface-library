@@ -78,6 +78,15 @@
      ((:module "monad" :components
        ((:module "transformer" :components ((:file "maybe")))))))))
 
+(asdf:defsystem :interface/monad/transformer/list
+  :depends-on
+  (:interface/monad :interface/monad/list :interface/monad/transformer
+   :interface/monad/identity)
+  :components
+  ((:module "interface" :components
+   ((:module "monad" :components
+    ((:module "transformer" :components ((:file "list")))))))))
+
 ;; The CHECK-INVARIANT test suite
 
 (asdf:defsystem :interface/monad/test/monad
@@ -156,14 +165,29 @@
          ((:module "monad" :components
            ((:module "transformer" :components ((:file "maybe")))))))))))))
 
- (asdf:defsystem :interface/monad/test/monad/monads
-   :depends-on
-   (:interface/monad/test/monad/transformer/maybe
-    :interface/monad/test/monad/transformer
-    :interface/monad/test/monad/continuation :interface/monad/test/monad/state
-    :interface/monad/test/monad/list :interface/monad/test/monad/maybe
-    :interface/monad/test/monad/identity :interface/monad/test/monad)
-   :components
+
+(asdf:defsystem :interface/monad/test/monad/transformer/list
+  :depends-on
+  (:interface/monad/test/monad/list :interface/monad/test/monad
+   :interface/monad :interface/monad/transformer/list
+   :interface/monad/transformer)
+  :components
+  ((:module "interface" :components
+    ((:module "monad" :components
+      ((:module "test" :components
+         ((:module "monad" :components
+           ((:module "transformer" :components ((:file "list")))))))))))))
+
+(asdf:defsystem :interface/monad/test/monad/monads
+  :depends-on
+  (:interface/monad/test/monad/transformer/list
+   :interface/monad/test/monad/transformer/maybe
+   :interface/monad/test/monad/transformer
+   :interface/monad/test/monad/continuation
+   :interface/monad/test/monad/state :interface/monad/test/monad/list
+   :interface/monad/test/monad/maybe :interface/monad/test/monad/identity
+   :interface/monad/test/monad)
+  :components
    ((:module "interface" :components
      ((:module "monad" :components
        ((:module "test" :components

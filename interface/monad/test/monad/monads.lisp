@@ -35,12 +35,14 @@
                                  *standard-monads*))))))
   (transformers interface/monad/transformer:<transformer>)
   (transformers interface/monad/transformer/maybe:<maybe-transformer>
-                "maybe"))
-
+                "maybe")
+  (transformers interface/monad/transformer/list:<list-transformer>
+                "list"))
 (defun test-monads
-    (&optional (monads (append *standard-monads*
+    (&optional (monads (append *standard-monads* 
                                *transformer-standard-monads*
-                               *maybe-transformer-standard-monads*)))
+                               *maybe-transformer-standard-monads*
+                               *list-transformer-standard-monads*)))
   (loop :for m :in monads
-     :collect (list (interface:check-invariant interface/monad:<monad> m)
-                    (interface:check-invariant m m))))
+     :collect (prog1 (interface:check-invariant interface/monad:<monad> m)
+                (interface:check-invariant m m))))
