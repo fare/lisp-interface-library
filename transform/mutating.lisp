@@ -129,7 +129,7 @@
                              (nth esi stateful-required)
                              `(box! ,(nth epo pure-results-required))))))
           (required-output-updates
-           (loop :for (eso esi epo ()) :in effective-outputs
+           (loop :for (() esi epo ()) :in effective-outputs
              :when (integerp esi)
              :collect `(set-box-value
                         ,(nth epo pure-results-required)

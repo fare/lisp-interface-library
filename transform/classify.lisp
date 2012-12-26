@@ -102,7 +102,7 @@
              :for piv = (nth in interface-required)
              :collect `(,piv (,@unwrap ,siv))))
           (required-output-bindings
-           (loop :for (out in) :in effective-outputs
+           (loop :for (out ()) :in effective-outputs
              :for eior = (nth out interface-results-required)
              :collect `(,(nth out class-results-required)
 			(,@wrap

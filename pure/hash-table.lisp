@@ -129,9 +129,11 @@
              (list a b)))))))
 
 (defmethod singleton ((i <hash-table>) pair)
-  (let* ((key (car pair)) (value (cdr pair)) (hash (hash (key-interface i) key)))
-    (singleton (hashmap-interface i) hash
-	       (singleton (bucketmap-interface i) key value))))
+  (let* ((key (car pair))
+         (value (cdr pair))
+         (hash (hash (key-interface i) key)))
+    (singleton (hashmap-interface i)
+               (cons hash (singleton (bucketmap-interface i) (cons key value))))))
 
 (defmethod size ((i <hash-table>) map)
   (fold-left* (hashmap-interface i) map

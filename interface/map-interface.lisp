@@ -65,13 +65,13 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
       #'identity)
      seed)))
 
-(define-interface <map-fold-right*-from-fold-left*> (<foldable>) ()
+(define-interface <map-fold-left*-from-fold-right*> (<foldable>) ()
   (:abstract)
-  (:method> fold-right* (map fun seed)
+  (:method> fold-left* (map fun seed)
     (funcall
-     (fold-left*
+     (fold-right*
       map
-      #'(lambda (f k v) #'(lambda (acc) (funcall f (funcall fun k v acc))))
+      #'(lambda (k v f) #'(lambda (acc) (funcall f (funcall fun acc k v))))
       #'identity)
      seed)))
 
