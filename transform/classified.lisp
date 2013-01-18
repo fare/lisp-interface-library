@@ -13,7 +13,7 @@
 
 (defpackage :classy
   (:documentation "traditional classy APIs for LIL data structure")
-  (:use :xcvb-utils :cl)
+  (:use :asdf/driver :fare-utils :cl)
   (:import-from :interface
     #:define-classified-interface-class
     #:class-interface
@@ -43,7 +43,7 @@
 
 (defpackage :posh
   (:documentation "Pure Object-Oriented Structure Hierarchy, classy APIs for pure LIL data structure")
-  (:use :xcvb-utils :cl)
+  (:use :asdf/driver :fare-utils :cl)
   (:import-from :interface
     #:define-classified-interface-class
     #:class-interface

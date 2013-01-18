@@ -3,10 +3,9 @@
 
 #+xcvb (module ())
 
-(in-package :cl)
-
-(defpackage :interface
-  (:use :closer-common-lisp :fare-memoization :xcvb-utils :closer-mop)
+(asdf/package:define-package :interface
+  (:use :closer-common-lisp :fare-memoization :closer-mop)
+  (:mix :fare-utils :asdf/driver :alexandria)
   (:export
 
    ;;; Classes

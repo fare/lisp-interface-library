@@ -6,10 +6,10 @@
  (:depends-on
   ("interface/interface" "interface/eq" "interface/order")))
 
-(in-package :cl)
+(in-package :asdf/package)
 
-(defpackage :stateful
-  (:use :cl :interface :xcvb-utils)
+(define-package :stateful
+  (:mix :cl :interface :fare-utils :asdf/driver :alexandria)
   (:export
 
    ;;; Iterators
