@@ -1,15 +1,11 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful mapping of keys to values
 
-#+xcvb (module (:depends-on ("interface/map-interface" "stateful/iterator-interface")))
+#+xcvb (module (:depends-on ("interface/map-interface" "stateful/collection" "stateful/iterator-interface")))
 
 (in-package :stateful)
 
-(define-interface <empty!able> (<emptyable>) ()
-  (:generic> empty! (map) (:in 1) (:values) (:out t)
-   (:documentation "Clear the map and make it empty. Return no value.")))
-
-(define-interface <map> (interface::<map> <empty!able> <fount> <sink>) ()
+(define-interface <map> (interface::<map> <finite-collection> <fount> <sink>) ()
   (:abstract)
   (:generic> insert (map key value) (:in 1) (:values) (:out t)
    (:documentation "Modify the map to add a key-value pair,
@@ -27,32 +23,6 @@ returning three values:
 2- a key
 3- a value.
 Which association is dropped is the same as per first-key-value."))
-  (:generic> join (map1 map2) (:in 1 2) (:values) (:out t t)
-   (:documentation "Join two maps into the first one.
-Mappings from MAP1 override those from MAP2.
-The state of MAP2 after the join is not specified (see method documentation).
-Return no values."))
-  (:generic> divide (map) (:in 1) (:values map2 map) (:out 1 0)
-   (:documentation "Divide a MAP in two,
-returning two maps MAP2 and MAP (eq to the MAP argument)
-that each have strictly fewer associations than MAP originally had,
-unless MAP is of size zero or one, at which point MAP2 is empty."))
-  (:generic> join/list (list) #|(:in #|((1 list))|#) (:values map) (:out 0)|#
-   (:documentation "Join a list of maps,
-returning a joined map where mappings from
-later mappings override those from earlier mappings.
-If the list is empty, a new empty map is returned;
-otherwise, the first list is returned,
-that has been updated with any additional mappings,
-whereas the state of other maps is not specified (see method documentation)."))
-  (:generic> divide/list (map) #|(:in 1) (:values list) (:out t #|((0 list))|#)|#
-   (:documentation "Divide a map in a list of several submaps and return that list,
-such that merging those maps with join/list
-will return a map similar to the original one,
-that the returned list is empty iff the initial map is empty,
-that the returned list is of length one iff the initial map is a singleton,
-and that otherwise, each element of the list is non-empty
-and the first one is EQ to the original map."))
   (:generic> update-key (map key fun) (:in 1) (:values) (:out t)
    (:documentation "Update the association of a map for a given key
 calling fun with the previous associated value and T if found, with NIL and NIL otherwise,
