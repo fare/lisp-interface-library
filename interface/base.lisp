@@ -38,17 +38,19 @@ On success the OBJECT itself is returned. On failure an error is signalled.")
   (:generic> id ()))
 (define-interface <monoid> (<semigroup> <identity>) () ;; associativity, identity
   (:abstract))
+
 #|
 (define-interface <quasigroup> (<magma>) () ;; division
   (:abstract)
   (:generic> left-division (x y)) ; x \ y  (== (op x (left-division x y)) y)
   (:generic> right-division (x y))) ; x / y  (== x (op (right-division x y) y))
 (define-interface <loop> (<quasigroup> <identity>) () ;; division, identity
+|#
 (define-interface <group> (<monoid> #|<quasigroup>|#) () ;; associativity, identity, division
   (:generic> inverse (x)))
 (define-interface <semiring> (<group>) ()
   (:generic> multiplicative-operation ()))
-|#
+
 
 (define-interface <copyable> (<type>) ()
   (:documentation "A type of objects that can be copied")

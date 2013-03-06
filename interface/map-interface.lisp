@@ -84,7 +84,7 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
      nil)
     (values)))
 
-(define-interface <map-has-key-p-from-lookup> (<finite-collection>) ()
+(define-interface <map-has-key-p-from-lookup> (<map>) ()
   (:method> has-key-p (collection key)
      (nth-value 2 (lookup collection key))))
 

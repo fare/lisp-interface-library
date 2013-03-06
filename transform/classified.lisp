@@ -86,6 +86,9 @@
   ((interface :initform stateful:<simple-fifo-queue> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -simple-fifo-queue))
 
+(defmethod print-object ((q >queue<) stream)
+  (print-unreadable-object (q stream :type t :identity t)
+    (write (collection-entries q) :stream stream)))
 
 
 (in-package :posh)
@@ -119,3 +122,6 @@
   ((interface :initform pure:<simple-fifo-queue> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -queue))
 
+(defmethod print-object ((q >queue<) stream)
+  (print-unreadable-object (q stream :type t :identity nil)
+    (write (collection-entries q) :stream stream)))
