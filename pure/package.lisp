@@ -82,6 +82,14 @@
    #:get-updatef-expansion
    #:updatef-function|#
 
+   ;;; Finite collections
+   #:<finite-collection> #:get-entry #:has-key-p #:first-entry #:entry-values
+   #:singleton-p #:singleton #:singleton* #:collection-entries #:from-entries
+
+   ;;; Queues
+   #:<queue> #:enqueue #:dequeue #:enqueue-first #:enqueue-last #:enqueue-many #:dequeue-all
+   #:<simple-fifo-queue> #:<simple-lifo-queue>
+
    ;; linearize --- TODO: move to its own package?
    #:<linear> #:<linearized> #:<linearized-map>
    ))

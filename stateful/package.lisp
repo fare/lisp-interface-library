@@ -75,6 +75,14 @@
 
    #:balance-node #:rotate-node-left #:rotate-node-right
 
+   ;;; Finite collections
+   #:<finite-collection> #:get-entry #:has-key-p #:first-entry #:entry-values
+   #:singleton-p #:singleton #:singleton* #:collection-entries #:from-entries
+
+   ;;; Queues
+   #:<queue> #:enqueue #:dequeue #:enqueue-first #:enqueue-last #:enqueue-many #:dequeue-all
+   #:<simple-fifo-queue> #:<simple-lifo-queue>
+
    ;; mutating --- TODO: move to its own package?
    #:<mutating> #:<mutating-map>
    #:<alist>

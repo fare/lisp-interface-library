@@ -179,7 +179,11 @@ What 'first' means here may depend on the particular collection interface,
 but generally means the element most easily accessible;
 it is also the first (leftmost) key and value as used by fold-left and fold-right."))
   (:generic> entry-values (entry)
-   (:documentation "Take one entry value, return as many values as makes sense for the entry.")))
+   (:documentation "Take one entry value, return as many values as makes sense for the entry."))
+  (:generic> collection-entries (collection) (:in 1) (:values entries)
+   (:documentation "A list of the entries for the collection"))
+  (:generic> from-entries (entries) (:values collection) (:out 0)
+   (:documentation "A collection from a list of entries")))
 
 (define-interface <collection-has-key-p-from-get-entry> (<finite-collection>) ()
   (:method> has-key-p (collection key)

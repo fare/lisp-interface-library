@@ -11,4 +11,5 @@
              (:file "map")
 	     (:file "tree")
 	     (:file "hash-table")
-	     (:file "encoded-key-map")))))
+	     (:file "encoded-key-map")
+             (:file "queue")))))

@@ -14,4 +14,5 @@
 	     (:file "tree")
 	     (:file "hash-table")
 	     (:file "fmim")
-	     (:file "encoded-key-map")))))
+	     (:file "encoded-key-map")
+             (:file "queue")))))

@@ -41,7 +41,7 @@
    #:<makeable> #:make
    #:<sizable> #:size #:size<=n-p
    #|#:<finite-collection>|# #:get-entry #:has-key-p #:first-entry #:entry-values
-                             #:singleton-p #:singleton #:singleton*
+                             #:singleton-p #:singleton #:singleton* #:collection-entries #:from-entries
    #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
 
    ;;; eq
@@ -69,7 +69,7 @@
    #:<one-use-value-box> #:one-use-value-box
    #:<one-use-thunk-box> #:one-use-thunk-box
    #:make-one-use-function #:one-use-lambda
-   #:<emptyable-box> #:empty #:empty-p
+   #:<emptyable-box> #:emptyable-box #:empty #:empty-p
    #:<mutable-box> #:mutable-box #:immutable-box #:set-box!
    #:<box!> #:box!
 
