@@ -13,6 +13,18 @@
   (:nicknames #:pure-functional)
   (:export
 
+   ;;; Base interfaces
+   #:<type> #:check-invariant #:convert
+   #:<copyable> #:copy
+   #:<emptyable> #:empty #:empty-p
+   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right
+   #:fold-left* #:fold-right* #:for-each #:for-each*
+   #:<makeable> #:make #:create #:contents
+   #:<sizable> #:size #:size<=n-p
+   #:<finite-collection> #:get-entry #:has-key-p #:first-entry #:entry-values
+                             #:singleton-p #:singleton #:singleton*
+   #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
+
    ;;; Iterators
    #:<fount> #:<sink>
    #:iterator #:next
@@ -22,18 +34,12 @@
    #:make-number-iterator
    #:<for-each> #:for-each #:for-each*
 
-   ;; #:boolean-integer
-
-   ;;; Emptyable
-   #:<emptyable> #:empty #:empty-p
-
    ;;; Functional Maps and Containers: classes
    #:<map> #:<alist>
    #:<binary-tree> #:<avl-tree>
    #:<number-map> #:<nm>
    #:<hash-table>
    #:<fmim> #:<encoded-key-map>
-
    ;; mixins
    #:<foldable-size-from-fold-left*>
    #:<map-empty-is-nil>
@@ -46,17 +52,8 @@
    #:<map-map/2-from-fold-left*-lookup-insert-drop>
    #:<map-update-key-from-lookup-insert-drop>
    #:<map-size<=n-p-from-decons>
-
-   ;;; Trees
-   #:<tree>
-   #:node #:locate #:join
-   #:left #:right #:leftmost #:rightmost
-   ;;#:trie-lookup #:trie-fold-left #:trie-fold-right #:trie-leftmost #:trie-rightmost
-   #:make-trie-leaf #:make-trie-skip #:make-trie-branch #:make-trie-head
-
-   ;;; Functional Maps and Containers: Generic Functions
-   #:lookup
-   #:insert
+   ;; Functional Maps and Containers: Generic Functions
+   #:lookup #:insert
    #:drop
    #:first-key-value
    #:decons
@@ -70,9 +67,12 @@
    #:map/2
    #:convert
 
-   #:check-invariant
-
-   #:encode-key #:decode-key
+   ;;; Trees
+   #:<tree>
+   #:node #:locate #:join
+   #:left #:right #:leftmost #:rightmost
+   ;;#:trie-lookup #:trie-fold-left #:trie-fold-right #:trie-leftmost #:trie-rightmost
+   #:make-trie-leaf #:make-trie-skip #:make-trie-branch #:make-trie-head
 
    #|;; updatef
    #:updatef
@@ -82,13 +82,9 @@
    #:get-updatef-expansion
    #:updatef-function|#
 
-   ;;; Finite collections
-   #:<finite-collection> #:get-entry #:has-key-p #:first-entry #:entry-values
-   #:singleton-p #:singleton #:singleton* #:collection-entries #:from-entries
-
    ;;; Queues
    #:<queue> #:enqueue #:dequeue #:enqueue-first #:enqueue-last #:enqueue-many #:dequeue-all
-   #:<simple-fifo-queue> #:<simple-lifo-queue>
+   #:<fifo-queue> #:<lifo-queue>
 
    ;; linearize --- TODO: move to its own package?
    #:<linear> #:<linearized> #:<linearized-map>

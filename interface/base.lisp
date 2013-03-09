@@ -19,7 +19,15 @@ On success the OBJECT itself is returned. On failure an error is signalled.")
   (:generic convert (<destination> <origin> object)
    (:values object) (:out 0)
    (:documentation "Convert an OBJECT following interface <ORIGIN>
-    into a new object following interface <DESTINATION>.")))
+    into a new object following interface <DESTINATION>."))
+  (:generic> create (contents &key #+sbcl &allow-other-keys)
+   (:values object) (:out 0)
+   (:documentation "create an object conforming to the interface
+based on CONTENTS and provided keyword options, returning the object."))
+  (:generic> contents (object &key #+sbcl &allow-other-keys)
+   (:values contents) (:in 1)
+   (:documentation "Given an object, return contents sufficient to re-CREATE a similar object.")))
+
 
 (define-interface <any> (<type>) ()
   (:singleton)
@@ -129,16 +137,17 @@ with those specified as initarg keywords, returning a new object."))
   (:generic> make (&key #+sbcl &allow-other-keys)
    (:values object) (:out 0)
    ;; the #+sbcl works around SBCL bug https://bugs.launchpad.net/sbcl/+bug/537711
-   (:documentation "Given a <type>, create an object conforming to the interface
+   (:documentation "create an object conforming to the interface
 based on provided initarg keywords, returning the object.")))
+  
 
 ;;; Classy Interface (i.e. has some associated class)
 
 (define-interface <classy> (<makeable>)
-  ((class :reader interface-class :allocation :class)))
+  ((class :reader interface-class :allocation :class))
+  (:method> make (&rest keys &key #+sbcl &allow-other-keys)
+     (apply 'make-instance (interface-class <classy>) keys)))
 
-(defmethod make ((i <classy>) &rest keys &key #+sbcl &allow-other-keys)
-  (apply 'make-instance (interface-class i) keys))
 
 ;;; Size
 (define-interface <sizable> (<type>) ()
@@ -181,11 +190,7 @@ What 'first' means here may depend on the particular collection interface,
 but generally means the element most easily accessible;
 it is also the first (leftmost) key and value as used by fold-left and fold-right."))
   (:generic> entry-values (entry)
-   (:documentation "Take one entry value, return as many values as makes sense for the entry."))
-  (:generic> collection-entries (collection) (:in 1) (:values entries)
-   (:documentation "A list of the entries for the collection"))
-  (:generic> from-entries (entries) (:values collection) (:out 0)
-   (:documentation "A collection from a list of entries")))
+   (:documentation "Take one entry value, return as many values as makes sense for the entry.")))
 
 (define-interface <collection-has-key-p-from-get-entry> (<finite-collection>) ()
   (:method> has-key-p (collection key)

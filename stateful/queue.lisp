@@ -20,12 +20,12 @@
     (null (cdr q)))
   (:method> empty! (q)
     (setf (car q) q (cdr q) nil))
-  (:method> from-entries (list)
-    (if list
-        (let ((list (copy-list list)))
+  (:method> create (contents &key)
+    (if contents
+        (let ((list (copy-list contents)))
           (cons (last list) list))
         (empty)))
-  (:method> collection-entries (q)
+  (:method> contents (q &key)
     (copy-list (cdr q)))
   (:method> enqueue-last (q x)
     (let ((c (list x)))
@@ -57,13 +57,13 @@
       (empty! q))))
 
 
-(define-interface <queue-enqueue-last> (<fifo-queue>) ()
+(define-interface <queue-enqueue-last> (<queue>) ()
   (:method> enqueue (q x) (enqueue-last q x)))
-(define-interface <simple-fifo-queue> (<queue-enqueue-last> <simple-queue>) ()
+(define-interface <fifo-queue> (<queue-enqueue-last> <simple-queue>) ()
   (:singleton))
 
-(define-interface <queue-enqueue-first> (<lifo-queue>) ()
+(define-interface <queue-enqueue-first> (<queue>) ()
   (:method> enqueue (q x) (enqueue-first q x)))
-(define-interface <simple-lifo-queue> (<queue-enqueue-first> <simple-queue>) ()
+(define-interface <lifo-queue> (<queue-enqueue-first> <simple-queue>) ()
   (:singleton))
 

@@ -16,9 +16,9 @@
     (assert (or (null q) (car q) (cdr q)))
     (assert (and (null (cdr (last (car q))))
                  (null (cdr (last (cdr q)))))))
-  (:method> from-entries (entries)
+  (:method> create (entries &key)
     (when entries (cons entries nil)))
-  (:method> collection-entries (q)
+  (:method> contents (q &key)
     (append (car q) (reverse (cdr q))))
   (:method> dequeue (q)
     (let ((head (car q))
@@ -49,16 +49,16 @@
     (cons (cons x (car q)) (cdr q)))
   (:method> enqueue-many (q list)
     (if q
-        (from-entries list)
+        (create list)
         (cons (car q) (revappend list (cdr q))))))
 
 (define-interface <queue-enqueue-last> (<queue>) ()
   (:method> enqueue (q x) (enqueue-last q x)))
-(define-interface <simple-fifo-queue> (<queue-enqueue-last> <simple-queue>) ()
+(define-interface <fifo-queue> (<queue-enqueue-last> <simple-queue>) ()
   (:singleton))
 
 (define-interface <queue-enqueue-first> (<queue>) ()
   (:method> enqueue (q x) (enqueue-first q x)))
-(define-interface <simple-lifo-queue> (<queue-enqueue-first> <simple-queue>) ()
+(define-interface <lifo-queue> (<queue-enqueue-first> <simple-queue>) ()
   (:singleton))
 

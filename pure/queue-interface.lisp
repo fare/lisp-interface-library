@@ -20,6 +20,3 @@
   (:generic> dequeue-all (queue) (:in 1) (:values queue) (:out 0)
    (:documentation "Empty the queue, return the former contents")))
 
-;;; Mixins implementing simple cases for a lot of the above functions
-(define-interface <fifo-queue> (<queue>) () (:abstract))
-(define-interface <lifo-queue> (<queue>) () (:abstract))

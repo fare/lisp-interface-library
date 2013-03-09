@@ -34,14 +34,15 @@
    #:<monoid> #:id
    #:<group> #:inverse
 
-   ;; Base Collections
+   ;; Base interfaces
    #:<copyable> #:copy
    #:<emptyable> #:empty #:empty-p
-   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right #:fold-left* #:fold-right* #:for-each #:for-each*
-   #:<makeable> #:make
+   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right
+   #:fold-left* #:fold-right* #:for-each #:for-each*
+   #:<makeable> #:make #:create #:contents
    #:<sizable> #:size #:size<=n-p
    #|#:<finite-collection>|# #:get-entry #:has-key-p #:first-entry #:entry-values
-                             #:singleton-p #:singleton #:singleton* #:collection-entries #:from-entries
+                             #:singleton-p #:singleton #:singleton*
    #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
 
    ;;; eq

@@ -12,6 +12,18 @@
   (:mix :cl :interface :fare-utils :asdf/driver :alexandria)
   (:export
 
+   ;;; Base interfaces
+   #:<type> #:check-invariant #:convert
+   #:<copyable> #:copy
+   #:<emptyable> #:empty #:empty-p
+   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right
+   #:fold-left* #:fold-right* #:for-each #:for-each*
+   #:<makeable> #:make #:create #:contents
+   #:<sizable> #:size #:size<=n-p
+   #:<finite-collection> #:get-entry #:has-key-p #:first-entry #:entry-values
+                             #:singleton-p #:singleton #:singleton*
+   #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
+
    ;;; Iterators
    #:<fount> #:<sink>
    #:iterator #:next
@@ -20,8 +32,6 @@
    #:<devnull>
    #:make-number-iterator
    #:<for-each> #:for-each #:for-each*
-
-   ;; #:boolean-integer
 
    ;;; Trees
    #:<tree>
@@ -51,9 +61,7 @@
    #:<map-first-key-value-from-for-each*>
 
    ;;; Stateful Maps and Containers: Generic Functions
-   #:empty
    #:empty!
-   #:empty-p
    #:lookup
    #:insert
    #:drop
@@ -69,19 +77,11 @@
    #:map/2
    #:convert
 
-   #:check-invariant
-
-   #:encode-key #:decode-key
-
    #:balance-node #:rotate-node-left #:rotate-node-right
-
-   ;;; Finite collections
-   #:<finite-collection> #:get-entry #:has-key-p #:first-entry #:entry-values
-   #:singleton-p #:singleton #:singleton* #:collection-entries #:from-entries
 
    ;;; Queues
    #:<queue> #:enqueue #:dequeue #:enqueue-first #:enqueue-last #:enqueue-many #:dequeue-all
-   #:<simple-fifo-queue> #:<simple-lifo-queue>
+   #:<fifo-queue> #:<lifo-queue>
 
    ;; mutating --- TODO: move to its own package?
    #:<mutating> #:<mutating-map>
