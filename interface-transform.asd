@@ -2,7 +2,8 @@
 (defsystem :interface-transform
   :description "transform LIL interfaces"
   :long-description "Transforming stateful datastructures into pure datastructures and back"
-  :depends-on (:pure-interfaces :stateful-interfaces)
+  :depends-on (:pure-interfaces :stateful-interfaces
+               :pure-datastructures :stateful-datastructures)
   :components
   (;;; Interface-Passing Style generic libraries
    (:module "transform"
