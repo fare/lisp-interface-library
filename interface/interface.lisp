@@ -197,7 +197,7 @@
                        mrest))
                     (keyp
                      (g 'keys))))
-           (mkeys (loop :for (kv def kp) :in keys
+           (mkeys (loop :for (kv #|def kp|#) :in keys
                     :for (kw kvar) = kv
                     :for mkvar = (m kvar)
                     :do (p kvar mkvar)
@@ -415,5 +415,6 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defmethod shared-initialize :before ((instance <interface>) slot-names &key &allow-other-keys)
+    (declare (ignorable slot-names))
     (when (interface-abstract-p (class-of instance))
       (error "Trying to instantiate abstract interface ~S" (type-of instance)))))

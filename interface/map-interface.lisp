@@ -30,7 +30,7 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
 (define-interface <map-foldable-from-*> (<foldable>) ()
   (:abstract)
   (:method> monoid-fold (<monoid> map fun)
-    (monoid-fold* map (compose fun #'cons)))
+    (monoid-fold* <monoid> map (compose fun #'cons)))
   (:method> fold-left (map fun seed)
     (fold-left* map #'(lambda (a k v) (funcall fun a (cons k v))) seed))
   (:method> fold-right (map fun seed)
