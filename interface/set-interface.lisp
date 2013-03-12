@@ -34,9 +34,8 @@
 (defun cons--t (x) (cons x t))
 (defun cons--1 (x) (cons x 1))
 
-(define-interface <set*-from-collection> (<set*>)
+(define-interface <set*-from-collection> (<has-base-interface> <set*>)
   ((base-interface :type <map> :initarg :base-interface :reader base-interface))
-  (:generic> base-interface () (:values interface))
   (:method key-interface ((<i> <set*-from-collection>)) (key-interface (base-interface <i>)))
   (:method empty ((<i> <set*-from-collection>)) (empty (base-interface <i>)))
   (:method empty-p ((<i> <set*-from-collection>) x) (empty-p (base-interface <i>) x)))

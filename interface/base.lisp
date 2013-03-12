@@ -129,8 +129,10 @@ and returns a new accumulated value."))
   (:documentation "Update OBJECT by overriding some of its slots
 with those specified as initarg keywords, returning a new object."))
 
-(defgeneric base-interface (<interface>)
-  (:documentation "from a functor, extract the base interface parameter"))
+(define-interface <has-base-interface> (<interface>) ()
+  (:generic> base-interface () (:values base-interface)
+    (:documentation "from a functor, extract the base interface parameter")))
+
 
 ;;; Makeable
 (define-interface <makeable> (<type>) ()
@@ -139,7 +141,7 @@ with those specified as initarg keywords, returning a new object."))
    ;; the #+sbcl works around SBCL bug https://bugs.launchpad.net/sbcl/+bug/537711
    (:documentation "create an object conforming to the interface
 based on provided initarg keywords, returning the object.")))
-  
+
 
 ;;; Classy Interface (i.e. has some associated class)
 
