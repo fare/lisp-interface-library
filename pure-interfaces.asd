@@ -16,4 +16,4 @@
 	     (:file "hash-table-interface" :depends-on ("tree-interface" "alist-interface"))
 	     (:file "fmim-interface" :depends-on ("tree-interface"))
 	     (:file "encoded-key-map-interface" :depends-on ("map-interface"))
-	     (:file "queue-interface" :depends-on ("iterator-interface"))))))
+	     (:file "queue-interface" :depends-on ("collection"))))))

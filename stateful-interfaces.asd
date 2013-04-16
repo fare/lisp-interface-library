@@ -12,5 +12,5 @@
 	     (:file "map-interface" :depends-on ("collection"))
 	     (:file "tree-interface" :depends-on ("map-interface"))
 	     (:file "hash-table-interface" :depends-on ("tree-interface"))
-	     (:file "encoded-key-map-interface" :depends-on ("package"))
-	     (:file "queue-interface" :depends-on ("iterator-interface"))))))
+	     (:file "encoded-key-map-interface" :depends-on ("map-interface"))
+	     (:file "queue-interface" :depends-on ("collection"))))))

@@ -19,6 +19,6 @@
      (:file "order" :depends-on ("eq"))
      (:file "iterator" :depends-on ("base"))
      (:file "map-interface" :depends-on ("base"))
-     (:file "set-interface" :depends-on ("map-interface"))
+     (:file "set-interface" :depends-on ("map-interface" "order"))
      (:file "tree-interface" :depends-on ("map-interface" "order"))
      (:file "tree" :depends-on ("tree-interface"))))))
