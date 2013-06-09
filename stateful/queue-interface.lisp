@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Functional queues
+;;;;; Stateful queues
 
-#+xcvb (module (:depends-on ("pure/collection")))
+#+xcvb (module (:depends-on ("stateful/collection")))
 
 (in-package :stateful)
 

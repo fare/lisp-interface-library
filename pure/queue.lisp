@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional queues, implementation
 
-#+xcvb (module (:depends-on ("interface/queue-interface")))
+#+xcvb (module (:depends-on ("pure/queue-interface")))
 
 (in-package :pure)
 
