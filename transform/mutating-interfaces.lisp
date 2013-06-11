@@ -2,7 +2,8 @@
 ;;;;; From Pure to Stateful by Boxification: actual interfaces
 
 #+xcvb
-(module (:depends-on ("transform/mutating" "pure/map-interface" "stateful/map-interface")))
+(module (:depends-on ("transform/mutating" "pure/map-interface" "stateful/map-interface"
+                                           "pure/alist-interface")))
 
 (in-package :stateful)
 

@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Sets and Multisets -- part common to pure and stateful
 
-#+xcvb (module (:depends-on ("interface/map-interface")))
+#+xcvb (module (:depends-on ("interface/order" "interface/map-interface")))
 
 (in-package :interface)
 
