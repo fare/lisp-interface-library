@@ -253,7 +253,7 @@
 	   (multiple-value-bind (remaining-forms declarations doc-string)
 	       (alexandria:parse-body body :documentation t))
 	   `(,@combination* ((,interface-var ,interface-class) ,@lambda-list)
-	     ,@doc-string ,@declarations (declare (ignorable ,interface-var))
+	     ,@(when doc-string (list doc-string)) ,@declarations (declare (ignorable ,interface-var))
 	     (with-interface (,interface-var ,interface-class)
 	       ,@remaining-forms)))))))
 

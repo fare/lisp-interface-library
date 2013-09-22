@@ -1,0 +1,35 @@
+;;; Interface Passing Style : Monad : Transformer
+(defpackage :interface/monad/transformer
+  (:nicknames :drewc.org/ips/monad/transformer)
+  (:use :cl :interface/monad)
+  (:import-from :interface/monad/identity
+		#:<identity>)
+  (:export 
+   #:<transformer>
+   #:inner
+   #:lift))
+(in-package :interface/monad/transformer)
+
+(interface:define-interface <transformer> (<monad>)
+  ((inner-monad :accessor inner
+		:initarg :inner
+		:initarg inner
+		:initform <identity>))
+  (:singleton)
+  (:generic inner (<transformer>))
+  (:generic lift (<transformer> inner-monadic-value))
+  (:parametric (&optional (inner <identity>))
+	       (make-instance '<transformer> :inner inner))
+  (:method> lift (inner-monadic-value)
+	    inner-monadic-value)
+  (:method result ((<m> <transformer>) v)
+	   (lift <m> (result (inner <m>) v)))
+  (:method bind ((<m> <transformer>) mv mf)
+	   (lift <m> (bind (inner <m>) mv mf)))
+  (:method fail ((<m> <transformer>))
+	   (lift <m> (fail (inner <m>)))))
+
+(defmethod print-object ((object <transformer>) stream)
+  (print-unreadable-object (object stream :type t)
+    (princ (inner object) stream)))
+
