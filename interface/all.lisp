@@ -17,11 +17,17 @@
    :lil/interface/tree
    :lil/interface/tree-implementation
    :lil/interface/tree
-   ;; :lil/interface/queue
    :lil/interface/zero-plus
    :lil/interface/monad
    :lil/interface/run
-   )
+   :lil/interface/monad/continuation
+   :lil/interface/monad/identity
+   :lil/interface/monad/list
+   :lil/interface/monad/maybe
+   :lil/interface/monad/state
+   :lil/interface/monad/test
+   :lil/interface/monad/transformer/list
+   :lil/interface/monad/transformer/maybe)
   (:reexport
    :lil/interface/utility
    :lil/interface/definition
@@ -34,8 +40,14 @@
    :lil/interface/set
    :lil/interface/tree
    :lil/interface/tree-implementation
-   ;; :lil/interface/queue
    :lil/interface/zero-plus
    :lil/interface/monad
    :lil/interface/run
-   ))
+   :lil/interface/monad/continuation
+   :lil/interface/monad/identity
+   :lil/interface/monad/list
+   :lil/interface/monad/maybe
+   :lil/interface/monad/state
+   :lil/interface/monad/test
+   :lil/interface/monad/transformer/list
+   :lil/interface/monad/transformer/maybe))

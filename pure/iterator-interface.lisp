@@ -1,10 +1,22 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Order
 
-#+xcvb (module (:depends-on ("interface/iterator" "pure/package")))
+#+xcvb (module (:depends-on ("interface/iterator")))
 
+(uiop:define-package :lil/pure/iterator
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/iterator)
+  (:mix :fare-utils :uiop :alexandria)
+  (:reexport :lil/interface/iterator)
+  (:export
+   #:<fount> #:<sink>
+   #:iterator #:next
+   #:collector #:collect #:result
+   #:flow
+   #:<devnull>
+   #:make-number-iterator
+   #:<for-each> #:for-each #:for-each*))
 
-(in-package :pure)
+(in-package :lil/pure/iterator)
 
 (define-interface <fount> (<interface>) () (:abstract))
 (define-interface <sink> (<interface>) () (:abstract))
