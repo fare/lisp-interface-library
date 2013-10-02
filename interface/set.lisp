@@ -3,7 +3,18 @@
 
 #+xcvb (module (:depends-on ("interface/order" "interface/map-interface")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/set
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/map)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:<set> ;; to be shadowed by pure and stateful packages.
+   #:member-p #:set-list #:list-set
+   #:<multiset> ;; to be shadowed by pure and stateful packages.
+   #:member-count #:multiset-list #:list-multiset
+   #:<sequence> ;; to be shadowed by pure and stateful packages.
+   #:sequence-list #:list-sequence))
+
+(in-package :lil/interface/set)
 
 (define-interface <set*> (<finite-collection>) ()
   (:abstract)

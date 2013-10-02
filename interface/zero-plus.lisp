@@ -1,18 +1,15 @@
 ;;; Interface Passing Style : Zero/plus
 
-(defpackage :interface/zero-plus
+(defpackage :lil/interface/zero-plus
   (:nicknames :drewc.org/ips/zero-plus)
-  (:use :cl)
-  (:import-from :interface
-		#:define-interface
-		#:<type>)
-  (:export #:<zero-plus>
-	   #:zero
-	   #:plus))
-(in-package :drewc.org/ips/zero-plus)
+  (:use :cl :lil/interface/definition #:lil/interface/base)
+  (:export #:<zero-plus> #:zero #:plus))
+(in-package :lil/interface/zero-plus)
 
-(interface:define-interface <zero-plus> (<type>)
+(define-interface <zero-plus> (<monoid>)
   ()
   (:abstract)
-  (:generic zero (<zero-plus>))
-  (:generic plus (<zero-plus> a b)))
+  (:generic> zero () (:values zero) (:out 0))
+  (:generic> plus (a b) (:values c) (:in 1 2) (:out 0))
+  (:method> id () (zero))
+  (:method> op (a b) (plus a b)))

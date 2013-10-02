@@ -1,6 +1,6 @@
 ;;; Interface Passing Style : Monad
 
-(defpackage :interface/monad
+(defpackage :lil/interface/monad
   (:documentation
    "This package is the <MONAD> interface.
 
@@ -14,10 +14,8 @@ MLET*")
 
   (:nicknames :drewc.org/ips/monad)
   (:use :cl)
-  (:import-from :interface
-		#:define-interface
-		#:with-interface
-		#:<type>)
+  (:import-from :lil/interface/definition #:define-interface #:with-interface)
+  (:import-from :lil/interface/base #:<type>)
   (:export
    #:<monad>
    #:result
@@ -29,7 +27,7 @@ MLET*")
    ;; Monad : Transformer : List
    #:lift-function))
 
-(in-package :interface/monad)
+(in-package :lil/interface/monad)
 
 (define-interface <monad> (<type>)
   ()
@@ -91,7 +89,7 @@ e.g, (mlet* <list> ((x (list 1 2 3 4)))
 				 `((%mlet* ,rest
 					   ,@body))
 				 body)))))
-       (interface:with-interface (,monad ,functions-spec)
+       (with-interface (,monad ,functions-spec)
 	 ,@(if bindings
 	      `((%mlet* ,bindings ,@body))
 	      body)))))

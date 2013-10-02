@@ -2,7 +2,26 @@
 
 #+xcvb (module (:depends-on ("interface/base")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/box
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   ;;; Boxes!
+   #:box #:box-ref #:box-set!
+   #:box-value #:set-box-value #:box!
+   #:<box> #:make-box #:unbox
+   #:<classy-box>
+   #:<value-box> #:value-box #:simple-value-box ;;#:peek
+   #:<thunk-box> #:thunk-box #:simple-thunk-box
+   #:<promise-box> #:promise-box #:delay #:force
+   #:<one-use-box> #:one-use-box
+   #:<one-use-value-box> #:one-use-value-box
+   #:<one-use-thunk-box> #:one-use-thunk-box
+   #:make-one-use-function #:one-use-lambda
+   #:<emptyable-box> #:emptyable-box #:empty #:empty-p
+   #:<mutable-box> #:mutable-box #:immutable-box #:set-box!
+   #:<box!> #:box!))
+(in-package :lil/interface/box)
 
 ;;;; Interface
 

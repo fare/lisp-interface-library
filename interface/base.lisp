@@ -1,9 +1,46 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Basic Interfaces
 
-#+xcvb (module (:depends-on ("interface/interface")))
+#+xcvb (module (:depends-on ("interface/definition")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/base
+  (:use :closer-common-lisp :lil/interface/definition)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   ;; Base
+   #:<type> #:check-invariant #:convert
+   #:<any>
+   #:<classy>
+
+   ;;; Algebra
+   #:<magma> #:op
+   #:<semigroup> #:op/list
+   #:<monoid> #:id
+   #:<group> #:inverse
+
+   ;; Base interfaces
+   #:<copyable> #:copy #:<copy-is-identity>
+   #:update ;; TODO: move to pure?
+   #:<has-base-interface> #:base-interface
+
+   #:<makeable> #:make #:create #:contents
+   #:<classy>
+   #:<sizable> #:size #:size<=n-p
+   #:<emptyable> #:empty #:empty-p
+   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right
+   #:fold-left* #:fold-right* #:for-each #:for-each*
+   #:<finite-collection> ;; note: shadowed in pure, stateful
+   #:get-entry #:has-key-p #:first-entry #:entry-values
+   #:singleton-p #:singleton #:singleton*
+   #:<collection-has-key-p-from-get-entry>
+   #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
+   #:key-encoder #:key-decoder
+   #:empty-object #:make-empty-object #:empty-object-p #:<empty-is-empty-object> #:<empty-is-nil>
+   #:<foldable-*-from> #:<foldable-monoid-fold-from-fold-left>
+   #:<foldable-fold-right-from-fold-left> #:<foldable-for-each-from-fold-left>
+   #:<foldable-size-from-fold-left> #:<sizable-size<=n-p-from-size>))
+
+(in-package :lil/interface/base)
 
 (define-interface <type> (<interface>) ()
   (:documentation "An interface encapsulating a particular type of objects")
@@ -37,13 +74,13 @@ based on CONTENTS and provided keyword options, returning the object."))
 
 (define-interface <magma> (<type>) ()
   (:abstract)
-  (:generic> op (x y))) ; x * y
+  (:generic> op (x y) (:values z) (:in 1 2) (:out 0))) ; x * y
 (define-interface <semigroup> (<magma>) () ;; associativity: (== (op (op x y) z) (op x (op y z)))
   (:abstract)
-  (:generic> op/list (list))) ; if not a monoid, the list must be non-empty
+  (:generic> op/list (list) (:values x))) ; if not a monoid, the list must be non-empty
 (define-interface <identity> (<magma>) () ;; identity: (== x (op id x) (op x id))
   (:abstract)
-  (:generic> id ()))
+  (:generic> id () (:values id) (:out 0)))
 (define-interface <monoid> (<semigroup> <identity>) () ;; associativity, identity
   (:abstract))
 
@@ -288,6 +325,3 @@ it is also the first (leftmost) key and value as used by fold-left and fold-righ
   (:method> size<=n-p (map n)
     (<= (size map) n)))
 
-;;; TODO: move this somewhere else!
-(defun boolean-integer (bool)
-  (if bool 1 0))

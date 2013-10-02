@@ -3,7 +3,16 @@
 
 #+xcvb (module (:depends-on ("interface/base")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/eq
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:<eq> #:== #:eq-function
+   #:<hashable> #:hash
+   #:<eql> #:<equal>
+   #:<eq-from-==> #:<eq-from-eq-function>))
+
+(in-package :lil/interface/eq)
 
 (define-interface <eq> (<type>) ()
   (:abstract)

@@ -1,15 +1,24 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; iterator
 
-#+xcvb (module (:depends-on ("interface/interface")))
+#+xcvb (module (:depends-on ("interface/definition")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/iterator
+  (:use :closer-common-lisp :lil/interface/definition)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   ;; number iterators
+   #:make-number-iterator
+   #:<number-iterator> #:<decreasing-number-iterator> #:<increasing-number-iterator>
+   #:iterator-start #:iterator-end #:iterator-increment))
+
+(in-package :lil/interface/iterator)
 
 (define-interface <number-iterator> (<interface>)
   ((start :initarg :start :reader iterator-start)
    (end :initarg :end :reader iterator-end)
    (increment :initarg :increment :reader iterator-increment))
-  (:abstract))  
+  (:abstract))
 
 (define-interface <decreasing-number-iterator> (<number-iterator>) ())
 

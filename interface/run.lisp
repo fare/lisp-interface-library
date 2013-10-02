@@ -1,20 +1,15 @@
 ;;; Interface Passing Style : Run
-(defpackage :interface/run
+(defpackage :lil/interface/run
   (:nicknames :drewc.org/ips/run)
   (:use :cl)
-  (:import-from :interface 
-		#:define-interface
-		#:<type>)
+  (:import-from :lil/interface/definition #:define-interface #:with-interface)
+  (:import-from :lil/interface/base #:<type>)
   (:export #:<run>
 	   #:run))
 
-(in-package :drewc.org/ips/run)
+(in-package :lil/interface/run)
 
-(interface:define-interface <run> (<type>)
+(define-interface <run> (<type>)
   ()
   (:abstract)
-  (:generic run (<run> runable &rest args)))
-
-
-
-
+  (:generic> run (runable &rest args) (:in 1)))

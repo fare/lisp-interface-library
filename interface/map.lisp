@@ -3,7 +3,23 @@
 
 #+xcvb (module (:depends-on ("interface/base")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/map
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:<map> ;; to be shadowed by pure and stateful packages.
+   #:lookup #:first-key-value #:map-alist #:alist-map
+   #:node-class
+   #:node #:node-key #:node-value #:left #:right #:node-balance #:node-height
+   #:locate #:node-key-value #:leftmost-node #:rightmost-node #:leftmost #:rightmost #:leftmost-entry #:rightmost-entry
+   #:key-interface
+   #:<map-foldable-from-*>
+   #:<map-for-each*-from-fold-left*>
+   #:<map-fold-right*-from-fold-left*>
+   #:<map-has-key-p-from-lookup>
+   #:<map-monoid-fold*-from-fold-left*>))
+
+(in-package :lil/interface/map)
 
 (define-interface <map> (<finite-collection>) ()
   (:abstract)

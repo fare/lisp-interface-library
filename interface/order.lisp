@@ -3,7 +3,17 @@
 
 #+xcvb (module (:depends-on ("interface/base" "interface/eq")))
 
-(in-package :interface)
+(uiop:define-package :lil/interface/order
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/eq)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:<order> #:<order-from-lessp> #:<lessp>
+   #:<order-from-compare> #:<compare>
+   #:order< #:order<= #:order> #:order>= #:== #:compare
+   #:<order-parameter> #:order-interface
+   #:<number> #:<integer> #:<char> #:<string> #:<case-insensitive-string>))
+
+(in-package :lil/interface/order)
 
 (define-interface <order> (<eq>) ()
   (:abstract)
