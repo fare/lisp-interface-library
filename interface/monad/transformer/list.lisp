@@ -1,14 +1,16 @@
 ;;; Interface Passing Style : Monad : Transformer : List
-(defpackage :interface/monad/transformer/list
+(defpackage :lil/interface/monad/transformer/list
   (:nicknames :drewc.org/ips/monad/transformer/list)
-  (:use :cl :interface/monad
-	:interface/monad/list
-	:interface/monad/transformer
-	:interface/monad/identity)
+  (:use :cl
+        :lil/interface/definition
+        :lil/interface/monad
+	:lil/interface/monad/list
+	:lil/interface/monad/transformer
+	:lil/interface/monad/identity)
   (:export #:<list-transformer>))
-(in-package :interface/monad/transformer/list)
+(in-package :lil/interface/monad/transformer/list)
 
-(interface:define-interface <list-transformer>
+(define-interface <list-transformer>
     (<list> <transformer>)
   ()
   (:singleton)

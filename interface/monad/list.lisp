@@ -1,18 +1,17 @@
 ;;; Interface Passing Style : Monad : List
 
-(defpackage :interface/monad/list
+(defpackage :lil/interface/monad/list
   (:nicknames :drewc.org/ips/monad/list)
-  (:use :cl :interface/monad)
+  (:use :cl :lil/interface/monad :lil/interface/definition)
   (:export #:<list>))
 
-(in-package :interface/monad/list)
+(in-package :lil/interface/monad/list)
 
-(interface:define-interface <list> (<monad>)
+(define-interface <list> (<monad>)
   ()
   (:singleton)
   (:method> result (value) (list value))
   (:method> bind (mvs mf)
 	    (loop :for mv in mvs
 		  :append (funcall mf mv))))
-
 

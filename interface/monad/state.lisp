@@ -1,20 +1,20 @@
 ;;; Interface Passing Style : Monad : State
-(defpackage :interface/monad/state
+(defpackage :lil/interface/monad/state
   (:nicknames :drewc.org/ips/monad/state)
-  (:use :cl :interface/monad)
-  (:import-from :interface/run
+  (:use :cl :lil/interface/monad :lil/interface/definition)
+  (:import-from :lil/interface/run
 		#:<run>
 		#:run)
   (:export #:<state>
 	   #:update
 	   #:fetch
 	   #:put))
-(in-package :interface/monad/state)
+(in-package :lil/interface/monad/state)
 
-(interface:define-interface <state> (<monad> <run>)
+(define-interface <state> (<monad> <run>)
   ()
   (:singleton)
-  (:generic update (<state> function)
+  (:generic> update (<state> function)
     (:documentation "The UPDATE function takes the state and returns
 it.  It also calls the THING with the current state and makes the
 result into the new state."))

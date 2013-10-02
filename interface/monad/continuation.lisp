@@ -1,20 +1,17 @@
 ;;; Interface Passing Style : Monad : Continuation
 
-(defpackage :interface/monad/continuation
+(defpackage :lil/interface/monad/continuation
   (:nicknames :drewc.org/ips/monad/continuation)
-  (:use :cl :interface/monad)
-  (:import-from :interface/run
-		#:<run>
-		#:run)
-  (:export #:<continuation>
-	   #:call/cc))
+  (:use :cl :lil/interface/monad :lil/interface/definition)
+  (:import-from :lil/interface/run #:<run> #:run)
+  (:export #:<continuation> #:call/cc))
 
-(in-package :drewc.org/ips/monad/continuation)
+(in-package :lil/interface/monad/continuation)
 
-(interface:define-interface <continuation> (<monad> <run>)
+(define-interface <continuation> (<monad> <run>)
   ()
   (:singleton)
-  (:generic call/cc (<continuation> function))
+  (:generic> call/cc (function))
   (:method> result (value)
    (lambda (k) (funcall k value)))
   (:method> bind (mv mf)
@@ -24,7 +21,7 @@
   (:method> call/cc (fn)
    ;; callCC f = Cont $ \k -> runCont (f (\a -> Cont $ \_ -> k a)) k
    (lambda (k)
-     (funcall 
+     (funcall
       (funcall fn (lambda (a)
 		    (lambda (_)
 		      (declare (ignore _))

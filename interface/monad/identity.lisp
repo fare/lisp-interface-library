@@ -1,13 +1,13 @@
 ;;; Interface Passing Style : Monad : Identity
 
-(defpackage :interface/monad/identity
+(defpackage :lil/interface/monad/identity
   (:nicknames :drewc.org/ips/monad/identity)
-  (:use :cl :interface/monad)
+  (:use :cl :lil/interface/monad :lil/interface/monad/definition)
   (:export #:<identity>))
 
-(in-package :interface/monad/identity)
+(in-package :lil/interface/monad/identity)
 
-(interface:define-interface <identity> (<monad>)
+(define-interface <identity> (<monad>)
   ()
   (:singleton)
   (:documentation "The RESULT function for <IDENTITY> is like CL:IDENTITY, and

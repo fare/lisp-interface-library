@@ -1,16 +1,16 @@
 ;;; Interface Passing Style : Monad : Transformer
-(defpackage :interface/monad/transformer
+(defpackage :lil/interface/monad/transformer
   (:nicknames :drewc.org/ips/monad/transformer)
-  (:use :cl :interface/monad)
+  (:use :cl :lil/interface/monad :lil/interface/definition)
   (:import-from :interface/monad/identity
 		#:<identity>)
   (:export 
    #:<transformer>
    #:inner
    #:lift))
-(in-package :interface/monad/transformer)
+(in-package :lil/interface/monad/transformer)
 
-(interface:define-interface <transformer> (<monad>)
+(define-interface <transformer> (<monad>)
   ((inner-monad :accessor inner
 		:initarg :inner
 		:initarg inner

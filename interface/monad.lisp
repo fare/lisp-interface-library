@@ -75,7 +75,7 @@ e.g, (mlet* <list> ((x (list 1 2 3 4)))
 
      ;; MACROEXPANDs to something like:
 
-     ;; (INTERFACE:WITH-INTERFACE (<LIST> <LIST>)
+     ;; (WITH-INTERFACE (<LIST> <LIST>)
      ;;  (BIND (LIST 1 2 3 4) (LAMBDA (X) (RESULT (1+ X)))
 "
   (destructuring-bind (monad &optional (functions-spec monad))

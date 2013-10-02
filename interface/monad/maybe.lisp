@@ -1,12 +1,12 @@
 ;;; Interface Passing Style : Monad : Maybe
-(defpackage :interface/monad/maybe
+(defpackage :lil/interface/monad/maybe
   (:nicknames :drewc.org/ips/monad/maybe)
-  (:use :cl :interface/monad)
-  (:import-from :interface/zero-plus
+  (:use :cl :lil/interface/monad :lil/interface/definition)
+  (:import-from :lil/interface/zero-plus
 		#:<zero-plus>
 		#:zero
 		#:plus)
-  (:import-from :interface
+  (:import-from :lil/interface/base
 		#:<empty-is-nil>
 		#:empty
 		#:empty-p)
@@ -14,12 +14,12 @@
 	   #:maybe-or
 	   #:<maybe-empty>
 	   #:maybe.empty-interface))
-(in-package :interface/monad/maybe)
+(in-package :lil/interface/monad/maybe)
 
-(interface:define-interface <maybe-empty> (<empty-is-nil>)
+(define-interface <maybe-empty> (<empty-is-nil>)
   () (:singleton))
 
-(interface:define-interface <maybe> (<monad> <zero-plus>)
+(define-interface <maybe> (<monad> <zero-plus>)
   ((empty-interface :initarg :empty-interface
 		    :initform <maybe-empty>
 		    :accessor maybe.empty-interface))

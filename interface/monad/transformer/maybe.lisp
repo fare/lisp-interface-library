@@ -1,29 +1,29 @@
 ;;; Interface Passing Style : Monad : Transformer : Maybe
 (defpackage :interface/monad/transformer/maybe
   (:nicknames :drewc.org/ips/monad/transformer/maybe)
-  (:use :cl :interface/monad)
-  (:import-from :interface/monad/identity
+  (:use :cl :lil/interface/monad :lil/interface/definition)
+  (:import-from :lil/interface/monad/identity
 		#:<identity>)
-  (:import-from :interface/zero-plus
+  (:import-from :lil/interface/zero-plus
 		#:zero
 		#:plus)
-  (:import-from :interface
+  (:import-from :lil/interface/base
 		#:empty
 		#:empty-p)
-  (:import-from :interface/monad/maybe
+  (:import-from :lil/interface/monad/maybe
 		#:<maybe>
 		#:fail
 		#:maybe-or
 		#:<maybe-empty>
 		#:maybe.empty-interface)
-  (:import-from :interface/monad/transformer
+  (:import-from :lil/interface/monad/transformer
 		 #:<transformer>
 		 #:inner
 		 #:lift)
   (:export #:<maybe-transformer>))
-(in-package :interface/monad/transformer/maybe)
+(in-package :lil/interface/monad/transformer/maybe)
 
-(interface:define-interface <maybe-transformer>
+(define-interface <maybe-transformer>
     (<maybe> <transformer>)
   ()
   (:parametric (&optional (inner <identity>)
