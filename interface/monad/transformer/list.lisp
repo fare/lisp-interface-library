@@ -1,6 +1,5 @@
 ;;; Interface Passing Style : Monad : Transformer : List
 (defpackage :lil/interface/monad/transformer/list
-  (:nicknames :drewc.org/ips/monad/transformer/list)
   (:use :cl
         :lil/interface/definition
         :lil/interface/monad

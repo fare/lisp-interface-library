@@ -1,8 +1,7 @@
 ;;; Interface Passing Style : Monad : Transformer
 (defpackage :lil/interface/monad/transformer
-  (:nicknames :drewc.org/ips/monad/transformer)
   (:use :cl :lil/interface/monad :lil/interface/definition)
-  (:import-from :interface/monad/identity
+  (:import-from :lil/interface/monad/identity
 		#:<identity>)
   (:export 
    #:<transformer>

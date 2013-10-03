@@ -20,7 +20,7 @@
 
    ;; Base interfaces
    #:<copyable> #:copy #:<copy-is-identity>
-   #:update ;; TODO: move to pure?
+   ;; #:update ;; TODO: move to pure?
    #:<has-base-interface> #:base-interface
 
    #:<makeable> #:make #:create #:contents
@@ -162,9 +162,9 @@ and returns a new accumulated value."))
   (:documentation "Pure Persistent Data Structures have trivial copying"))
 
 ;;; This one is only colloquial for use in pure datastructure. TODO: Move it to pure-?
-(defgeneric update (<type> object &key)
-  (:documentation "Update OBJECT by overriding some of its slots
-with those specified as initarg keywords, returning a new object."))
+;;(defgeneric update (<type> object &key)
+;;  (:documentation "Update OBJECT by overriding some of its slots
+;;  with those specified as initarg keywords, returning a new object."))
 
 (define-interface <has-base-interface> (<interface>) ()
   (:generic> base-interface () (:values base-interface)

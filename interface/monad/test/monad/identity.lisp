@@ -1,7 +1,8 @@
-(defpackage :interface/monad/test/monad/identity
+(defpackage :lil/interface/monad/test/monad/identity
   (:use :cl
-        :interface/monad
-        :interface/monad/identity))
+        :lil/interface/base
+        :lil/interface/monad
+        :lil/interface/monad/identity))
 (in-package :interface/monad/test/monad/identity)
 
 (defun test-identity-1 ()
@@ -28,8 +29,8 @@
      (result (+ a b)))
    ))
 
-(defmethod interface:check-invariant ((<i> <identity>) monad &key &allow-other-keys)
-  (interface:check-invariant <monad> monad)
+(defmethod check-invariant ((<i> <identity>) monad &key &allow-other-keys)
+  (check-invariant <monad> monad)
     (loop for test in '(test-identity-1
                         test-identity-2
                         test-identity-3)

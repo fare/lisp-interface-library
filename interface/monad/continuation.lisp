@@ -1,7 +1,6 @@
 ;;; Interface Passing Style : Monad : Continuation
 
 (defpackage :lil/interface/monad/continuation
-  (:nicknames :drewc.org/ips/monad/continuation)
   (:use :cl :lil/interface/monad :lil/interface/definition)
   (:import-from :lil/interface/run #:<run> #:run)
   (:export #:<continuation> #:call/cc))

@@ -25,7 +25,6 @@
    :lil/interface/monad/list
    :lil/interface/monad/maybe
    :lil/interface/monad/state
-   :lil/interface/monad/test
    :lil/interface/monad/transformer/list
    :lil/interface/monad/transformer/maybe)
   (:reexport
@@ -48,6 +47,5 @@
    :lil/interface/monad/list
    :lil/interface/monad/maybe
    :lil/interface/monad/state
-   :lil/interface/monad/test
    :lil/interface/monad/transformer/list
    :lil/interface/monad/transformer/maybe))

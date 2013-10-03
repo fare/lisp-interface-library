@@ -1,6 +1,5 @@
 ;;; Interface Passing Style : Monad : Maybe
 (defpackage :lil/interface/monad/maybe
-  (:nicknames :drewc.org/ips/monad/maybe)
   (:use :cl :lil/interface/monad :lil/interface/definition)
   (:import-from :lil/interface/zero-plus
 		#:<zero-plus>

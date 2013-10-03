@@ -1,8 +1,7 @@
 ;;; Interface Passing Style : Monad : Identity
 
 (defpackage :lil/interface/monad/identity
-  (:nicknames :drewc.org/ips/monad/identity)
-  (:use :cl :lil/interface/monad :lil/interface/monad/definition)
+  (:use :cl :lil/interface/monad :lil/interface/definition)
   (:export #:<identity>))
 
 (in-package :lil/interface/monad/identity)

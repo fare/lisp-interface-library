@@ -1,11 +1,12 @@
+(defpackage :lil/interface/monad/test/monad/maybe
+  (:use :cl
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/monad
+        :lil/interface/monad/maybe
+        :lil/interface/monad/test/monad))
 
-(defpackage :interface/monad/test/monad/maybe
-  (:use :cl 
-        :interface/monad
-        :interface/monad/maybe)
-  (:import-from :interface/monad/test/monad))
-
-(in-package :interface/monad/test/monad/maybe)
+(in-package :lil/interface/monad/test/monad/maybe)
 
 (defun test-maybe-1 ()
   (let ((maybes (loop :repeat 10 
@@ -19,11 +20,6 @@
          (find 'w00t maybes)
          T)))
 
-  
-(interface:define-interface <empty-is-empty-object>
-    (interface:<empty-is-empty-object>) ()
-    (:singleton))
-
 (defun test-maybe-2 ()
   (let ((res
          (let ((<m> (<maybe> <empty-is-empty-object>)))
@@ -33,7 +29,7 @@
              (result a)))
          ;; => #<INTERFACE:EMPTY-OBJECT {C1CE539}>
           ))
-    (and (interface:empty-object-p res) t)))
+    (and (empty-object-p res) t)))
 
 (defun doit (&optional (<m> <maybe>)) 
   (flet ((mv ()
@@ -55,8 +51,8 @@
      :do (return nil)
      :finally (return t)))
   
-(defmethod interface:check-invariant ((<m> <maybe>) monad &key &allow-other-keys)
-  (interface:check-invariant <monad> monad)
+(defmethod check-invariant ((<m> <maybe>) monad &key &allow-other-keys)
+  (check-invariant <monad> monad)
   (loop for test in '(test-maybe-1
                       test-maybe-2
                       test-maybe-3)

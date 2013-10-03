@@ -1,23 +1,29 @@
-
-(defpackage :interface/monad/test/monad/monads
-  (:use :cl)
-  (:import-from :interface/monad/test/monad)
-  (:import-from :interface/monad/test/monad/identity)
-  (:import-from :interface/monad/test/monad/maybe)
-  (:import-from :interface/monad/test/monad/list)
-  (:import-from :interface/monad/test/monad/state)
-  (:import-from :interface/monad/test/monad/continuation)
-  (:import-from :interface/monad/test/monad/transformer)
-  (:import-from :interface/monad/test/monad/transformer/maybe)
+(defpackage :lil/interface/monad/test/monad/monads
+  (:use :cl
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/monad
+        :lil/interface/monad/identity
+        :lil/interface/monad/maybe
+        :lil/interface/monad/list
+        :lil/interface/monad/state
+        :lil/interface/monad/continuation
+        :lil/interface/monad/transformer
+        :lil/interface/monad/transformer/list
+        :lil/interface/monad/transformer/maybe
+        :lil/interface/monad/test/monad
+        :lil/interface/monad/test/monad/identity
+        :lil/interface/monad/test/monad/maybe
+        :lil/interface/monad/test/monad/list
+        :lil/interface/monad/test/monad/state
+        :lil/interface/monad/test/monad/continuation
+        :lil/interface/monad/test/monad/transformer
+        :lil/interface/monad/test/monad/transformer/maybe)
   (:export #:test-monads))
-(in-package :interface/monad/test/monad/monads)
+(in-package :lil/interface/monad/test/monad/monads)
 
 (defparameter *standard-monads* 
-  (list interface/monad/identity:<identity>
-                      interface/monad/maybe:<maybe>
-                      interface/monad/list:<list>
-                      interface/monad/state:<state>
-                      interface/monad/continuation:<continuation>))
+  (list <identity> <maybe> <list> <state> <continuation>))
 
 (macrolet ((transformers (interface &optional prefix)
              (let ((name
@@ -33,16 +39,15 @@
                   (list* ,interface
                          (mapcar (function ,interface)
                                  *standard-monads*))))))
-  (transformers interface/monad/transformer:<transformer>)
-  (transformers interface/monad/transformer/maybe:<maybe-transformer>
-                "maybe")
-  (transformers interface/monad/transformer/list:<list-transformer>
-                "list"))
+  (transformers <transformer>)
+  (transformers <maybe-transformer> "maybe")
+  (transformers <list-transformer> "list"))
+
 (defun test-monads
     (&optional (monads (append *standard-monads* 
                                *transformer-standard-monads*
                                *maybe-transformer-standard-monads*
                                *list-transformer-standard-monads*)))
   (loop :for m :in monads
-     :collect (prog1 (interface:check-invariant interface/monad:<monad> m)
-                (interface:check-invariant m m))))
+     :collect (prog1 (check-invariant <monad> m)
+                (check-invariant m m))))
