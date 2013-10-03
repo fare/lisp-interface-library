@@ -11,7 +11,7 @@
    #:<order-from-compare> #:<compare>
    #:order< #:order<= #:order> #:order>= #:== #:compare
    #:<order-parameter> #:order-interface
-   #:<number> #:<integer> #:<char> #:<string> #:<case-insensitive-string>))
+   #:<boolean> #:<number> #:<integer> #:<char> #:<string> #:<case-insensitive-string>))
 
 (in-package :lil/interface/order)
 

@@ -4,7 +4,9 @@
 #+xcvb (module (:depends-on ("interface/tree")))
 
 (uiop:define-package :lil/interface/tree-implementation
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/tree)
+  (:use :closer-common-lisp
+        :lil/interface/definition :lil/interface/base
+        :lil/interface/order :lil/interface/tree)
   (:mix :fare-utils :uiop :alexandria)
   (:export #:binary-tree-sexp))
 

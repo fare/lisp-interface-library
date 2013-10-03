@@ -4,7 +4,8 @@
 #+xcvb (module (:depends-on ("interface/order" "interface/map-interface")))
 
 (uiop:define-package :lil/interface/set
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/map)
+  (:use :closer-common-lisp :lil/interface/definition
+        :lil/interface/base :lil/interface/order :lil/interface/map)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<set> ;; to be shadowed by pure and stateful packages.
