@@ -1,13 +1,16 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Basic Interfaces
-
-#+xcvb (module (:depends-on ("interface/definition")))
+;;;;; All general interfaces + common core of pure and stateful data structures
 
 (uiop:define-package :lil/interface/all
-  (:use
+  (:use-reexport
    :lil/interface/utility
    :lil/interface/definition
    :lil/interface/base
+   :lil/interface/group
+   :lil/interface/empty
+   :lil/interface/size
+   :lil/interface/fold
+   :lil/interface/collection
    :lil/interface/box
    :lil/interface/eq
    :lil/interface/order
@@ -17,29 +20,6 @@
    :lil/interface/tree
    :lil/interface/tree-implementation
    :lil/interface/tree
-   :lil/interface/zero-plus
-   :lil/interface/monad
-   :lil/interface/run
-   :lil/interface/monad/continuation
-   :lil/interface/monad/identity
-   :lil/interface/monad/list
-   :lil/interface/monad/maybe
-   :lil/interface/monad/state
-   :lil/interface/monad/transformer/list
-   :lil/interface/monad/transformer/maybe)
-  (:reexport
-   :lil/interface/utility
-   :lil/interface/definition
-   :lil/interface/base
-   :lil/interface/box
-   :lil/interface/eq
-   :lil/interface/order
-   :lil/interface/iterator
-   :lil/interface/map
-   :lil/interface/set
-   :lil/interface/tree
-   :lil/interface/tree-implementation
-   :lil/interface/zero-plus
    :lil/interface/monad
    :lil/interface/run
    :lil/interface/monad/continuation

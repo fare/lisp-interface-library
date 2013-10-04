@@ -3,12 +3,10 @@
   (:use :cl :lil/interface/monad :lil/interface/definition)
   (:import-from :lil/interface/monad/identity
 		#:<identity>)
-  (:import-from :lil/interface/zero-plus
-		#:zero
-		#:plus)
-  (:import-from :lil/interface/base
-		#:empty
-		#:empty-p)
+  (:import-from :lil/interface/group
+		#:<zero-plus> #:zero #:plus)
+  (:import-from :lil/interface/empty
+		#:empty #:empty-p)
   (:import-from :lil/interface/monad/maybe
 		#:<maybe>
 		#:fail

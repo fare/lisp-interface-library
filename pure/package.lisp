@@ -25,15 +25,6 @@
                              #:singleton-p #:singleton #:singleton*
    #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
 
-   ;;; Iterators
-   #:<fount> #:<sink>
-   #:iterator #:next
-   #:collector #:collect #:result
-   #:flow
-   #:<devnull>
-   #:make-number-iterator
-   #:<for-each> #:for-each #:for-each*
-
    ;;; Functional Maps and Containers: classes
    #:<map> #:<alist>
    #:<binary-tree> #:<avl-tree>

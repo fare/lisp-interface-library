@@ -1,12 +1,11 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
-
-#+xcvb (module (:depends-on ("interface/tree")))
+;;;;; Implementation of what's common between pure and stateful trees
 
 (uiop:define-package :lil/interface/tree-implementation
   (:use :closer-common-lisp
-        :lil/interface/definition :lil/interface/base
-        :lil/interface/order :lil/interface/tree)
+   :lil/interface/definition :lil/interface/base :lil/interface/empty
+   :lil/interface/map :lil/interface/fold :lil/interface/order
+   :lil/interface/tree)
   (:mix :fare-utils :uiop :alexandria)
   (:export #:binary-tree-sexp))
 

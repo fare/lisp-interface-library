@@ -1,10 +1,10 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; mapping of keys to values -- part common to pure and stateful
 
-#+xcvb (module (:depends-on ("interface/base")))
-
 (uiop:define-package :lil/interface/map
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use :closer-common-lisp
+   :lil/interface/definition :lil/interface/base
+   :lil/interface/collection :lil/interface/fold)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<map> ;; to be shadowed by pure and stateful packages.

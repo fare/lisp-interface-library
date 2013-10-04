@@ -1,11 +1,10 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; trees -- what's common between pure and stateful trees
-
-#+xcvb (module (:depends-on ("interface/order" "interface/map")))
+;;;;; trees -- interfaces common between pure and stateful trees
 
 (uiop:define-package :lil/interface/tree
   (:use :closer-common-lisp
-   :lil/interface/definition :lil/interface/base :lil/interface/map :lil/interface/order)
+   :lil/interface/definition :lil/interface/base
+   :lil/interface/map :lil/interface/fold :lil/interface/order)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<node> ;; to be shadowed by pure, stateful packages. Move node to its own file?

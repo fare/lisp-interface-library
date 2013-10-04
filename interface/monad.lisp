@@ -12,7 +12,6 @@ BIND
 FAIL
 MLET*")
 
-  (:nicknames :drewc.org/ips/monad)
   (:use :cl)
   (:import-from :lil/interface/definition #:define-interface #:with-interface)
   (:import-from :lil/interface/base #:<type>)

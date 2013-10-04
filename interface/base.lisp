@@ -1,45 +1,20 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Basic Interfaces
 
-#+xcvb (module (:depends-on ("interface/definition")))
-
 (uiop:define-package :lil/interface/base
   (:use :closer-common-lisp :lil/interface/definition)
-  (:mix :fare-utils :uiop :alexandria)
   (:export
    ;; Base
    #:<type> #:check-invariant #:convert
    #:<any>
    #:<classy>
 
-   ;;; Algebra
-   #:<magma> #:op
-   #:<semigroup> #:op/list
-   #:<monoid> #:id
-   #:<group> #:inverse
-
    ;; Base interfaces
    #:<copyable> #:copy #:<copy-is-identity>
    ;; #:update ;; TODO: move to pure?
    #:<has-base-interface> #:base-interface
 
-   #:<makeable> #:make #:create #:contents
-   #:<classy>
-   #:<sizable> #:size #:size<=n-p
-   #:<emptyable> #:empty #:empty-p
-   #:<foldable> #:monoid-fold #:monoid-fold* #:fold-left #:fold-right
-   #:fold-left* #:fold-right* #:for-each #:for-each*
-   #:<finite-collection> ;; note: shadowed in pure, stateful
-   #:get-entry #:has-key-p #:first-entry #:entry-values
-   #:singleton-p #:singleton #:singleton*
-   #:<collection-has-key-p-from-get-entry>
-   #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
-   #:key-encoder #:key-decoder
-   #:empty-object #:make-empty-object #:empty-object-p #:<empty-is-empty-object> #:<empty-is-nil>
-   #:<foldable-*-from> #:<foldable-monoid-fold-from-fold-left>
-   #:<foldable-fold-right-from-fold-left> #:<foldable-for-each-from-fold-left>
-   #:<foldable-size-from-fold-left> #:<sizable-size<=n-p-from-size>))
-
+   #:<makeable> #:make #:create #:contents))
 (in-package :lil/interface/base)
 
 (define-interface <type> (<interface>) ()
@@ -67,34 +42,11 @@ based on CONTENTS and provided keyword options, returning the object."))
 
 
 (define-interface <any> (<type>) ()
+  ;; sometimes useful to pass as parameter to a parametrically-polymorphic interface
   (:singleton)
-  (:documentation "Interface for any object")
+  (:documentation "Concrete interface for any object")
   (:method> check-invariant (object &key) (declare (ignore object)) (values))
   (:method> convert (<origin> object) (declare (ignore <origin>)) object))
-
-(define-interface <magma> (<type>) ()
-  (:abstract)
-  (:generic> op (x y) (:values z) (:in 1 2) (:out 0))) ; x * y
-(define-interface <semigroup> (<magma>) () ;; associativity: (== (op (op x y) z) (op x (op y z)))
-  (:abstract)
-  (:generic> op/list (list) (:values x))) ; if not a monoid, the list must be non-empty
-(define-interface <identity> (<magma>) () ;; identity: (== x (op id x) (op x id))
-  (:abstract)
-  (:generic> id () (:values id) (:out 0)))
-(define-interface <monoid> (<semigroup> <identity>) () ;; associativity, identity
-  (:abstract))
-
-#|
-(define-interface <quasigroup> (<magma>) () ;; division
-  (:abstract)
-  (:generic> left-division (x y)) ; x \ y  (== (op x (left-division x y)) y)
-  (:generic> right-division (x y))) ; x / y  (== x (op (right-division x y) y))
-(define-interface <loop> (<quasigroup> <identity>) () ;; division, identity
-|#
-(define-interface <group> (<monoid> #|<quasigroup>|#) () ;; associativity, identity, division
-  (:generic> inverse (x)))
-(define-interface <semiring> (<group>) ()
-  (:generic> multiplicative-operation ()))
 
 
 (define-interface <copyable> (<type>) ()
@@ -110,50 +62,6 @@ being left at leaves; or it may not.
 If you work in a stateful style, then this matters a lot
 because your side-effects may or may not be seen by more or fewer copies
 than you think. Please consult the documentation of appropriate methods.")))
-
-(define-interface <foldable> (<type>) ()
-  (:documentation "A type of objects that can be folded")
-  (:abstract)
-  (:generic> monoid-fold (<monoid> foldable function) (:in 2) (:values value)
-   (:documentation "Fold the FOLDABLE according to a <MONOID> interface,
-where each entry is mapped to the monoid using the provided function"))
-  (:generic> monoid-fold* (<monoid> foldable function) (:in 2) (:values value)
-   (:documentation "Fold the FOLDABLE according to a <MONOID> interface,
-where each entry's values are mapped to the monoid using the provided function"))
-  (:generic> fold-left (foldable function seed) (:in 1) (:values value)
-   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
-iterating on the contents from a notional left to a notional right.
-The function takes as parameters
-an accumulated value followed by
-a single value for the content of each iteration
-and returns a new accumulated value."))
-  (:generic> fold-left* (foldable function seed) (:in 1) (:values value)
-   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
-iterating on the contents from a notional left to a notional right.
-The function takes as parameters
-an accumulated value followed by
-as many values as make sense for the specific interface, i.e.
-element for a set, element and count for a multi-set, key and value for a map,
-and returns a new accumulated value."))
-  (:generic> fold-right (foldable function seed) (:in 1) (:values value)
-   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
-iterating on the contents from a notional right to a notional left.
-The function takes as parameters
-a single value for the content of each iteration
-followed by an accumulated value
-and returns a new accumulated value."))
-  (:generic> fold-right* (map function seed) (:in 1) (:values value)
-   (:documentation "Fold the FOLDABLE with a FUNCTION accumulating from the SEED,
-iterating on the contents from a notional right to a notional left.
-The function takes as parameters
-as many values as make sense for the specific interface,
-i.e. element for a set, element and count for a multi-set, key and value for a map,
-followed by an accumulated value
-and returns a new accumulated value."))
-  (:generic> for-each (iterator f) (:in 1) (:values result)
-   (:documentation "For every step in iterator, apply f to one entry"))
-  (:generic> for-each* (iterator f) (:in 1) (:values result)
-   (:documentation "For every step in iterator, apply f to multiple values")))
 
 (define-interface <copy-is-identity> (<copyable>) ()
   (:abstract)
@@ -186,142 +94,3 @@ based on provided initarg keywords, returning the object.")))
   ((class :reader interface-class :allocation :class))
   (:method> make (&rest keys &key #+sbcl &allow-other-keys)
      (apply 'make-instance (interface-class <classy>) keys)))
-
-
-;;; Size
-(define-interface <sizable> (<type>) ()
-  (:abstract)
-  (:generic> size (object) (:in 1) (:values size) (:out nil)
-   (:documentation "Size the object, e.g. number of elements in a collection"))
-  (:generic> size<=n-p (object n) (:in 1) (:values boolean) (:out nil)
-   (:documentation "Is the size of the object less or equal to integer n?")))
-
-;;; Emptyable
-(define-interface <emptyable> (<type>) ()
-  (:abstract)
-  (:generic> empty ()
-   (:values object) (:out 0)
-   (:documentation "Return an empty object of the emptyable type.
-A constant one is pure, a new one if stateful."))
-  (:generic> empty-p (object)
-   (:in 1) (:values boolean)
-   (:documentation "Return a boolean indicating whether the object is empty")))
-
-(define-interface <finite-collection> (<sizable> <foldable> <copyable> <emptyable>) ()
-  (:abstract)
-  (:generic> get-entry (collection key) (:in 1) (:values entry foundp)
-   (:documentation "Return two values:
-1- a single value for an entry
-2- a boolean a boolean indicating whether the entry was found."))
-  (:generic> has-key-p (collection key) (:in 1) (:values foundp)
-   (:documentation "Return a boolean indicating whether an entry was found for that key."))
-  (:generic> key-interface () (:values interface)
-   (:documentation "Interface for the type of keys of a collection"))
-  (:generic> singleton-p (collection) (:in 1) (:values boolean)
-   (:documentation "Is the collection a singleton?"))
-  (:generic> singleton (entry) (:out 0) (:values collection)
-   (:documentation "Make a singleton from a single entry"))
-  (:generic> first-entry (collection) (:in 1) (:values entry foundp)
-   (:documentation "Return two values:
-1- a single value for an entry
-2- a boolean a boolean indicating whether the collection was already empty.
-What 'first' means here may depend on the particular collection interface,
-but generally means the element most easily accessible;
-it is also the first (leftmost) key and value as used by fold-left and fold-right."))
-  (:generic> entry-values (entry)
-   (:documentation "Take one entry value, return as many values as makes sense for the entry.")))
-
-(define-interface <collection-has-key-p-from-get-entry> (<finite-collection>) ()
-  (:method> has-key-p (collection key)
-     (nth-value 1 (get-entry collection key))))
-
-(define-interface <encoded-key-collection> (<finite-collection>) ()
-  (:generic> encode-key (plain-key)
-     (:documentation "encode user-visible key into internal key"))
-  (:generic> decode-key (encoded-key)
-     (:documentation "decode user-visible key from internal key")))
-
-(define-interface <parametric-encoded-key-collection> (<encoded-key-collection>)
-  ((base-interface :initarg :base-interface :reader base-interface) ;; internal map representation
-   (key-encoder :initarg :key-encoder :reader key-encoder) ;; from key-interface to (key-interface base-interface)
-   (key-decoder :initarg :key-decoder :reader key-decoder)) ;; from (key-interface base-interface) to key-interface
- (:method encode-key ((i <parametric-encoded-key-collection>) k)
-  (funcall (key-encoder i) k))
- (:method decode-key ((i <parametric-encoded-key-collection>) k)
-  (funcall (key-decoder i) k)))
-
-;;;
-;;; Simple Mixins
-;;;
-(defclass empty-object () ())
-(defun make-empty-object ()
-  (make-instance 'empty-object))
-(defun empty-object-p (x)
-  (typep x 'empty-object))
-
-(define-interface <empty-is-empty-object> (<emptyable>) ()
-  (:abstract)
-  (:method> check-invariant ((m empty-object) &key &allow-other-keys)
-    (values))
-  (:method> empty ()
-    (make-empty-object))
-  (:method> empty-p (object)
-    (empty-object-p object)))
-
-(define-interface <empty-is-nil> (<emptyable>) ()
-  (:abstract)
-  (:method> check-invariant ((m null) &key &allow-other-keys)
-    (values))
-  (:method> empty ()
-    nil)
-  (:method> empty-p (object)
-    (null object)))
-
-(define-interface <foldable-*-from> (<foldable>) ()
-  (:abstract)
-  (:method> monoid-fold* (<monoid> map function)
-    (monoid-fold <monoid> map function))
-  (:method> fold-left* (map function seed)
-    (fold-left map function seed))
-  (:method> fold-right* (map function seed)
-    (fold-right map function seed))
-  (:method> for-each* (map function)
-    (for-each map function)))
-
-(define-interface <foldable-monoid-fold-from-fold-left> (<foldable>) ()
-  (:abstract)
-  (:method> monoid-fold (<monoid> map fun)
-    (fold-left
-     map
-     #'(lambda (acc entry) (op <monoid> acc (funcall fun entry)))
-     (id <monoid>))))
-
-(define-interface <foldable-fold-right-from-fold-left> (<foldable>) ()
-  (:abstract)
-  (:method> fold-right (map right-function seed)
-    (funcall
-     (fold-left
-      map
-      #'(lambda (f entry) #'(lambda (accumulator) (funcall f (funcall right-function entry accumulator))))
-      #'identity)
-     seed)))
-
-(define-interface <foldable-for-each-from-fold-left> (<foldable>) ()
-  (:abstract)
-  (:method> for-each (map fun)
-    (fold-left
-     map
-     #'(lambda (s e) (declare (ignore s)) (funcall fun e))
-     nil)
-    (values)))
-
-(define-interface <foldable-size-from-fold-left> (<foldable>) ()
-  (:abstract)
-  (:method> size (map)
-    (fold-left map #'(lambda (x e) (declare (ignore e)) (1+ x)) 0)))
-
-(define-interface <sizable-size<=n-p-from-size> (<sizable>) ()
-  (:abstract)
-  (:method> size<=n-p (map n)
-    (<= (size map) n)))
-

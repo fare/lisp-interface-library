@@ -1,8 +1,6 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Equality
 
-#+xcvb (module (:depends-on ("interface/base")))
-
 (uiop:define-package :lil/interface/eq
   (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)

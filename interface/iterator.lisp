@@ -1,17 +1,15 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; iterator
-
-#+xcvb (module (:depends-on ("interface/definition")))
+;;;;; Iterator
 
 (uiop:define-package :lil/interface/iterator
-  (:use :closer-common-lisp :lil/interface/definition)
+  (:use :closer-common-lisp :lil/interface/definition
+        :lil/interface/utility :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)
   (:export
-   ;; number iterators
    #:make-number-iterator
    #:<number-iterator> #:<decreasing-number-iterator> #:<increasing-number-iterator>
-   #:iterator-start #:iterator-end #:iterator-increment))
-
+   #:iterator-start #:iterator-end #:iterator-increment
+   #:<for-each> #:for-each #:for-each*))
 (in-package :lil/interface/iterator)
 
 (define-interface <number-iterator> (<interface>)
@@ -77,3 +75,11 @@
                       :start start :end end :increment increment))
       (t
        (error "WTF? ~S" 'make-number-iterator)))))
+
+
+(define-interface <for-each> (<type>) () (:singleton)
+  (:generic> for-each (iterator f) (:in 1) (:values result)
+   (:documentation "For every step in iterator, apply f to one entry"))
+  (:generic> for-each* (iterator f) (:in 1) (:values result)
+   (:documentation "For every step in iterator, apply f to multiple values")))
+

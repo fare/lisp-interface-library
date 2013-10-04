@@ -1,10 +1,10 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Order
 
-#+xcvb (module (:depends-on ("interface/base" "interface/eq")))
-
 (uiop:define-package :lil/interface/order
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/eq)
+  (:use :closer-common-lisp
+   :lil/interface/definition :lil/interface/base
+   :lil/interface/eq :lil/interface/group)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<order> #:<order-from-lessp> #:<lessp>

@@ -1,8 +1,6 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Plumbing to Define Interfaces
 
-#+xcvb (module (:depends-on ("interface/utility")))
-
 (uiop:define-package :lil/interface/definition
   (:use :closer-common-lisp :fare-memoization :closer-mop
         :lil/interface/utility)

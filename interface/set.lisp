@@ -1,11 +1,10 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Sets and Multisets -- part common to pure and stateful
 
-#+xcvb (module (:depends-on ("interface/order" "interface/map-interface")))
-
 (uiop:define-package :lil/interface/set
   (:use :closer-common-lisp :lil/interface/definition
-        :lil/interface/base :lil/interface/order :lil/interface/map)
+        :lil/interface/base :lil/interface/order :lil/interface/fold
+        :lil/interface/collection :lil/interface/map)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<set> ;; to be shadowed by pure and stateful packages.

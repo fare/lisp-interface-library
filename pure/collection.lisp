@@ -1,21 +1,20 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Base collections
+;;;;; Pure Collections
 
-#+xcvb (module (:depends-on ("pure/iterator-interface")))
+(uiop:define-package :lil/pure/collection
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/pure/empty
+   :lil/interface/collection)
+  (:shadow #:<finite-collection>)
+  (:export
+   #:<finite-collection> #:conj #:disj #:deconj #:restriction
+   #:join #:divide #:join/list #:divide/list))
+(in-package :lil/pure/collection)
 
-(in-package :pure)
-
-(define-interface <empty!able> (<emptyable>) ()
-  (:generic> empty! (ignored) (:in 1)
-    (:values empty) (:out 0)
-    (:method> (ignored)
-       (declare (ignorable ignored))
-       (empty))
-    (:documentation
-     "This function is pretty useless to call, but allows for
-      automatic generation of mutating interface wrappers.")))
-
-(define-interface <finite-collection> (interface::<finite-collection> <empty!able>) ()
+(define-interface <finite-collection> (lil/interface/collection:<finite-collection> <empty!able>) ()
   (:abstract)
   (:generic> conj (collection entry) (:in 1) (:values collection) (:out 0)
    (:documentation "Add an ENTRY to a COLLECTION.

@@ -1,9 +1,7 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 
-#+xcvb (module (:depends-on ("interface/base")))
-
 (uiop:define-package :lil/interface/box
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/empty)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    ;;; Boxes!
