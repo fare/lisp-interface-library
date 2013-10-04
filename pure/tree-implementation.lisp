@@ -1,9 +1,14 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure trees
 
-#+xcvb (module (:depends-on ("pure/tree-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/tree-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/order)
+  (:use-reexport
+   :lil/pure/tree))
+(in-package :lil/pure/tree-implementation)
 
 (defmethod node-class ((i <binary-tree>))
   'binary-tree-node)

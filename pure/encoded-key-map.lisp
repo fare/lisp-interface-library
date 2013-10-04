@@ -1,8 +1,14 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional mapping where key is encoded.
-#+xcvb (module (:depends-on ("pure/map")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/encoded-key-map
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/pure/map)
+  (:export
+   #:<encoded-key-map> #:<parametric-encoded-key-map>))
+(in-package :lil/pure/encoded-key-map)
 
 (define-interface <encoded-key-map>
     (<encoded-key-collection> <map-foldable-from-*> <map-singleton-from-insert> <map>) ()

@@ -1,9 +1,13 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure trees
 
-#+xcvb (module (:depends-on ("pure/hash-table-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/hash-table-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/pure/hash-table))
+(in-package :lil/pure/hash-table-implementation)
 
 (defmethod check-invariant ((i <hash-table>) map &key)
   (check-invariant (hashmap-interface i) map)

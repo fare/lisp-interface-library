@@ -5,12 +5,22 @@
 ;;; Under the hood: Big Endian Patricia Trees (Tries).
 ;;; Note however that in our API, what they call "merge" is called "join".
 
-#+xcvb
-(module
- (:depends-on
-  ("interface/interface" "pure/package" "pure/map" "pure/alist" "pure/tree")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/fmim
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/box
+        :lil/interface/order
+        :lil/pure/tree
+        :lil/pure/alist)
+  (:use-reexport
+   :lil/pure/map)
+  (:export
+   #:<fmim>
+   #:trie-head #:trie-node #:trie-skip #:trie-branch #:full-trie-branch
+   #:node-prefix-bits #:node-prefix-length
+   ))
+(in-package :lil/pure/fmim)
 
 (define-interface <fmim>
     (<copy-is-identity>
@@ -53,7 +63,7 @@
     :initarg :prefix-length
     :reader node-prefix-length)))
 
-(defclass trie-branch (trie-node interface::binary-branch) ())
+(defclass trie-branch (trie-node lil/interface/tree:binary-branch) ())
 
 (defclass full-trie-branch (trie-branch) ())
 ;;; Not needed: position tells us! (defclass trie-leaf (trie-node simple-value-box) ())

@@ -5,9 +5,17 @@
 ;;; Under the hood: Big Endian Patricia Trees (Tries).
 ;;; Note however that in our API, what they call "merge" is called "join".
 
-#+xcvb (module (:depends-on ("interface/box" "pure/fmim-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/fmim-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/box
+        :lil/interface/order
+        :lil/pure/tree
+        :lil/pure/alist)
+  (:use-reexport
+   :lil/pure/fmim))
+(in-package :lil/pure/fmim-implementation)
 
 (defmethod check-invariant ((i <fmim>) (map trie-head) &key)
   (trie-check-invariant (box-ref map) (node-height map) 0))

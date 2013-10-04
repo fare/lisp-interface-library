@@ -1,9 +1,13 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional queues, implementation
 
-#+xcvb (module (:depends-on ("pure/queue-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/queue-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/pure/queue))
+(in-package :lil/pure/queue-implementation)
 
 ;; Simple pure queue as a CONS cell (or NIL if empty)
 ;; the CAR of which is a list of entries to dequeue first,

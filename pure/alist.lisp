@@ -1,9 +1,17 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; Trivial functional map interface: alists.
 
-#+xcvb (module (:depends-on ("interface/eq" "pure/map-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/alist
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/eq
+        :lil/interface/group)
+  (:use-reexport
+   :lil/pure/map)
+  (:export
+   #:<alist>))
+(in-package :lil/pure/alist)
 
 (define-interface <alist>
     (<copy-is-identity>

@@ -1,13 +1,21 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure trees - interface
 
-#+xcvb (module (:depends-on ("pure/map-interface" "interface/tree-interface")))
+(uiop:define-package :lil/pure/tree
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/interface/tree
+   :lil/pure/map)
+  (:shadow #:<tree> #:<avl-tree> #:<number-map>
+           #:association-pair #:binary-tree-node #:avl-tree-node)
+  (:export
+   #:<tree> #:<avl-tree> #:<number-map> #:<nm>
+   #:association-pair #:binary-tree-node #:avl-tree-node))
+(in-package :lil/pure/tree)
 
-(in-package :pure)
-
-;;; Trees in general
-
-(define-interface <tree> (interface::<tree> <map>) ()
+(define-interface <tree> (lil/interface/tree:<tree> <map>) ()
   (:abstract)
   (:documentation "abstract interface for trees"))
 
@@ -27,10 +35,10 @@
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
 
-(defclass association-pair (interface::association-pair)
+(defclass association-pair (lil/interface/tree:association-pair)
   ())
 
-(defclass binary-tree-node (interface::binary-tree-node association-pair)
+(defclass binary-tree-node (lil/interface/tree:binary-tree-node association-pair)
   ;;; Or should we have a box instead of an association-pair ???
   ;;; Or let the user just inherit from binary-branch,
   ;;; and use a node-interface with make and update?
@@ -39,14 +47,14 @@
 
 ;;; pure AVL-tree
 
-(define-interface <avl-tree> (interface::<avl-tree> <binary-tree>) ()
+(define-interface <avl-tree> (lil/interface/tree:<avl-tree> <binary-tree>) ()
   (:abstract))
 
-(defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
+(defclass avl-tree-node (lil/interface/tree:avl-tree-node binary-tree-node)
   ())
 
 ;;; Common special case: when keys are (real) numbers
-(define-interface <number-map> (<avl-tree> interface::<number-map>)
+(define-interface <number-map> (<avl-tree> lil/interface/tree:<number-map>)
   ()
   (:singleton))
 

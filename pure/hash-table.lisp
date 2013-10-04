@@ -1,16 +1,19 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
+;;;;; Pure hash-tables
 
-#+xcvb
-(module
- (:depends-on
-  ("interface/interface"
-   "interface/eq"
-   "pure/map-interface"
-   "pure/alist-interface"
-   "pure/tree-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/hash-table
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/pure/tree
+        :lil/pure/alist
+        :lil/pure/encoded-key-map)
+  (:use-reexport
+   :lil/interface/eq
+   :lil/pure/map)
+  (:export
+   #:<hash-table> #:hashmap-interface #:bucketmap-interface))
+(in-package :lil/pure/hash-table)
 
 (define-interface <hash-table>
     (<copy-is-identity>

@@ -12,7 +12,7 @@
    #:node-class
    #:node #:node-key #:node-value #:left #:right #:node-balance #:node-height
    #:locate #:node-key-value #:leftmost-node #:rightmost-node #:leftmost #:rightmost #:leftmost-entry #:rightmost-entry
-   #:key-interface
+   #:key-interface #:value-interface
    #:<map-foldable-from-*>
    #:<map-for-each*-from-fold-left*>
    #:<map-fold-right*-from-fold-left*>

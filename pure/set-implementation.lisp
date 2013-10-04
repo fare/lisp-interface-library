@@ -1,9 +1,13 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure Sets and Multisets — implementation
 
-#+xcvb (module (:depends-on ("pure/set-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/set-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/pure/set))
+(in-package :lil/pure/set-implementation)
 
 ;;; set
 (defmethod set-union ((<i> <set>) set1 set2)

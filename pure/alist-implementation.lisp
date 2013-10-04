@@ -1,9 +1,15 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; Trivial functional map implementation: alists.
 
-#+xcvb (module (:depends-on ("pure/alist-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/alist-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/eq
+        :lil/interface/group)
+  (:use-reexport
+   :lil/pure/alist))
+(in-package :lil/pure/alist-implementation)
 
 (define-interface-methods (i <alist>)
 
@@ -66,12 +72,12 @@
 (:method> id ()
   (empty)))
 
-(defmethod map-alist ((<i> interface::<map>) map)
+(defmethod map-alist ((<i> lil/interface/map:<map>) map)
   (fold-right* <i> map #'acons '()))
 
-(defmethod convert ((<to> <alist>) (<from> interface::<map>) map)
+(defmethod convert ((<to> <alist>) (<from> lil/interface/map:<map>) map)
   (declare (ignorable <to>))
   (map-alist <from> map))
 
-(defmethod alist-map ((<map> interface::<map>) map)
+(defmethod alist-map ((<map> lil/interface/map:<map>) map)
   (convert <map> <alist> map))

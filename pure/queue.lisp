@@ -1,9 +1,18 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional queues
-
-#+xcvb (module (:depends-on ("pure/collection")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/queue
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/pure/iterator
+   :lil/pure/collection)
+  (:export
+   #:<queue> #:enqueue #:dequeue #:enqueue-first #:enqueue-last #:enqueue-many #:dequeue-all
+   #:<simple-queue>
+   #:<fifo-queue> #:<lifo-queue> #:<queue-enqueue-last> #:<queue-enqueue-first>
+   ))
+(in-package :lil/pure/queue)
 
 (define-interface <queue> (<finite-collection> <empty!able> <fount> <sink>) ()
   (:abstract)

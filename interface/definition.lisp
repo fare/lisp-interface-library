@@ -8,7 +8,7 @@
   (:export
    ;; The main user interface
    #:interface-class #:interface-class-p #:<interface>
-   #:define-interface #:with-interface
+   #:define-interface #:with-interface #:make-interface
    ;; Advanced interface
    #:interface-generics #:interface-abstract-p
    #:register-interface-generic #:interface-direct-generics

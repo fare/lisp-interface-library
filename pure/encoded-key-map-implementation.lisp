@@ -1,8 +1,13 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional mapping where key is encoded.
-#+xcvb (module (:depends-on ("pure/encoded-key-map-interface")))
-
-(in-package :pure)
+(uiop:define-package :lil/pure/encoded-key-map-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use :alexandria)
+  (:use-reexport
+   :lil/pure/encoded-key-map))
+(in-package :lil/pure/encoded-key-map-implementation)
 
 ;;; This ought to have been possible with some type-directed metaprogramming...
 
