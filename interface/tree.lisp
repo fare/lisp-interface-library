@@ -11,10 +11,12 @@
    #:node-class #:node-key-value #:leftmost-node #:leftmost #:rightmost-node #:rightmost
    #:locate #:node
    ;; to be shadowed by pure, stateful packages:
-   #:<tree> #:<binary-tree> #:<avl-tree> #:<number-map>
-   #:binary-branch #:binary-tree-node #:association-pair #:heighted-binary-tree-node #:avl-tree-node
+   #:<tree> #:<binary-tree> #:<avl-tree> #:<heighted-binary-tree> #:<number-map>
+   #:binary-branch #:binary-tree-node #:association-pair
+   #:heighted-binary-tree-node #:height #:node-height #:avl-tree-node
    ;; not shadowed:
-   #:node-balance
+   #:balance #:node-balance
+   #:key #:value #:left #:right
    ))
 
 (in-package :lil/interface/tree)

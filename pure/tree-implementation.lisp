@@ -1,5 +1,5 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
+;;;;; Pure trees (implementation)
 
 (uiop:define-package :lil/pure/tree-implementation
   (:use :closer-common-lisp

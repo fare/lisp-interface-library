@@ -1,9 +1,10 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Stateful Iterator
+;;;;; Stateful Iterator (implementation)
 
-#+xcvb (module (:depends-on ("stateful/iterator-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/iterator-implementation
+  (:use :closer-common-lisp :lil/interface/definition)
+  (:use-reexport :lil/stateful/iterator))
+(in-package :lil/stateful/iterator-implementation)
 
 ;;; Trivial stream: devnull
 (define-interface <devnull> (<fount> <sink>) ())

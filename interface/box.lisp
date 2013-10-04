@@ -16,7 +16,7 @@
    #:<one-use-value-box> #:one-use-value-box
    #:<one-use-thunk-box> #:one-use-thunk-box
    #:make-one-use-function #:one-use-lambda
-   #:<emptyable-box> #:emptyable-box #:empty #:empty-p
+   #:<emptyable-box> #:emptyable-box
    #:<mutable-box> #:mutable-box #:immutable-box #:set-box!
    #:<box!> #:box!))
 (in-package :lil/interface/box)

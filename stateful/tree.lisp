@@ -1,13 +1,27 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees - interface
+;;;;; Stateful trees - interface
 
-#+xcvb (module (:depends-on ("stateful/map-interface" "interface/tree-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/tree
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/interface/tree
+   :lil/stateful/map)
+  (:shadow #:<tree> #:<binary-tree> #:<avl-tree> #:<heighted-binary-tree> #:<number-map>
+           #:association-pair #:binary-tree-node #:binary-branch
+           #:heighted-binary-tree-node #:avl-tree-node)
+  (:export
+   #:<tree> #:<binary-tree> #:<avl-tree> #:<heighted-binary-tree> #:<number-map> #:<nm>
+   #:association-pair #:binary-tree-node #:binary-branch
+   #:heighted-binary-tree-node #:avl-tree-node
+   #:<post-self-balanced-binary-tree>
+   #:balance-node #:rotate-node-left #:rotate-node-right #:update-height))
+(in-package :lil/stateful/tree)
 
 ;;; Trees in general
 
-(define-interface <tree> (interface::<tree> <map>) ()
+(define-interface <tree> (lil/interface/tree:<tree> <map>) ()
   (:abstract)
   (:documentation "abstract interface for stateful trees"))
 
@@ -15,7 +29,7 @@
 
 (define-interface <binary-tree>
     (<tree>
-     interface::<binary-tree>
+     lil/interface/tree:<binary-tree>
      <foldable-size-from-fold-left>
      <map-copy-from-join-empty>
      <map-empty-is-empty-object> ;; handles all the empty-object cases so we don't have to.
@@ -29,13 +43,13 @@
   (:abstract)
   (:documentation "Keys in binary trees increase from left to right"))
 
-(defclass binary-branch (interface::binary-branch)
+(defclass binary-branch (lil/interface/tree:binary-branch)
   ((left :accessor left :initform (make-empty-object))
    (right :accessor right :initform (make-empty-object))))
 
-(defclass association-pair (interface::association-pair)
-  ((interface::key :accessor node-key) ;; only write the key when copying a key-value pair.
-   (interface::value :accessor node-value))) ;; writable value, not writable key.
+(defclass association-pair (lil/interface/tree:association-pair)
+  ((lil/interface/tree:key :accessor node-key) ;; only write the key when copying a key-value pair.
+   (lil/interface/tree:value :accessor node-value))) ;; writable value, not writable key.
 
 (defclass binary-tree-node (binary-branch association-pair) ())
 
@@ -53,26 +67,26 @@
   (:abstract))
 
 ;;; Trees that maintain a record of their height
-(define-interface <heighted-binary-tree> (interface::<heighted-binary-tree> <binary-tree> ) ()
+(define-interface <heighted-binary-tree> (lil/interface/tree:<heighted-binary-tree> <binary-tree> ) ()
   (:abstract))
 
-(defclass heighted-binary-tree-node (interface::heighted-binary-tree-node binary-tree-node)
-    ((interface::height :accessor node-height))) ;; make it writable.
+(defclass heighted-binary-tree-node (lil/interface/tree:heighted-binary-tree-node binary-tree-node)
+    ((lil/interface/tree:height :accessor node-height))) ;; make it writable.
 
 (defgeneric update-height (node))
 
 ;;; stateful AVL-tree
 
 (define-interface <avl-tree>
-    (interface::<avl-tree>
+    (lil/interface/tree:<avl-tree>
      <heighted-binary-tree>
      <post-self-balanced-binary-tree>) ()
   (:abstract))
 
-(defclass avl-tree-node (interface::avl-tree-node heighted-binary-tree-node) ())
+(defclass avl-tree-node (lil/interface/tree:avl-tree-node heighted-binary-tree-node) ())
 
 ;;; Common special case: when keys are (real) numbers
-(define-interface <number-map> (interface::<number-map> <avl-tree>)
+(define-interface <number-map> (lil/interface/tree:<number-map> <avl-tree>)
   ()
   (:singleton))
 

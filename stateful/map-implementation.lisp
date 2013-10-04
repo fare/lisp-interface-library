@@ -1,9 +1,14 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Stateful mapping of keys to values
+;;;;; Stateful mapping of keys to values (implementation)
 
-#+xcvb (module (:depends-on ("stateful/map-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/map-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/group
+        :lil/interface/fold)
+  (:use-reexport :lil/stateful/map))
+(in-package :lil/stateful/map-implementation)
 
 ;;; <map-empty-is-empty-object>
 (define-interface-methods (<i> <map-empty-is-empty-object>)
@@ -97,7 +102,7 @@
   map)
 
 ;;; Converting a map to another one... may destroy the original one
-(defmethod convert ((<to> <map>) (<from> interface::<map>) frommap)
+(defmethod convert ((<to> <map>) (<from> lil/interface/map:<map>) frommap)
   (let ((tomap (empty <to>)))
     (for-each* <from> frommap #'(lambda (k v) (insert <to> tomap k v)))
     tomap))

@@ -1,9 +1,18 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
+;;;;; Stateful hash-tables (thin wrapper over the implementation)
 
-#+xcvb (module (:depends-on ("interface/eq" "stateful/map-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/hash-table
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/stateful/tree
+        :lil/stateful/encoded-key-map)
+  (:use-reexport
+   :lil/interface/eq
+   :lil/stateful/map)
+  (:export
+   #:<hash-table> #:hashmap-interface #:bucketmap-interface))
+(in-package :lil/stateful/hash-table)
 
 (define-interface <hash-table>
     (<map-copy-from-join-empty>

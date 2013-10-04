@@ -1,9 +1,17 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Pure to Stateful: Macros
 
-#+xcvb (module (:depends-on ("interface/box" "stateful/package")))
-
-(in-package :interface)
+(uiop:define-package :lil/transform/mutating
+  (:use :closer-common-lisp
+        :lil/interface/utility
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/box)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:define-mutating-interface #:define-mutating-method
+   #:<mutating> #:pure-interface))
+(in-package :lil/transform/mutating)
 
 (declaim (optimize (speed 1) (safety 3) (debug 3)))
 
@@ -201,7 +209,7 @@
          (overridden-gfs-hash
           (alexandria:alist-hash-table (mapcar 'cdr overridden-gfs))))
     `(progn
-       (define-interface ,name (stateful:<mutating> ,@stateful-interfaces)
+       (define-interface ,name (<mutating> ,@stateful-interfaces)
          ,slots
          ,@options)
        ,@(loop :for stateful-gf :in stateful-gfs
@@ -218,3 +226,10 @@
                       pure-gf stateful-gf name))
             `((define-mutating-method ,name ,stateful-interfaces ,pure-interfaces
                                       ,stateful-gf ,pure-gf)))))))
+
+(define-interface <mutating> (<interface>)
+  ((pure-interface
+    :reader pure-interface
+    :initarg :pure-interface))
+  (:parametric (interface)
+    (make-interface :pure-interface interface)))

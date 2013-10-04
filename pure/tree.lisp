@@ -8,7 +8,7 @@
   (:use-reexport
    :lil/interface/tree
    :lil/pure/map)
-  (:shadow #:<tree> #:<avl-tree> #:<number-map>
+  (:shadow #:<tree> #:<binary-tree> #:<heighted-binary-tree> #:<avl-tree> #:<number-map>
            #:association-pair #:binary-tree-node #:avl-tree-node)
   (:export
    #:<tree> #:<avl-tree> #:<number-map> #:<nm>
@@ -22,7 +22,7 @@
 ;;; Vanilla Binary Tree
 
 (define-interface <binary-tree>
-    (<tree>
+    (<tree> lil/interface/tree:<binary-tree>
      <map-decons-from-first-key-value-drop>
      <map-empty-is-nil> ;; handles all the null cases so we don't have to.
      <map-has-key-p-from-lookup>

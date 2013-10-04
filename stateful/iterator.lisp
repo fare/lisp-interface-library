@@ -1,9 +1,15 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; stateful iterator
 
-#+xcvb (module (:depends-on ("interface/iterator" "stateful/package")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/iterator
+  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use-reexport :lil/interface/iterator)
+  (:export
+   #:<fount> #:<sink>
+   #:iterator #:next
+   #:collector #:collect #:result
+   #:flow))
+(in-package :lil/stateful/iterator)
 
 (define-interface <fount> (<interface>) () (:abstract))
 (define-interface <sink> (<interface>) () (:abstract))
@@ -36,5 +42,3 @@ the final RESULT from the collecting process"))
   (:documentation
    "Given <FOUNT> and <SINK> interfaces and FOUNT and SINK objects,
 let data flow from the FOUNT to the SINK, and return the result"))
-
-(define-interface <for-each> (<sink>) () (:singleton))

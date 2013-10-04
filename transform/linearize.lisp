@@ -1,9 +1,17 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Stateful to Pure via linearization: Macros
 
-#+xcvb (module (:depends-on ("interface/box" "pure/package")))
-
-(in-package :interface)
+(uiop:define-package :lil/transform/linearize
+  (:use :closer-common-lisp
+        :lil/interface/utility
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/box)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:define-linearized-interface #:define-linearized-method
+   #:<linear> #:<linearized> #:stateful-interface))
+(in-package :lil/transform/linearize)
 
 (declaim (optimize (speed 1) (safety 3) (debug 3)))
 
@@ -195,7 +203,7 @@
          (overridden-gfs-hash
           (alexandria:alist-hash-table (mapcar 'cdr overridden-gfs))))
     `(progn
-       (define-interface ,name (pure:<linearized> ,@pure-interfaces)
+       (define-interface ,name (<linearized> ,@pure-interfaces)
          ,slots
          ,@options)
        ,@(loop :for pure-gf :in pure-gfs
@@ -212,3 +220,16 @@
                       stateful-gf pure-gf name))
             `((define-linearized-method ,name ,pure-interfaces ,stateful-interfaces
                                         ,pure-gf ,stateful-gf)))))))
+
+(define-interface <linear> (<interface>) () (:abstract))
+
+(define-interface <linearized> (<linear>)
+  ((stateful-interface
+    :reader stateful-interface
+    :initarg :stateful-interface)
+   #|(box-interface
+    :reader box-interface
+    :initarg :box-interface :initform <one-use-value-box>)|#)
+  (:parametric (interface #|&key unsafe|#)
+    (make-interface :stateful-interface interface
+                    #|:box-interface (if unsafe <value-box> <one-use-value-box>)|#)))

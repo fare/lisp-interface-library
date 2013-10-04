@@ -2,6 +2,7 @@
 ;;;;; All pure interfaces and data structures
 
 (uiop:define-package :lil/pure/all
+  (:nicknames :pure)
   (:import-from :lil/interface/all)
   (:use-reexport
    :lil/pure/empty

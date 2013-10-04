@@ -14,7 +14,7 @@
   (harder-linear-map-test i)
   (multilinear-map-test i))
 
-(defmethod read-only-linear-map-test ((i interface::<map>))
+(defmethod read-only-linear-map-test ((i lil/interface/map:<map>))
   (declare (optimize (speed 1) (debug 3) (space 3)))
   ;;; TODO: test each and every function in the API
   (X 'read-only-linear-map-test *package* i)

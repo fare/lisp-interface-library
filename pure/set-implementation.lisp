@@ -75,31 +75,31 @@
                               key count collection)))))))
 
 #|
-(define-interface <set*-from-collection> (interface::<set*-from-collection> <set*>) ()
+(define-interface <set*-from-collection> (lil/interface/set:<set*-from-collection> <set*>) ()
   (:method empty! ((i <set*-from-collection>) x) (empty (base-interface i))))
 
-(define-interface <set-from-map> (<set> <set*-from-collection> interface::<set-from-map>)
+(define-interface <set-from-map> (<set> <set*-from-collection> lil/interface/set:<set-from-map>)
   ((base-interface :type <map>))
   (:parametric (base-interface)
      (make-interface :base-interface base-interface))
   (:method singleton ((<i> <set-from-map>) element)
     (singleton <b> (cons element t))))
 
-(define-interface <multiset-from-map> (<multiset> <set*-from-collection> interface::<multiset-from-map>)
+(define-interface <multiset-from-map> (<multiset> <set*-from-collection> lil/interface/set:<multiset-from-map>)
   ((base-interface :type <map>))
   (:parametric (base-interface)
      (make-interface :base-interface base-interface))
   (:method singleton ((<i> <multiset-from-map>) element)
     (singleton <b> (cons element 1))))
 
-(define-interface <set-from-multiset> (<set> <set*-from-collection> interface::<set-from-multiset>)
+(define-interface <set-from-multiset> (<set> <set*-from-collection> lil/interface/set:<set-from-multiset>)
   ((base-interface :type <multiset>))
   (:parametric (base-interface)
     (make-interface :base-interface base-interface))
   (:method singleton ((<i> <set-from-multiset>) element)
     (singleton <b> element)))
 
-(define-interface <multiset-from-set> (<multiset> <set*-from-collection> interface::<multiset-from-set>)
+(define-interface <multiset-from-set> (<multiset> <set*-from-collection> lil/interface/set:<multiset-from-set>)
   ((base-interface :type <map>))
   (:parametric (base-interface)
      (make-interface :base-interface base-interface))

@@ -18,8 +18,7 @@
   (:export
    #:<fmim>
    #:trie-head #:trie-node #:trie-skip #:trie-branch #:full-trie-branch
-   #:node-prefix-bits #:node-prefix-length
-   ))
+   #:node-prefix-bits #:node-prefix-length))
 (in-package :lil/pure/fmim)
 
 (define-interface <fmim>

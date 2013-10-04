@@ -33,8 +33,8 @@
           ;; => (2 4 6 8)
           ))
 
-(defmethod interface:check-invariant ((<l> <list>) monad &key &allow-other-keys)
-  (interface:check-invariant <monad> monad)
+(defmethod check-invariant ((<l> <list>) monad &key &allow-other-keys)
+  (check-invariant <monad> monad)
   (loop for test in '(test-list-1
                       test-list-2
                       test-list-3

@@ -1,8 +1,13 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Stateful mapping where key is encoded.
-#+xcvb (module (:depends-on ("stateful/encoded-key-map-interface")))
-
-(in-package :stateful)
+;;;;; Stateful mapping where key is encoded (implementation)
+(uiop:define-package :lil/stateful/encoded-key-map-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use :alexandria)
+  (:use-reexport
+   :lil/stateful/encoded-key-map))
+(in-package :lil/stateful/encoded-key-map-implementation)
 
 ;;; This ought to have been possible with some type-directed metaprogramming...
 

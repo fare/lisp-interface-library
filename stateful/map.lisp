@@ -1,11 +1,32 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Stateful mapping of keys to values
+;;;;; Stateful (mutable) mapping of keys to values
 
-#+xcvb (module (:depends-on ("interface/map-interface" "stateful/collection" "stateful/iterator-interface")))
+(uiop:define-package :lil/stateful/map
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/interface/map
+   :lil/interface/fold
+   :lil/stateful/iterator
+   :lil/stateful/collection)
+  (:shadow #:<map>)
+  (:export
+   #:insert #:drop #:decons #:update-key #:map/2
+   #:<map-copy-from-join-empty>
+   #:<map-decons-from-first-key-value-drop>
+   #:<map-divide-from-for-each*>
+   #:<map-divide/list-from-divide>
+   #:<map-empty-is-empty-object>
+   #:<map-first-key-value-from-for-each*>
+   #:<map-fold-left*-from-for-each*>
+   #:<map-join-from-for-each*-lookup-insert>
+   #:<map-join/list-from-join>
+   #:<map-map/2-from-for-each*-lookup-insert-drop>
+   #:<map-update-key-from-lookup-insert-drop>))
+(in-package :lil/stateful/map)
 
-(in-package :stateful)
-
-(define-interface <map> (interface::<map> <finite-collection> <fount> <sink>) ()
+(define-interface <map> (lil/interface/map:<map> <finite-collection> <fount> <sink>) ()
   (:abstract)
   (:generic> insert (map key value) (:in 1) (:values) (:out t)
    (:documentation "Modify the map to add a key-value pair,

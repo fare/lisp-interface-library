@@ -1,9 +1,14 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
+;;;;; Stateful trees (implementation)
 
-#+xcvb (module (:depends-on ("stateful/tree-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/tree-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/order)
+  (:use-reexport
+   :lil/stateful/tree))
+(in-package :lil/stateful/tree-implementation)
 
 (defmethod node-class ((i <binary-tree>))
   'binary-tree-node)

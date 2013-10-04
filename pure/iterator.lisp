@@ -43,4 +43,3 @@ the final RESULT from the collecting process"))
   (:documentation
    "Given <FOUNT> and <SINK> interfaces and FOUNT and SINK objects,
 let data flow from the FOUNT to the SINK, and return the result"))
-

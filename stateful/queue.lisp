@@ -1,11 +1,19 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful queues
+(uiop:define-package :lil/stateful/queue
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/stateful/iterator
+   :lil/stateful/collection)
+  (:export
+   #:<queue> #:enqueue #:dequeue #:enqueue-first #:enqueue-last #:enqueue-many #:dequeue-all
+   #:<simple-queue>
+   #:<fifo-queue> #:<lifo-queue> #:<queue-enqueue-last> #:<queue-enqueue-first>))
+(in-package :lil/stateful/queue)
 
-#+xcvb (module (:depends-on ("stateful/collection")))
-
-(in-package :stateful)
-
-(define-interface <queue> (interface::<finite-collection> <empty!able> <fount> <sink>) ()
+(define-interface <queue> (lil/interface/collection:<finite-collection> <empty!able> <fount> <sink>) ()
   (:abstract)
   (:generic> enqueue (queue datum) (:in 1) (:values) (:out t)
    (:documentation "Enqueue a datum into a queue, whether it's first or last makes the queue LIFO or FIFO"))

@@ -93,6 +93,7 @@ e.g, (mlet* <list> ((x (list 1 2 3 4)))
 	      `((%mlet* ,bindings ,@body))
 	      body)))))
 
+(defgeneric lift-function (<monad> function))
 (defmethod lift-function ((<m> <monad>) function)
   "Take a function that accepts standard values and returns a standard
 value, Turn it into a function that accepts monadic values and retuns

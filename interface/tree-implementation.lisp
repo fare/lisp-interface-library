@@ -3,9 +3,10 @@
 
 (uiop:define-package :lil/interface/tree-implementation
   (:use :closer-common-lisp
-   :lil/interface/definition :lil/interface/base :lil/interface/empty
-   :lil/interface/map :lil/interface/fold :lil/interface/order
-   :lil/interface/tree)
+   :lil/interface/definition :lil/interface/base
+   :lil/interface/empty :lil/interface/order
+   :lil/interface/iterator :lil/interface/fold
+   :lil/interface/map :lil/interface/tree)
   (:mix :fare-utils :uiop :alexandria)
   (:export #:binary-tree-sexp))
 

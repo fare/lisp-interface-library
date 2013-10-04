@@ -77,21 +77,6 @@
     (loop :for name :being :the :hash-key :of (interface-generics interface)
       :collect name))
 
-  (defun call-with-unique-collector (fun &key test)
-    (let ((already-seen (make-hash-table :test (or test 'eql)))
-          (accumulator '()))
-      (funcall fun
-               #'(lambda (x) (unless (gethash x already-seen)
-                               (setf (gethash x already-seen) t)
-                               (push x accumulator)
-                               t)))
-      (nreverse accumulator)))
-
-  (defmacro with-unique-collector ((collector &key test) &body body)
-    "Like UIOP:WHILE-COLLECTING, but doesn't collect duplicates."
-    `(call-with-unique-collector
-      #'(lambda (,collector) ,@body) :test ,test))
-
   (defgeneric all-super-interfaces (interfaces)
     (:method ((symbol symbol))
       (when symbol

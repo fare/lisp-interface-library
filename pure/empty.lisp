@@ -3,8 +3,7 @@
 
 (uiop:define-package :lil/pure/empty
   (:use :closer-common-lisp
-        :lil/interface/definition
-        :lil/interface/base)
+        :lil/interface/definition)
   (:use-reexport
    :lil/interface/empty)
   (:export

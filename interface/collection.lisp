@@ -15,6 +15,7 @@
    #:<finite-collection> ;; note: shadowed in pure, stateful
    #:get-entry #:has-key-p #:first-entry #:entry-values
    #:singleton-p #:singleton #:singleton*
+   #:key-interface
    #:<collection-has-key-p-from-get-entry>
    #:<encoded-key-collection> #:<parametric-encoded-key-collection> #:encode-key #:decode-key
    #:key-encoder #:key-decoder))

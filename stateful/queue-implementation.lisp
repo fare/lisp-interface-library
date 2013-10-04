@@ -1,9 +1,13 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful queues, straightforward implementation
 
-#+xcvb (module (:depends-on ("stateful/queue-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/queue-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/stateful/queue))
+(in-package :lil/stateful/queue-implementation)
 
 ;; Simple stateful fifo queue as a CONS cell
 ;; the CDR of which is the list of entries, and

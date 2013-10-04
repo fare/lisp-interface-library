@@ -1,9 +1,17 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Interfaces to Classes: Macros
 
-#+xcvb (module (:depends-on ("interface/interface" "interface/box")))
-
-(in-package :interface)
+(uiop:define-package :lil/transform/classify
+  (:use :closer-common-lisp
+        :lil/interface/utility
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/interface/box)
+  (:mix :fare-utils :uiop :alexandria)
+  (:export
+   #:define-classified-interface-class #:define-classified-method
+   #:<linear> #:<linearized> #:stateful-interface))
+(in-package :lil/transform/classify)
 
 (declaim (optimize (speed 1) (safety 3) (debug 3)))
 

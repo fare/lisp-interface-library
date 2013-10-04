@@ -1,15 +1,20 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Base collections
+;;;;; Stateful collections
 
-#+xcvb (module (:depends-on ("stateful/iterator-interface")))
+(uiop:define-package :lil/stateful/collection
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base)
+  (:use-reexport
+   :lil/stateful/empty
+   :lil/interface/collection)
+  (:shadow #:<finite-collection>)
+  (:export
+   #:<finite-collection> #:conj #:disj #:deconj #:restriction
+   #:join #:divide #:join/list #:divide/list))
+(in-package :lil/stateful/collection)
 
-(in-package :stateful)
-
-(define-interface <empty!able> (<emptyable>) ()
-  (:generic> empty! (map) (:in 1) (:values) (:out t)
-   (:documentation "Clear the collection and make it empty. Return no value.")))
-
-(define-interface <finite-collection> (interface::<finite-collection> <empty!able>) ()
+(define-interface <finite-collection> (lil/interface/collection:<finite-collection> <empty!able>) ()
   (:abstract)
   (:generic> conj (collection entry) (:in 1) (:values) (:out t)
    (:documentation "Add an ENTRY to a COLLECTION.

@@ -1,9 +1,14 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
+;;;;; Stateful hash-tables (implementation)
 
-#+xcvb (module (:depends-on ("stateful/hash-table-interface")))
-
-(in-package :stateful)
+(uiop:define-package :lil/stateful/hash-table-implementation
+  (:use :closer-common-lisp
+        :lil/interface/definition
+        :lil/interface/base
+        :lil/stateful/map-implementation)
+  (:use-reexport
+   :lil/stateful/hash-table))
+(in-package :lil/stateful/hash-table-implementation)
 
 (defun normalize-eq-function (x)
   (cond
