@@ -6,6 +6,7 @@
   (:use-reexport :lil/interface/iterator)
   (:export
    #:<fount> #:<sink>
+   #:end-of-iteration
    #:iterator #:next
    #:collector #:collect #:result
    #:flow))

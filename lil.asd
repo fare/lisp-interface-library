@@ -1,6 +1,8 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 (in-package :asdf)
 
+#-asdf3 (error "LIL requires ASDF 3 or later. Please upgrade your ASDF.")
+
 (defsystem :lil
   :description "LIL: Lisp Interface Library"
   :long-description
@@ -15,14 +17,15 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
                :lil/pure/all
                :lil/stateful/all
                :lil/transform/all)
-  :perform (test-op :after (o c)
-             (load-system :lisp-interface-library-test)
-             (symbol-call :lisp-interface-library-test :test-suite)))
+  :in-order-to ((test-op (load-op :lil/test/all)))
+  :perform (test-op (o c)
+             (symbol-call :lil/test/all :test-suite)))
 
 (register-system-packages :lil/pure/all '(:pure))
 (register-system-packages :lil/stateful/all '(:stateful))
 (register-system-packages :lil/transform/classy '(:classy))
 (register-system-packages :lil/transform/posh '(:posh))
+(register-system-packages :lil/test/all '(:lil/test))
 
 (register-system-packages
  :closer-mop

@@ -1,6 +1,25 @@
-#+xcvb (module (:depends-on ("package")))
-
-(in-package :lisp-interface-library-test)
+(defpackage :lil/test/base
+  (:use :lil/interface/all :reader-interception :fare-utils :uiop
+        :cl :hu.dwim.stefil)
+  (:export
+   #:test-suite
+   #:sort-alist
+   #:shuffle-list
+   #:make-alist
+   #:equal-alist
+   #:interface-test
+   #:alist-map* #:map-alist*
+   #:*verbose* #:x
+   #:*alist-10-latin*
+   #:*alist-100-decimal*
+   #:*alist-100-latin*
+   #:*alist-100-english*
+   #:*al-1*
+   #:*al-2*
+   #:*al-3*
+   #:*al-5*
+   #:read-only-linear-map-test))
+(in-package :lil/test/base)
 
 (defsuite* (test-suite
             :in root-suite
@@ -37,3 +56,4 @@
 (defvar *verbose* nil)
 
 (defmacro X (&rest rest) `(when *verbose* (DBG ,@rest)))
+

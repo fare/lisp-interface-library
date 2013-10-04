@@ -1,6 +1,9 @@
-#+xcvb (module (:depends-on ("package" "functional-map")))
-
-(in-package :lisp-stateful-datastructure-test)
+(uiop:define-package :lil/test/stateful-map
+  (:use :stateful :lil/test/base :lil/transform/mutating-map :lil/interface/base
+        :reader-interception :uiop :fare-utils
+        :cl :hu.dwim.stefil)
+  (:import-from :lil/test/pure-map))
+(in-package :lil/test/stateful-map)
 
 (declaim (optimize (speed 1) (debug 3) (space 3)))
 
@@ -12,7 +15,7 @@
   `(let ((,m (alist-map* ,i ,init))) ,@body (map-alist* i ,m)))
 
 (defmethod interface-test ((i <map>))
-  (lisp-pure-datastructure-test::read-only-linear-map-test i)
+  (lil/test/pure-map:read-only-linear-map-test i)
   (simple-map-test i)
   (harder-map-test i))
 

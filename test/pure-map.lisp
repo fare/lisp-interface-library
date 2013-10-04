@@ -1,6 +1,10 @@
-#+xcvb (module (:depends-on ("package")))
+(uiop:define-package :lil/test/pure-map
+  (:use :pure :lil/test/base :lil/transform/linearized-map :lil/interface/base
+        :reader-interception :uiop :fare-utils
+        :cl :hu.dwim.stefil)
+  (:export :read-only-linear-map-test))
 
-(in-package :lisp-pure-datastructure-test)
+(in-package :lil/test/pure-map)
 
 (declaim (optimize (speed 1) (debug 3) (space 3)))
 

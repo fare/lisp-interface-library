@@ -4,6 +4,7 @@
 (uiop:define-package :lil/transform/linearized-map
   (:use :closer-common-lisp
         :lil/interface/definition
+        :lil/interface/box
         :lil/transform/linearize)
   (:use-reexport :lil/pure/map)
   (:import-from :lil/stateful/map)

@@ -10,7 +10,7 @@
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:define-classified-interface-class #:define-classified-method
-   #:<linear> #:<linearized> #:stateful-interface))
+   #:<linear> #:<linearized> #:stateful-interface #:class-interface))
 (in-package :lil/transform/classify)
 
 (declaim (optimize (speed 1) (safety 3) (debug 3)))

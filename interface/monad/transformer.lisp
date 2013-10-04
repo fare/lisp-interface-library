@@ -15,7 +15,6 @@
 		:initarg inner
 		:initform <identity>))
   (:singleton)
-  (:generic> inner ())
   (:generic> lift (inner-monadic-value))
   (:parametric (&optional (inner <identity>))
 	       (make-instance '<transformer> :inner inner))
