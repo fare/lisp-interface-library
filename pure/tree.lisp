@@ -1,65 +1,53 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Pure trees
+;;;;; Pure trees - interface
 
-#+xcvb (module (:depends-on ("pure/tree-interface")))
+#+xcvb (module (:depends-on ("pure/map-interface" "interface/tree-interface")))
 
 (in-package :pure)
 
-(defmethod node-class ((i <binary-tree>))
-  'binary-tree-node)
+;;; Trees in general
 
-(defmethod node ((i <binary-tree>) &key left right key value)
-  (make-instance (node-class i)
-                 :key key :value value :left left :right right))
+(define-interface <tree> (interface::<tree> <map>) ()
+  (:abstract)
+  (:documentation "abstract interface for trees"))
 
-(defmethod insert ((i <binary-tree>) node key value)
-  (if (empty-p i node)
-      (node i :key key :value value)
-      (ecase (compare (key-interface i) key (node-key node))
-        (0 (node i :key key :value value ;; (update-node i node :key key :value value)
-                 :left (left node) :right (right node)))
-        (-1 (node i :key (node-key node) :value (node-value node)
-                  :left (insert i (left node) key value) :right (right node)))
-        (1 (node i :key (node-key node) :value (node-value node)
-                 :left (left node) :right (insert i (right node) key value))))))
+;;; Vanilla Binary Tree
 
-(defmethod drop ((i <binary-tree>) node key)
-  (if (null node)
-      (values nil nil nil)
-      (let ((k (node-key node))
-            (v (node-value node)))
-        (ecase (compare (key-interface i) key k)
-          (0 (values
-              (cond
-                ((null (left node)) (right node))
-                ((null (right node)) (left node))
-                (t
-                 (multiple-value-bind (kk vv)
-                     (leftmost i (right node))
-                   (node i :key kk :value vv
-                         :left (left node) :right (drop i (right node) kk)))))
-              v t))
-          (-1
-           (multiple-value-bind (left value foundp) (drop i (left node) key)
-                (values (node i :key k :value v
-                              :left left :right (right node))
-                    value foundp)))
-          (1
-           (multiple-value-bind (right value foundp) (drop i (right node) key)
-               (values (node i :key k :value v
-                             :left (left node) :right right)
-                       value foundp)))))))
+(define-interface <binary-tree>
+    (<tree>
+     <map-decons-from-first-key-value-drop>
+     <map-empty-is-nil> ;; handles all the null cases so we don't have to.
+     <map-has-key-p-from-lookup>
+     <map-join-from-fold-left*-insert>
+     <map-join/list-from-join>
+     <map-map/2-from-fold-left*-lookup-insert-drop>
+     <map-monoid-fold*-from-divide/list>
+     <map-update-key-from-lookup-insert-drop>)
+  ()
+  (:abstract)
+  (:documentation "Keys in binary trees increase from left to right"))
 
-(defmethod divide ((i <binary-tree>) node)
-  (if (null node)
-      (values nil nil)
-      (values (left node) (insert i (right node) (node-key node) (node-value node)))))
+(defclass association-pair (interface::association-pair)
+  ())
 
-(defmethod divide/list ((i <binary-tree>) node)
-  (if (null node) '()
-      (let* ((rlist (cons (node i :key (node-key node) :value (node-value node))
-                          (if (null (right node)) '() (list (right node))))))
-        (if (null (left node)) rlist (cons (left node) rlist)))))
+(defclass binary-tree-node (interface::binary-tree-node association-pair)
+  ;;; Or should we have a box instead of an association-pair ???
+  ;;; Or let the user just inherit from binary-branch,
+  ;;; and use a node-interface with make and update?
+  ((left :initform nil)
+   (right :initform nil)))
 
-(defmethod node-class ((i <avl-tree>))
-  'avl-tree-node)
+;;; pure AVL-tree
+
+(define-interface <avl-tree> (interface::<avl-tree> <binary-tree>) ()
+  (:abstract))
+
+(defclass avl-tree-node (interface::avl-tree-node binary-tree-node)
+  ())
+
+;;; Common special case: when keys are (real) numbers
+(define-interface <number-map> (<avl-tree> interface::<number-map>)
+  ()
+  (:singleton))
+
+(defparameter <nm> <number-map>)

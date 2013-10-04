@@ -1,123 +1,69 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful mapping of keys to values
 
-#+xcvb (module (:depends-on ("stateful/map-interface")))
+#+xcvb (module (:depends-on ("interface/map-interface" "stateful/collection" "stateful/iterator-interface")))
 
 (in-package :stateful)
 
-;;; <map-empty-is-empty-object>
-(define-interface-methods (<i> <map-empty-is-empty-object>)
-  (:method> empty! (map)
-    (change-class map 'empty-object)
-    (values))
-  (:method> node-key-value ((m empty-object))
-    (values nil nil nil)))
+(define-interface <map> (interface::<map> <finite-collection> <fount> <sink>) ()
+  (:abstract)
+  (:generic> insert (map key value) (:in 1) (:values) (:out t)
+   (:documentation "Modify the map to add a key-value pair,
+replacing any previous association for this key.
+Return no value."))
+  (:generic> drop (map key) (:in 1) (:values value foundp) (:out t)
+   (:documentation "Modify the map to drop the association corresponding to given key,
+returning two values:
+1- the value from the dropped association, and
+2- a boolean that is true iff an association was found."))
+  (:generic> decons (map) (:in 1) (:values emptyp key value) (:out t)
+   (:documentation "Modify a map to drop its first association,
+returning three values:
+1- a boolean indicating whether the map was already empty.
+2- a key
+3- a value.
+Which association is dropped is the same as per first-key-value."))
+  (:generic> update-key (map key fun) (:in 1) (:values) (:out t)
+   (:documentation "Update the association of a map for a given key
+calling fun with the previous associated value and T if found, with NIL and NIL otherwise,
+and return no values,
+where fun will return two values,
+the new value and a boolean,
+the association being dropped if the boolean is NIL,
+otherwise a new association being setup with the new value."))
+  (:generic> map/2 (fun map1 map2) (:in 2 3) (:values) (:out t nil)
+   (:documentation "Join two maps into the first one, after merging elements from MAP2.
+Return no values.
+For each key K present in either MAP1 or MAP2,
+the function FUN is called with arguments K V1 F1 V2 F2 where
+V1 and F1 are the value and found flag for MAP1, and
+V2 and F2 are the value and found flag for MAP2,
+and FUN returns value V and found flag F,
+that correspond the lookup for K in the result.")))
 
-;;; <map-decons-from-first-key-value-drop>
-(defmethod decons ((i <map-decons-from-first-key-value-drop>) map)
-  (multiple-value-bind (k v f) (first-key-value i map)
-    (cond
-      (f
-       (drop i map k)
-       (values t k v))
-      (t
-       (values nil nil nil)))))
+#|
+Instead of divide and divide/list and in the spirit of fold-left and fold-right,
+we could have a
+(defgeneric monoid-fold (i map m-null m-singleton m-join m-join/list))
+|#
 
-;;; <map-update-key-from-lookup-insert-drop>
-(defmethod update-key ((i <map-update-key-from-lookup-insert-drop>) map key fun)
-  (multiple-value-bind (value foundp) (lookup i map key)
-   (multiple-value-bind (new-value new-foundp) (funcall fun value foundp)
-     (cond
-       (new-foundp
-        (insert i map key new-value))
-       (foundp
-        (drop i map key)
-        (values))
-       (t
-        (values))))))
+(define-interface <map-copy-from-join-empty> (<map>) ()
+  (:abstract)
+  (:documentation "Beware that join must be non-destructive of its second argument")
+  (:method> copy (map)
+    (let ((new (empty)))
+      (join new map)
+      new)))
 
-;;; <map-join-from-for-each*-lookup-insert>
-(defmethod join ((<i> <map-join-from-for-each*-lookup-insert>) map1 map2)
-  (for-each* <i> map2
-	     #'(lambda (k v)
-		 (unless (lookup <i> map1 k)
-		   (insert <i> map1 k v))))
-  (values))
-
-(defmethod join/list ((<i> <map-join-from-for-each*-lookup-insert>) maplist)
-  (with-interface (<i> <map>)
-    (if maplist
-	(reduce #'join maplist)
-	(empty))))
-
-(defmethod divide/list ((<i> <map-divide/list-from-divide>) map)
-  (cond
-    ((empty-p <i> map) '())
-    ((size<=n-p <i> map 1) (list map))
-    (t (multiple-value-bind (map2 map) (divide <i> map) (list map map2)))))
-
-(defmethod map/2 ((<i> <map-map/2-from-for-each*-lookup-insert-drop>) fun map1 map2)
-  (with-interface (<i> <map>)
-    (for-each* map1
-	       #'(lambda (k v1)
-		   (multiple-value-bind (v2 f2) (lookup map2 k)
-		     (multiple-value-bind (v f) (funcall fun k v1 t v2 f2)
-		       (if f
-			   (insert map1 k v)
-			   (drop map1 k))))))
-    (for-each* map2
-	       #'(lambda (k v2)
-		   (multiple-value-bind (v1 f1) (lookup map1 k)
-		     (declare (ignore v1))
-		     (unless f1
-		       (multiple-value-bind (v f) (funcall fun k nil nil v2 t)
-			 (when f
-			   (insert map1 k v)))))))
-    map1))
-
-;;; Stateful maps as founts: trivial! BEWARE: this iterator empties the map as it goes.
-(defmethod iterator ((<map> <map>) map)
-  (declare (ignorable <map>))
-  map)
-(defmethod next ((<map> <map>) map)
-  (multiple-value-bind (f k v) (decons <map> map)
-    (if f
-        (values k v)
-        (error 'end-of-iteration))))
-
-;;; Stateful maps as sinks: trivial!
-(defmethod collector ((<map> <map>) map)
-  (declare (ignorable <map>))
-  map)
-(defmethod collect ((<map> <map>) map &rest values)
-  (destructuring-bind (key value) values
-    (insert <map> map key value)))
-(defmethod result ((<map> <map>) map)
-  (declare (ignorable <map>))
-  map)
-
-;;; Converting a map to another one... may destroy the original one
-(defmethod convert ((<to> <map>) (<from> interface::<map>) frommap)
-  (let ((tomap (empty <to>)))
-    (for-each* <from> frommap #'(lambda (k v) (insert <to> tomap k v)))
-    tomap))
-
-(defmethod fold-left* ((<i> <map-fold-left*-from-for-each*>) map f seed)
-  (for-each* <i> map #'(lambda (key value) (setf seed (funcall f seed key value))))
-  seed)
-
-(defmethod first-key-value ((<i> <map-first-key-value-from-for-each*>) map)
-  (block nil
-    (for-each* <i> map #'(lambda (key value) (return (values key value t))))
-    (values nil nil nil)))
-
-(defmethod divide ((<i> <map-divide-from-for-each*>) map)
-  (let ((map2 (empty <i>))
-        (keep t))
-    (for-each* <i> map
-	       #'(lambda (k v)
-		   (unless keep
-		     (drop <i> map k)
-		     (insert <i> map2 k v))
-		   (setf keep (not keep))))
-    (values map2 map)))
+;;; Mixins implementing simple cases for a lot of the above functions
+(define-interface <map-decons-from-first-key-value-drop> (<map>) () (:abstract))
+(define-interface <map-divide-from-for-each*> (<map>) () (:abstract))
+(define-interface <map-divide/list-from-divide> (<map>) () (:abstract))
+(define-interface <map-empty-is-empty-object>
+    (<map> <empty-is-empty-object>) () (:abstract))
+(define-interface <map-first-key-value-from-for-each*> (<map>) () (:abstract))
+(define-interface <map-fold-left*-from-for-each*> (<map>) () (:abstract))
+(define-interface <map-join-from-for-each*-lookup-insert> (<map>) () (:abstract))
+(define-interface <map-join/list-from-join> (<map>) () (:abstract))
+(define-interface <map-map/2-from-for-each*-lookup-insert-drop> (<map>) () (:abstract))
+(define-interface <map-update-key-from-lookup-insert-drop> (<map>) () (:abstract))

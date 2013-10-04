@@ -1,69 +1,40 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-;;;;; Stateful Iterator
+;;;;; stateful iterator
 
-#+xcvb (module (:depends-on ("stateful/iterator-interface")))
+#+xcvb (module (:depends-on ("interface/iterator" "stateful/package")))
 
 (in-package :stateful)
 
-;;; Trivial stream: devnull
-(define-interface <devnull> (<fount> <sink>) ())
-(defmethod iterator ((i <devnull>) x)
-  (declare (ignorable i x))
-  nil)
-(defmethod next ((i <devnull>) x)
-  (declare (ignorable i x))
-  (values))
-(defmethod collector ((i <devnull>) x)
-  (declare (ignorable i x))
-  nil)
-(defmethod collect ((i <devnull>) x &rest values)
-  (declare (ignorable i x values))
-  (values))
-(defmethod result ((i <devnull>) x)
-  (declare (ignorable i x))
-  (values))
+(define-interface <fount> (<interface>) () (:abstract))
+(define-interface <sink> (<interface>) () (:abstract))
 
-(defmethod iterator ((i <number-iterator>) iterator)
-  (make-box '<box!> (iterator-start iterator)))
-(defmethod next ((i <decreasing-number-iterator>) counter-box)
-  (let ((counter (box-ref counter-box))
-	(end (iterator-end i))
-	(increment (iterator-increment i)))
-    (cond
-      ((and counter (< end counter))
-       (setf (box-ref counter-box) (- counter increment))
-       (values t counter))
-      (t
-       (values nil nil)))))
-(defmethod next ((i <increasing-number-iterator>) counter-box)
-  (let ((counter (box-ref counter-box))
-	(end (iterator-end i))
-	(increment (iterator-increment i)))
-    (cond
-      ((and counter (< counter end))
-       (setf (box-ref counter-box) (+ counter increment))
-       (values t counter))
-      (t
-       (values nil nil)))))
+(define-condition end-of-iteration (error) ())
 
-(defmethod flow ((<fount> <fount>) (<sink> <sink>) fount sink)
-  (loop :with iterator = (iterator <fount> fount)
-    :with collector = (collector <sink> sink)
-    :for values = (handler-case (multiple-value-list (next <fount> iterator))
-                    (end-of-iteration () (return (result <sink> collector))))
-    :do (apply 'collect <sink> collector values)))
+(defgeneric iterator (<fount> fount)
+  (:documentation "Given a <FOUNT> interface and an object FOUNT,
+return an initial ITERATOR state with which to start iterating."))
 
-;;; A sink that calls a function for side-effect on each collected value
-(defmethod collector ((<for-each> <for-each>) fun)
-  (declare (ignorable <for-each>))
-  fun)
-(defmethod collect ((<for-each> <for-each>) fun &rest values)
-  (declare (ignorable <for-each>))
-  (apply fun values)
-  fun)
-(defmethod result ((<for-each> <for-each>) fun)
-  (declare (ignorable <for-each> fun))
-  nil)
+(defgeneric next (<fount> iterator)
+  (:documentation "Given a <FOUNT> interface and an ITERATOR state,
+raise an END-OF-ITERATION condition if the iterator has reached its end,
+otherwise, side-effect the iterator to go to its next state and
+return values produced by this iteration step."))
 
-(defmethod for-each* ((<fount> <fount>) fount fun)
-  (flow <fount> (<for-each>) fount fun))
+(defgeneric collector (<sink> sink)
+  (:documentation "Given a <SINK> interface and a SINK object, return
+an initial COLLECTOR state with which to start collecting."))
+
+(defgeneric collect (<sink> collector &rest values)
+  (:documentation "Given a <SINK> interface, a COLLECTOR state some VALUES,
+return no values."))
+
+(defgeneric result (<sink> collector)
+  (:documentation "Given a <SINK> interface and a COLLECTOR, return
+the final RESULT from the collecting process"))
+
+(defgeneric flow (<fount> <sink> fount sink)
+  (:documentation
+   "Given <FOUNT> and <SINK> interfaces and FOUNT and SINK objects,
+let data flow from the FOUNT to the SINK, and return the result"))
+
+(define-interface <for-each> (<sink>) () (:singleton))
