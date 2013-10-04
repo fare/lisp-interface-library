@@ -21,6 +21,7 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
   :perform (test-op (o c)
              (symbol-call :lil/test/all :test-suite)))
 
+(register-system-packages :lil/interface/all '(:interface))
 (register-system-packages :lil/pure/all '(:pure))
 (register-system-packages :lil/stateful/all '(:stateful))
 (register-system-packages :lil/transform/classy '(:classy))

@@ -4,7 +4,13 @@
 (uiop:define-package :lil/pure/all
   (:nicknames :pure)
   (:import-from :lil/interface/all)
+  (:use :closer-common-lisp)
+  (:mix :fare-utils :uiop :alexandria)
   (:use-reexport
+   :lil/interface/base
+   :lil/interface/eq
+   :lil/interface/order
+   :lil/interface/group
    :lil/pure/empty
    :lil/pure/collection
    :lil/pure/iterator

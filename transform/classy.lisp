@@ -3,8 +3,9 @@
 
 (uiop:define-package :lil/transform/classy
   (:nicknames :classy)
-  (:use :closer-common-lisp :fare-utils :uiop
+  (:use :closer-common-lisp
         :lil/transform/classify :lil/interface/box)
+  (:mix :fare-utils :uiop :alexandria)
   (:import-from :lil/stateful/tree)
   (:import-from :lil/stateful/map)
   (:import-from :lil/stateful/queue)

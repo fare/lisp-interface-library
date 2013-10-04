@@ -2,6 +2,9 @@
 ;;;;; All general interfaces + common core of pure and stateful data structures
 
 (uiop:define-package :lil/interface/all
+  (:nicknames :interface)
+  (:use :closer-common-lisp)
+  (:mix :fare-utils :uiop :alexandria)
   (:use-reexport
    :lil/interface/utility
    :lil/interface/definition
