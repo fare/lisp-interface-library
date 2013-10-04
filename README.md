@@ -43,23 +43,26 @@ Building it
 -----------
 
 LIL needs to be built using ASDF 3 or later:
-	* http://common-lisp.net/gitweb?p=projects/asdf/asdf.git
+
+  * http://common-lisp.net/gitweb?p=projects/asdf/asdf.git
+
 
 LIL was recently converted to use the asdf-package-system,
 whereby instead of dependencies being listed in a central .asd file,
 each source file has a defpackage form from which the dependencies are deduced.
 We're hoping that this will soon be part of ASDF itself,
 but in the meantime, you can find it here:
-	* http://common-lisp.net/gitweb?p=projects/asdf/asdf-package-system.git
+
+ * http://common-lisp.net/gitweb?p=projects/asdf/asdf-package-system.git
 
 LIL also depends on fare-utils, fare-memoization, closer-moo, alexandria:
 
-	* http://common-lisp.net/gitweb?p=users/frideau/fare-utils.git
+ * http://common-lisp.net/gitweb?p=users/frideau/fare-utils.git
 
-	* http://common-lisp.net/gitweb?p=users/frideau/fare-memoization.git
+ * http://common-lisp.net/gitweb?p=users/frideau/fare-memoization.git
 
-	* http://common-lisp.net/project/closer/repos/closer-mop/
+ * http://common-lisp.net/project/closer/repos/closer-mop/
 
-	* http://common-lisp.net/gitweb?p=projects/xcvb/closer-mop.git
+ * http://common-lisp.net/gitweb?p=projects/xcvb/closer-mop.git
 
-	* http://common-lisp.net/gitweb?p=projects/alexandria/alexandria.git
+ * http://common-lisp.net/gitweb?p=projects/alexandria/alexandria.git
