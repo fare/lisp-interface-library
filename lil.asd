@@ -1,5 +1,4 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-(in-package :asdf)
 
 #-asdf3 (error "LIL requires ASDF 3 or later. Please upgrade your ASDF.")
 
@@ -11,15 +10,13 @@ See http://fare.livejournal.com/155094.html regarding Interface Passing Style,
 or our ILC'2012 article http://github.com/fare/lil-ilc2012/
 "
   :class :package-system
-  :defsystem-depends-on
-  #.(unless (find-class :package-system nil) '(:asdf-package-system))
+  :defsystem-depends-on (:asdf-package-system)
   :depends-on (:lil/interface/all
                :lil/pure/all
                :lil/stateful/all
                :lil/transform/all)
   :in-order-to ((test-op (load-op :lil/test/all)))
-  :perform (test-op (o c)
-             (symbol-call :lil/test/all :test-suite)))
+  :perform (test-op (o c) (symbol-call :lil/test/all :test-suite)))
 
 (register-system-packages :lil/interface/all '(:interface))
 (register-system-packages :lil/pure/all '(:pure))
