@@ -37,24 +37,24 @@
   ((interface :reader class-interface)))
 
 (define-classified-interface-class
-  >map< (object-box) stateful:<map>
+  >map< (object-box) lil/stateful/map:<map>
   ((interface :initarg :interface))
-  (:interface-argument (stateful:<map> stateful:<map>)))
+  (:interface-argument (lil/stateful/map:<map> lil/stateful/map:<map>)))
 
 (define-classified-interface-class
-  >number-map< (>map<) stateful:<number-map>
-  ((interface :initform stateful:<number-map> :allocation :class))
+  >number-map< (>map<) lil/stateful/tree:<number-map>
+  ((interface :initform lil/stateful/tree:<number-map> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -number-map))
 
 
 (define-classified-interface-class
-  >queue< (object-box) stateful:<queue>
+  >queue< (object-box) lil/stateful/queue:<queue>
   ((interface :initarg :interface))
-  (:interface-argument (stateful:<queue> stateful:<queue>)))
+  (:interface-argument (lil/stateful/queue:<queue> lil/stateful/queue:<queue>)))
 
 (define-classified-interface-class
-  >fifo-queue< (>queue<) stateful:<fifo-queue>
-  ((interface :initform stateful:<fifo-queue> :allocation :class))
+  >fifo-queue< (>queue<) lil/stateful/queue:<fifo-queue>
+  ((interface :initform lil/stateful/queue:<fifo-queue> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -fifo-queue))
 
 (defmethod print-object ((q >queue<) stream)

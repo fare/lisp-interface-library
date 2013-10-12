@@ -53,29 +53,29 @@
   ((interface :reader class-interface)))
 
 (define-classified-interface-class
-  >map< (object-box) pure:<map>
+  >map< (object-box) lil/pure/map:<map>
   ((interface :initarg :interface))
-  (:interface-argument (pure:<map> pure:<map>)))
+  (:interface-argument (lil/pure/map:<map> lil/pure/map:<map>)))
 
 (define-classified-interface-class
-  >hash-table< (>map<) pure:<hash-table>
-  ((interface :initform pure:<hash-table> :allocation :class))
+  >hash-table< (>map<) lil/pure/hash-table:<hash-table>
+  ((interface :initform lil/pure/hash-table:<hash-table> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -hash-table))
 
 (define-classified-interface-class
-  >number-map< (>map<) pure:<number-map>
-  ((interface :initform pure:<number-map> :allocation :class))
+  >number-map< (>map<) lil/pure/tree:<number-map>
+  ((interface :initform lil/pure/tree:<number-map> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -number-map))
 
 
 (define-classified-interface-class
-  >queue< (object-box) pure:<queue>
+  >queue< (object-box) lil/pure/queue:<queue>
   ((interface :initarg :interface))
-  (:interface-argument (pure:<queue> pure:<queue>)))
+  (:interface-argument (lil/pure/queue:<queue> lil/pure/queue:<queue>)))
 
 (define-classified-interface-class
-  >fifo-queue< (>queue<) pure:<fifo-queue>
-  ((interface :initform pure:<fifo-queue> :allocation :class))
+  >fifo-queue< (>queue<) lil/pure/queue:<fifo-queue>
+  ((interface :initform lil/pure/queue:<fifo-queue> :allocation :class))
   (:interface-keyword nil) (:constructor-suffix -queue))
 
 (defmethod print-object ((q >queue<) stream)

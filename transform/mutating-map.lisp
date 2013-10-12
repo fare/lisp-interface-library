@@ -7,7 +7,8 @@
         :lil/interface/box
         :lil/transform/mutating)
   (:use-reexport :lil/stateful/map)
-  (:import-from :lil/pure/map :lil/pure/alist)
+  (:import-from :lil/pure/map)
+  (:import-from :lil/pure/alist)
   (:export
    #:<mutating-map> #:<alist>))
 (in-package :lil/transform/mutating-map)

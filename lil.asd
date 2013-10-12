@@ -18,6 +18,8 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
   :in-order-to ((test-op (load-op :lil/test/all)))
   :perform (test-op (o c) (symbol-call :lil/test/all :test-suite)))
 
+(defsystem :lil/test :depends-on (:lil/test/all))
+
 (register-system-packages :lil/interface/all '(:interface))
 (register-system-packages :lil/pure/all '(:pure))
 (register-system-packages :lil/stateful/all '(:stateful))

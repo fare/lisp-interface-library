@@ -18,13 +18,13 @@
      (cond
        (list
         (one-use-value-box
-         (stateful:join/list (stateful-interface <linearized-map>)
+         (lil/stateful/collection:join/list (stateful-interface <linearized-map>)
                              (mapcar #'box-ref list))))
        (t
         (empty <linearized-map>))))
   (:method> divide/list (map)
      (let ((list
-            (stateful:divide/list
+            (lil/stateful/collection:divide/list
              (stateful-interface <linearized-map>)
              (box-ref map))))
        (and list
