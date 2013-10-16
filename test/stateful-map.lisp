@@ -1,4 +1,5 @@
 (uiop:define-package :lil/test/stateful-map
+  (:import-from :pure)
   (:use :stateful :lil/test/base :lil/transform/mutating-map :lil/interface/base
         :reader-interception :uiop :fare-utils
         :cl :hu.dwim.stefil)
@@ -64,7 +65,7 @@
     (multiple-value-bind (b k v) (decons i m)
       (is (eq b t))
       (is (equal (list v t)
-                 (multiple-value-list (lookup pure:<alist> *alist-10-latin* k))))
+                 (multiple-value-list (lookup lil/pure/alist:<alist> *alist-10-latin* k))))
       (is (equal '(nil nil)
                  (multiple-value-list (lookup i m k))))
       (is (= (size i m) 9))))
