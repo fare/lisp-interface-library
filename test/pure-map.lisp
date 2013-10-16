@@ -1,8 +1,7 @@
 (uiop:define-package :lil/test/pure-map
   (:import-from :stateful)
   (:use :pure :lil/test/base :lil/transform/linearized-map :lil/interface/base
-        :reader-interception :uiop :fare-utils
-        :cl :hu.dwim.stefil)
+        :cl :uiop :fare-utils :hu.dwim.stefil)
   (:export :read-only-linear-map-test))
 
 (in-package :lil/test/pure-map)

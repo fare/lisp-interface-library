@@ -1,8 +1,7 @@
 (uiop:define-package :lil/test/stateful-map
   (:import-from :pure)
   (:use :stateful :lil/test/base :lil/transform/mutating-map :lil/interface/base
-        :reader-interception :uiop :fare-utils
-        :cl :hu.dwim.stefil)
+        :cl :uiop :fare-utils :hu.dwim.stefil)
   (:import-from :lil/test/pure-map))
 (in-package :lil/test/stateful-map)
 
