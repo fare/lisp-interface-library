@@ -2,6 +2,8 @@
 (module
  (:fullname "/lisp-interface-library"
   :nicknames ("lil")
+  :build-depends-on ((:asdf "lil"))
+#|
   :build-depends-on ((:asdf "alexandria") (:asdf "closer-mop")
                      "/fare-memoization" "/fare-utils" )
   :depends-on
@@ -58,4 +60,5 @@
   ("lisp-interface-library" "lil"
    "interface"
    "pure-interfaces" "pure-datastructures"
-   "stateful-interfaces" "stateful-datastructures")))
+   "stateful-interfaces" "stateful-datastructures")
+|#))
