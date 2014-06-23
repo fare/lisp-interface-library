@@ -9,7 +9,7 @@
 See http://fare.livejournal.com/155094.html regarding Interface Passing Style,
 or our ILC'2012 article http://github.com/fare/lil-ilc2012/
 "
-  :version (:read-file-line "version.text")
+  :version (:read-file-form "version.text")
   :defsystem-depends-on ((:version "asdf-package-system" "3.1.0.116"))
   :class :package-inferred-system
   :depends-on ("lil/interface/all"
