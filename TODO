@@ -6,8 +6,11 @@
 ** Some bootstrapped datastructure from Okasaki
 ** More from
  http://planet.plt-scheme.org/display.ss?package=pfds.plt&owner=krhari
-** implement functional arrays -- use RRB-trees?
+** Implement functional arrays -- use RRB-trees?
   http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf
+** The above seem slightly better than Finger trees
+  http://www.soi.city.ac.uk/~ross/papers/FingerTree.html
+  http://andrew.gibiansky.com/blog/haskell/finger-trees/
 ** implement red-black trees
 ** Import functionality from cl-containers?
 ** Add "Minimal Viable Snippet" for the library and each of its major features.
@@ -56,5 +59,7 @@
  can be extracted from a single specification,
  whereby you can (update-node a ...) and it will preserve
  the identity of linear variable a when in stateful mode.
-
+ Basically, the language would be a linear lisp with region annotations;
+ annotation of the same unique region between input and output signifies
+ update in place in the mutable variant.
 |#
