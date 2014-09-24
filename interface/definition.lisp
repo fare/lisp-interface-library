@@ -214,7 +214,8 @@
        (eval-when (:compile-toplevel :load-toplevel :execute)
          (defclass ,interface ,super-interfaces ,slots
            (:metaclass ,metaclass)
-           ,@class-options)
+           ,@class-options))
+       (eval-when (:compile-toplevel :load-toplevel :execute)
          (let ((interface-class (find-class ',interface)))
 	   (finalize-inheritance interface-class)
 	   ,@(when abstract
