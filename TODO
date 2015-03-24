@@ -3,6 +3,7 @@
 * fare:
 
 * Unassigned:
+* Check that all generic functions are implemented for a concrete class
 ** Some bootstrapped datastructure from Okasaki
 ** More from
  http://planet.plt-scheme.org/display.ss?package=pfds.plt&owner=krhari
@@ -62,4 +63,11 @@
  Basically, the language would be a linear lisp with region annotations;
  annotation of the same unique region between input and output signifies
  update in place in the mutable variant.
+** In implementing data structures, there should be a way to declare symmetries and
+ not have to fill in the blank. Kind of like Bach sometimes wrote his music as puzzles
+ whereby the reader would have to complete using symmetries.
+ One approach would be to do like Dan Friedman or William Byrd, and implement
+ in miniKanren a Prolog-style semantics for the Lisp dialect used in implementing
+ data structures, then search for solutions to constrained problems.
+ See also the works of http://homes.cs.washington.edu/~emina/
 |#
