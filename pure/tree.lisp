@@ -4,14 +4,16 @@
 (uiop:define-package :lil/pure/tree
   (:use :closer-common-lisp
         :lil/interface/definition
-        :lil/interface/base)
+        :lil/interface/base
+        :lil/interface/order)
   (:use-reexport
    :lil/interface/tree
    :lil/pure/map)
   (:shadow #:<tree> #:<binary-tree> #:<heighted-binary-tree> #:<avl-tree> #:<number-map>
            #:association-pair #:binary-tree-node #:avl-tree-node)
   (:export
-   #:<tree> #:<avl-tree> #:<number-map> #:<nm>
+   #:<tree> #:<binary-tree> #:<avl-tree> #:<parametric-avl-tree> #:<heighted-binary-tree>
+   #:<number-map> #:<nm> #:<string-map>
    #:association-pair #:binary-tree-node #:avl-tree-node))
 (in-package :lil/pure/tree)
 
@@ -53,9 +55,17 @@
 (defclass avl-tree-node (lil/interface/tree:avl-tree-node binary-tree-node)
   ())
 
-;;; Common special case: when keys are (real) numbers
+(define-interface <parametric-avl-tree> (<avl-tree>)
+  ((key-interface :type <order> :reader key-interface :initarg :key-interface)
+   (value-interface :type <type> :reader value-interface :initarg :value-interface))
+  (:parametric (key-interface &optional (value-interface <any>))
+     (make-interface :key-interface key-interface :value-interface value-interface)))
+
+;;; Common special cases: when keys are (real) numbers, strings
 (define-interface <number-map> (<avl-tree> lil/interface/tree:<number-map>)
   ()
   (:singleton))
 
 (defparameter <nm> <number-map>)
+
+(defparameter <string-map> (<parametric-avl-tree> <string>))
