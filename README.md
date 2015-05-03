@@ -18,6 +18,12 @@ LIL: abstract interfaces and concrete data structures in Common Lisp
  * A short introduction on our "Interface-Passing Style" of programming, is also at:
 	* http://fare.livejournal.com/155094.html
 
+ * Manual: I have never worked on a manual, nor on a tutorial.
+   For a quick introduction to how things work, look at the tests in `test/`
+   for a few examples.
+   Then docstrings and source code can get you somewhat further.
+   A manual or a tutorial would be a great contribution to this library.
+
 
 Features
 --------
@@ -43,31 +49,24 @@ Features
 Building it
 -----------
 
-LIL needs to be built using ASDF 3 or later:
+LIL needs to be built using ASDF 3.1 or later:
 
-  * http://common-lisp.net/gitweb?p=projects/asdf/asdf.git
+  * https://common-lisp.net/project/asdf/
+  * https://gitlab.common-lisp.net/asdf/asdf.git
 
-
-LIL was recently converted to use the asdf-package-system,
+Indeed, LIL notably relies on ASDF 3.1's `asdf-package-system`.
 whereby instead of dependencies being listed in a central .asd file,
 each source file has a defpackage form from which the dependencies are deduced.
-While we think it's a good way to write Lisp code,
+While we think it's a great way to write Lisp code,
 you don't have to use it in your own code to use LIL.
-We're hoping that asdf-package-system will soon be part of ASDF itself,
-but until an updated version of ASDF is universally available,
-you can find it here:
-
- * http://common-lisp.net/gitweb?p=projects/asdf/asdf-package-system.git
 
 
 LIL also depends on fare-utils, fare-memoization, closer-mop, alexandria:
 
- * http://common-lisp.net/gitweb?p=users/frideau/fare-utils.git
+ * https://gitlab.common-lisp.net/frideau/fare-utils.git
 
- * http://common-lisp.net/gitweb?p=users/frideau/fare-memoization.git
+ * https://gitlab.common-lisp.net/frideau/fare-memoization.git
 
- * http://common-lisp.net/project/closer/repos/closer-mop/
+ * http://sourceforge.net/p/closer/closer-mop/ci/master/tree/
 
- * http://common-lisp.net/gitweb?p=projects/xcvb/closer-mop.git
-
- * http://common-lisp.net/gitweb?p=projects/alexandria/alexandria.git
+ * https://gitlab.common-lisp.net/alexandria/alexandria.git
