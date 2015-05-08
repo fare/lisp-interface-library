@@ -174,7 +174,7 @@
       (let* (,@interface-argument-bindings)
         (multiple-value-bind (,@interface-results-lambda-list)
             (,interface-invoker ',interface-gf ,interface-var ,@(rest interface-arguments))
-          (declare (ignore ,@interface-results-ignorables))
+          #-clisp (declare (ignore ,@interface-results-ignorables))
           (let* (,@class-results-bindings)
             (,class-results-invoker #'values ,@class-results-arguments)))))))
 

@@ -190,7 +190,7 @@
       (let* (,@pure-argument-bindings)
         (multiple-value-bind (,@pure-results-lambda-list)
             (,pure-mimic-invoker ',pure-gf ,pi-var ,@(rest pure-mimic-arguments))
-          (declare (ignore ,@pure-results-ignorables))
+          #-clisp (declare (ignore ,@pure-results-ignorables))
           (let* (,@stateful-results-bindings)
             ,@required-output-updates
             (,stateful-results-invoker #'values ,@stateful-results-arguments)))))))

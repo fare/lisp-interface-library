@@ -185,7 +185,7 @@
      (let* (,@stateful-argument-bindings)
        (multiple-value-bind (,@stateful-results-lambda-list)
            (,stateful-mimic-invoker ',stateful-gf ,si-var ,@(rest stateful-mimic-arguments))
-         (declare (ignore ,@stateful-results-ignorables))
+         #-clisp (declare (ignore ,@stateful-results-ignorables))
          (let* (,@pure-results-bindings)
            (,pure-results-invoker #'values ,@pure-results-arguments)))))))
 
