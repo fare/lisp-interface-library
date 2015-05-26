@@ -4,22 +4,22 @@ lisp-interface-library
 LIL: abstract interfaces and concrete data structures in Common Lisp
 
  * Home Page:
-	* http://github.com/fare/lisp-interface-library/
+	<http://github.com/fare/lisp-interface-library/>
 
  * We wrote an article explaining about our library for ILC'2012:
-	* http://github.com/fare/lil-ilc2012/
+	<http://github.com/fare/lil-ilc2012/>
 
  * A PDF of a slightly corrected version of the article is here:
-	* http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.pdf
+	<http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.pdf>
 
  * An HTML of that version of the article is here:
-	* http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.html
+	<http://common-lisp.net/~frideau/lil-ilc2012/lil-ilc2012.html>
 
  * A short introduction on our "Interface-Passing Style" of programming, is also at:
-	* http://fare.livejournal.com/155094.html
+	<http://fare.livejournal.com/155094.html>
 
  * Manual: I have never worked on a manual, nor on a tutorial.
-   For a quick introduction to how things work, look at the tests in `test/`
+   For a quick introduction to how things work, look at the tests in [test/](test/)
    for a few examples.
    Then docstrings and source code can get you somewhat further.
    A manual or a tutorial would be a great contribution to this library.
@@ -49,24 +49,24 @@ Features
 Building it
 -----------
 
-LIL needs to be built using ASDF 3.1 or later:
+LIL needs to be built using [ASDF](https://common-lisp.net/project/asdf/) 3.1 or later:
 
-  * https://common-lisp.net/project/asdf/
-  * https://gitlab.common-lisp.net/asdf/asdf.git
-
-Indeed, LIL notably relies on ASDF 3.1's `asdf-package-system`.
+Indeed, LIL notably relies on ASDF 3.1's `package-inferred-system`.
 whereby instead of dependencies being listed in a central .asd file,
 each source file has a defpackage form from which the dependencies are deduced.
 While we think it's a great way to write Lisp code,
 you don't have to use it in your own code to use LIL.
 
+LIL also depends on
+[fare-utils](https://gitlab.common-lisp.net/frideau/fare-utils),
+[fare-memoization](https://gitlab.common-lisp.net/frideau/fare-memoization),
+[closer-mop](http://cliki.net/closer-mop),
+[alexandria](https://gitlab.common-lisp.net/alexandria/alexandria).
 
-LIL also depends on fare-utils, fare-memoization, closer-mop, alexandria:
 
- * https://gitlab.common-lisp.net/frideau/fare-utils.git
+Using it
+--------
 
- * https://gitlab.common-lisp.net/frideau/fare-memoization.git
-
- * http://sourceforge.net/p/closer/closer-mop/ci/master/tree/
-
- * https://gitlab.common-lisp.net/alexandria/alexandria.git
+See [test/pure-map.lisp](test/pure-map.lisp) and [test/stateful-map.lisp](test/stateful-map.lisp)
+for examples of how to use LIL.
+Unhappily, no one is working on documentation at this time.

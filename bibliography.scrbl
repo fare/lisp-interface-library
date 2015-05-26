@@ -12,7 +12,7 @@
 
 (define-bib LIL2012
   #:title "lisp-interface-library"
-  #:author "François-René Rideau" ;; and Eric O'Connor ??
+  #:author "François-René Rideau"
   #:date 2012
   #:url "http://github.com/fare/lisp-interface-library/")
 
@@ -93,6 +93,7 @@ See discussion on 2012-08-03 on #racket
 ;; Separation logic: A logic for shared mutable data structures
 ;; JC Reynolds - Logic in Computer Science, 2002. Proceedings. …, 2002 - ieeexplore.ieee.org
 
+;; "ad hoc polymorphism"
 ;; Christopher Strachey in his seminal 1967 article (or at least its 2000 reprint)
 ;; uses no dash. Scott wins!
 ;;  http://www.itu.dk/courses/BPRD/E2009/fundamental-1967.pdf

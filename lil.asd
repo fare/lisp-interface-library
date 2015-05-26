@@ -1,6 +1,6 @@
 ;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 
-#-asdf3 (error "LIL requires ASDF 3 or later. Please upgrade your ASDF.")
+#-asdf3.1 (error "LIL requires ASDF 3.1 or later. Please upgrade your ASDF.")
 
 (defsystem "lil"
   :description "LIL: Lisp Interface Library"
@@ -9,8 +9,9 @@
 See http://fare.livejournal.com/155094.html regarding Interface Passing Style,
 or our ILC'2012 article http://github.com/fare/lil-ilc2012/
 "
+  :author "Francois-Rene Rideau"
+  :license "MIT"
   :version (:read-file-form "version.text")
-  :defsystem-depends-on ((:version "asdf-package-system" "3.1.0.116"))
   :class :package-inferred-system
   :depends-on ("lil/interface/all"
                "lil/pure/all"
