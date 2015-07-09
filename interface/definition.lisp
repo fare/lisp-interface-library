@@ -280,12 +280,12 @@
   (with-gensyms (arguments)
     (let ((function-names (collect-function-names functions-spec)))
       `(progn
-         ,(loop :for function-name :in function-names
-            :for local-name = (make-local-name function-name :prefix prefix :package package)
-            :do (assert (not (eq local-name function-name)))
-            :collect
-            `(defun ,local-name (&rest ,arguments)
-               (apply ',function-name ,interface-sexp ,arguments)))
+         ,@(loop :for function-name :in function-names
+             :for local-name = (make-local-name function-name :prefix prefix :package package)
+             :do (assert (not (eq local-name function-name)))
+             :collect
+             `(defun ,local-name (&rest ,arguments)
+                (apply ',function-name ,interface-sexp ,arguments)))
          (declaim (inline ,@function-names))))))
 
 (defmacro define-interface-method (interface gf &rest rest)
