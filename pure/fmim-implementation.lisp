@@ -10,9 +10,7 @@
         :lil/interface/definition
         :lil/interface/base
         :lil/interface/box
-        :lil/interface/order
-        :lil/pure/tree
-        :lil/pure/alist)
+        :lil/pure/tree)
   (:use-reexport
    :lil/pure/fmim))
 (in-package :lil/pure/fmim-implementation)
@@ -355,7 +353,7 @@
                             (f 0 (left child))
                             (f 1 (right child))))))))))))))))
 
-;;; The whole point of fmim is that we could do a fast "append",
+;;; The whole point of fmim is that we could do a fast "merge",
 (defmethod join ((i <fmim>) a b)
   (cond
     ((null a) b)
