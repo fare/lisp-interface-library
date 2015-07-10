@@ -17,10 +17,11 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
                "lil/pure/all"
                "lil/stateful/all"
                "lil/transform/all")
-  :in-order-to ((test-op (load-op "lil/test/all")))
+  :in-order-to ((test-op (test-op "lil/test"))))
+
+(defsystem "lil/test" :depends-on ("lil/test/all")
   :perform (test-op (o c) (symbol-call :lil/test/all :test-suite)))
 
-(defsystem "lil/test" :depends-on ("lil/test/all"))
 
 (register-system-packages "lil/interface/all" '(:interface))
 (register-system-packages "lil/pure/all" '(:pure))

@@ -109,28 +109,22 @@
   (if (empty-p (hashmap-interface i) map)
       (values nil nil)
       (multiple-value-bind (a b) (divide (hashmap-interface i) map)
-        (if (empty-p (hashmap-interface i) a)
+        (if (empty-p (hashmap-interface i) a) ;; a is empty, b has only one bucket
             (multiple-value-bind (hash bucket)
                 (first-key-value (hashmap-interface i) b)
               (multiple-value-bind (x y) (divide (bucketmap-interface i) bucket)
                 (if (empty-p (bucketmap-interface i) x)
-                    (values a b)
-                    (values (insert (hashmap-interface i) b hash x)
-                            (insert (hashmap-interface i) b hash y)))))
-            (values a b)))))
+                    (values a b) ;; a is empty, b has one bucket with one entry
+                    (values (insert (hashmap-interface i) a hash x) ;; a is empty, b has one bucket divisible into x and y
+                            (insert (hashmap-interface i) a hash y)))))
+            (values a b))))) ;; both a and b have buckets
 
 (defmethod divide/list ((i <hash-table>) map)
   (let ((list (divide/list (hashmap-interface i) map)))
-    (if (cdr list)
-        list
-        (multiple-value-bind (a b) (divide i map)
-          (cond
-            ((empty-p (hashmap-interface i) a)
-             nil)
-            ((empty-p (hashmap-interface i) b)
-             (list a))
-            (t
-             (list a b)))))))
+    (if (or (null list) (cdr list)) list
+        (multiple-value-bind (hash bucket) (first-key-value (hashmap-interface i) map)
+          (mapcar #'(lambda (b) () (insert (hashmap-interface i) map hash b))
+                  (divide/list (bucketmap-interface i) bucket))))))
 
 (defmethod singleton ((i <hash-table>) pair)
   (let* ((key (car pair))

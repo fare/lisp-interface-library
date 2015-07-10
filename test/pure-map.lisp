@@ -212,12 +212,19 @@
       (divide i (alist-map* i '((1 . "1"))))
     (is (empty-p i x))
     (is (= 1 (size i y))))
-  (multiple-value-bind (x y)
-      (divide i (alist-map* i *alist-100-latin*))
-    (let ((sx (size i x)) (sy (size i y)))
-      (is (plusp sx))
-      (is (plusp sy))
-      (is (= 100 (+ sx sy)))))
+  ;; Repeatedly divide a map into pairs of smaller sub-maps.
+  ;; TODO: implement and use a queue interface?
+  (loop with q = (list (alist-map* i *alist-100-latin*))
+        while q do
+          (nest
+           (let* ((m (pop q))
+                  (s (size i m))))
+           (multiple-value-bind (x y) (divide i m))
+           (let ((sx (size i x))
+                 (sy (size i y)))
+             (is (= s (+ sx sy)))
+             (is (if (zerop sx) (>= 1 sy) (plusp sy)))
+             (unless (zerop sx) (push y q) (push x q)))))
 
   (X 'size-and-decons)
   (is (= 99 (size i (nth-value 1 (decons i (alist-map* i *alist-100-decimal*))))))
@@ -246,8 +253,19 @@
   ;; TODO: add tests
 
   (X 'divide/list)
-  ;; TODO: add more tests
-  (is (null (divide/list i (empty i)))))
+  (is (null (divide/list i (empty i))))
+  ;; Repeatedly divide a map into pairs of smaller sub-maps.
+  ;; TODO: implement and use a queue interface?
+  (loop with q = (list (alist-map* i *alist-100-latin*))
+        while q do
+          (let* ((m (pop q))
+                 (s (size i m))
+                 (l (divide/list i m))
+                 (sl (mapcar (lambda (x) (size i x)) l)))
+            (is (= s (reduce #'+ sl :initial-value 0)))
+            (every #'plusp sl)
+            (when (cddr l) (setf q (append l q))))))
+
 
 (defmethod multilinear-map-test ((i <map>))
   (let ((m (alist-map* i *alist-10-latin*)))

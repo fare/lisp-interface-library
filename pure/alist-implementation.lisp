@@ -56,7 +56,7 @@
 
 (:method> divide (map)
   (let* ((l (length map))
-         (l1 (floor l 2)))
+         (l1 (ash l -1)))
     (values (subseq map 0 l1) (nthcdr l1 map))))
 
 (:method> size (map)

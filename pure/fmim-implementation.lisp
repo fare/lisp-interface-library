@@ -21,7 +21,7 @@
   (trie-check-invariant (box-ref map) (node-height map) 0))
 
 (defun trie-check-invariant (trie position key)
-  (declare (optimize (debug 3)))
+  (declare (optimize (speed 1) (safety 3) (debug 3)))
   (check-type position (unsigned-byte))
   (check-type key (unsigned-byte))
   (assert (zerop (ldb (byte position 0) key)))
@@ -341,17 +341,19 @@
                      (position (- height plen)))
                 (if (zerop position)
                     (values nil map)
-                    (etypecase (box-ref datum)
-                      (trie-branch
-                       (flet ((f (bit datum)
-                                (make-trie-head height
-                                                (make-trie-skip
-                                                 height
-                                                 (1+ plen)
-                                                 (dpb pbits (byte plen 1) bit)
-                                                 datum))))
-                         (f 0 (left datum))
-                         (f 1 (right datum))))))))))))))
+                    (let ((child (box-ref datum)))
+                      (etypecase child
+                        (trie-branch
+                         (flet ((f (bit datum)
+                                  (make-trie-head height
+                                                  (make-trie-skip
+                                                   height
+                                                   (1+ plen)
+                                                   (dpb pbits (byte plen 1) bit)
+                                                   datum))))
+                           (values
+                            (f 0 (left child))
+                            (f 1 (right child))))))))))))))))
 
 ;;; The whole point of fmim is that we could do a fast "append",
 (defmethod join ((i <fmim>) a b)
@@ -423,3 +425,15 @@
                     (if (zerop ah)
                         (make-trie-branch position a1 b1)
                         (make-trie-branch position b1 a1)))))))))))
+
+(defmethod print-object ((x trie-head) stream)
+  (print-unreadable-object (x stream :type t)
+    (format stream "~D ~S" (node-height x) (box-ref x))))
+
+(defmethod print-object ((x trie-skip) stream)
+  (print-unreadable-object (x stream :type t)
+    (format stream "~v,'0B ~S" (node-prefix-length x) (node-prefix-bits x) (box-ref x))))
+
+(defmethod print-object ((x trie-branch) stream)
+  (print-unreadable-object (x stream :type t)
+    (format stream "~S ~S" (left x) (right x))))

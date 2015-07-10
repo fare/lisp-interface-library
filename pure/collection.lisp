@@ -38,11 +38,11 @@ Return three values:
    (:documentation "Join two collections, returning a new joined collection.
 How entries are combined depends on the specific interface.
 Typically, entries from the first override entries from the second."))
-  (:generic> divide (collection) (:in 1) (:values collection2 collection) (:out 1 0)
+  (:generic> divide (collection) (:in 1) (:values collection1 collection2) (:out 1 0)
    (:documentation "Divide a COLLECTION in two,
 returning two collections COLLECTION1 and COLLECTION2 that each have strictly
 fewer entries than COLLECTION unless COLLECTION is of size zero or one,
-at which point COLLECTION2 is empty."))
+at which point the first result COLLECTION1 is empty."))
   (:generic> join/list (list) #|(:in #|((1 list))|#) (:values collection) (:out 0)|#
    (:documentation "Join a list of COLLECTIONS, returning a new joined COLLECTION.
 earlier entries override those from latter entries.
