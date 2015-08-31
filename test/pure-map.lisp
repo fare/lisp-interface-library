@@ -300,7 +300,7 @@
   (harder-linear-map-test <lsnm>)
   (linear-string-map-test))
 
-(defun linear-string-map-test ()
+(deftest linear-string-map-test ()
   (let* ((a1 (loop :for i :from 1 :to 42 :collect (cons (format nil "~@R" i) i)))
          (a2 (shuffle-list a1))
          (m1 (convert <string-map> <alist> a1))

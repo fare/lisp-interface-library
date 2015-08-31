@@ -18,6 +18,7 @@
    :lil/interface/eq
    :lil/interface/order
    :lil/interface/iterator
+   :lil/interface/sequence
    :lil/interface/map
    :lil/interface/set
    :lil/interface/tree

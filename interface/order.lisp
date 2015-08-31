@@ -72,17 +72,13 @@
   ((lessp :initarg :lessp :reader lessp-function))
   (:parametric (lessp) (make-interface :lessp lessp)))
 
-#|
 (macrolet ((delegate (&rest names)
              `(progn
                 ,@(loop :for (name suffix) :in names :collect
                     `(defmethod ,name ((i <lessp>) x y)
-                       (,(symbolicate :call suffix) (lessp-function i)
-                              (funcall (key-function i) x)
-                              (funcall (key-function i) y)))))))
+                       (,(symbolicate :call suffix) (lessp-function i) x y))))))
   (delegate (order< <) (order<= <=) (order> >) (order>= >=)
             (== =) (compare -compare)))
-|#
 
 (defun call< (lessp x y)
   (funcall lessp x y))

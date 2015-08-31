@@ -11,8 +11,6 @@
    #:member-p #:set-list #:list-set
    #:<multiset> ;; to be shadowed by pure and stateful packages.
    #:member-count #:multiset-list #:list-multiset
-   #:<sequence> ;; to be shadowed by pure and stateful packages.
-   #:sequence-list #:list-sequence
    #:<set*-from-collection>
    #:<set-from-map> #:<multiset-from-map> #:<set-from-multiset> #:<multiset-from-set>))
 (in-package :lil/interface/set)

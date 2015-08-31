@@ -16,6 +16,8 @@
    :lil/pure/iterator
    :lil/pure/map
    :lil/pure/set
+   :lil/pure/sequence
+   :lil/pure/lexicographic
    :lil/pure/alist
    :lil/pure/tree
    :lil/pure/hash-table

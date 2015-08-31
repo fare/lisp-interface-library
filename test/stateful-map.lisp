@@ -208,3 +208,98 @@
 
 (deftest test-mutating-map-interfaces ()
   (interface-test <msnm>))
+
+(defparameter *special-test-data*
+  '((:INSERT (720255619831889/500000 . 1))
+    (:INSERT (180063904958453/125000 . 101))
+    (:INSERT (1440511239667639/1000000 . 102))
+    (:INSERT (720255619833821/500000 . 103))
+    (:INSERT (1440511239667643/1000000 . 104))
+    (:INSERT (360127809916911/250000 . 105))
+    (:INSERT (720255619833823/500000 . 106))
+    (:INSERT (1440511239667647/1000000 . 107))
+    (:INSERT (22507988119807/15625 . 108))
+    (:INSERT (1440511239667649/1000000 . 109))
+    (:REMOVE (720255619831889/500000 . 1))
+    (:INSERT (720255619833833/500000 . 110))
+    (:REMOVE (180063904958453/125000 . 101))
+    (:INSERT (180063904958459/125000 . 111))
+    (:REMOVE (1440511239667639/1000000 . 102))
+    (:INSERT (720255619833837/500000 . 112))
+    (:REMOVE (720255619833821/500000 . 103))
+    (:INSERT (360127809916919/250000 . 113))
+    (:REMOVE (1440511239667643/1000000 . 104))
+    (:INSERT (1440511239667677/1000000 . 114))
+    (:REMOVE (360127809916911/250000 . 105))
+    (:INSERT (1440511239667679/1000000 . 115))
+    (:REMOVE (720255619833823/500000 . 106))
+    (:INSERT (9003195247923/6250 . 116))
+    (:REMOVE (1440511239667647/1000000 . 107))
+    (:INSERT (720255619833841/500000 . 117))
+    (:REMOVE (22507988119807/15625 . 108))
+    (:INSERT (1440511239667683/1000000 . 118))
+    (:REMOVE (1440511239667649/1000000 . 109))
+    (:INSERT (288102247933537/200000 . 119))
+    (:INSERT (90031952478987/62500 . 2))
+    (:INSERT (720255619835067/500000 . 120))
+    (:INSERT (720255619835069/500000 . 121))
+    (:INSERT (720255619835071/500000 . 122))
+    (:INSERT (22507988119846/15625 . 123))
+    (:INSERT (288102247934029/200000 . 124))
+    (:INSERT (720255619835073/500000 . 125))
+    (:INSERT (1440511239670147/1000000 . 126))
+    (:INSERT (360127809917537/250000 . 127))
+    (:INSERT (28810224793403/20000 . 128))
+    (:REMOVE (90031952478987/62500 . 2))
+    (:INSERT (180063904958769/125000 . 129))
+    (:REMOVE (720255619835067/500000 . 120))
+    (:INSERT (1440511239670153/1000000 . 130))
+    (:REMOVE (720255619835069/500000 . 121))
+    (:INSERT (288102247934031/200000 . 131))
+    (:REMOVE (720255619835071/500000 . 122))))
+
+(deftest special-test-1 ()
+  (loop :for <m> :in (list <number-map> <hash-table> <denm> <alist>) :do
+    (loop
+      :with q = (empty <m>)
+      :with expected-size = 0
+      :for i from 0
+      :for (cmd (k . v)) in *special-test-data*
+      :do (is (= expected-size (size <m> q)))
+          (ecase cmd
+            (:insert (progn
+                       (insert <m> q k v)
+                       (incf expected-size)))
+            (:remove (multiple-value-bind (dropped foundp) (drop <m> q k)
+                       (is foundp)
+                       (is (equal dropped v))
+                       (decf expected-size))))
+      :finally (is (= expected-size (size <m> q))))))
+
+(defun value< (v1 v2)
+  (cond ((= (car v1) (car v2))
+         (< (cdr v1) (cdr v2)))
+        (t
+         (< (car v1) (car v2)))))
+
+(defparameter <number-pair> (<lessp> 'value<))
+
+(defparameter <number-pair-map> (<parametric-avl-tree> <number-pair>))
+
+(deftest special-test-2 ()
+  (let* ((<m> <number-pair-map>)
+         (q (empty <m>)))
+    (loop
+      :with expected-size = 0
+      :for i from 0
+      :for (cmd k) in *special-test-data*
+      :do (is (= expected-size (size <m> q)))
+          (ecase cmd
+            (:insert (progn
+                       (insert <m> q k (cdr k))
+                       (incf expected-size)))
+            (:remove (multiple-value-bind (dropped foundp) (drop <m> q k)
+                       (is foundp)
+                       (is (equal dropped (cdr k)))
+                       (decf expected-size))))
+      :finally (is (= expected-size (size <m> q))))))
