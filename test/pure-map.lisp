@@ -315,3 +315,13 @@
            (size <alist> b1)
            (size <alist> b2)))
     (is (equal b1 b2))))
+
+(deftest regression-test-1--divide-number-map ()
+  (multiple-value-bind (x y)
+      (divide <number-map> (alist-map* <number-map> '((557088 . 7) (229378 . 79))))
+    (is x)
+    (is y)
+    (destructuring-bind ((kx . vx)) (map-alist* <number-map> x)
+      (destructuring-bind ((ky . vy)) (map-alist* <number-map> y)
+	(when (>= kx ky) (rotatef kx ky) (rotatef vx vy))
+	(is (equal (list kx vx ky vy) '(229378 79 557088 7)))))))
