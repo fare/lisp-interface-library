@@ -16,7 +16,11 @@
     ((eq x #'eq) 'eq)
     ((eq x #'eql) 'eql)
     ((eq x #'equal) 'equal)
-    ((eq x #'equalp) 'equalp)))
+    ((eq x #'equalp) 'equalp)
+    ((eq x (load-time-value (hash-table-test (make-hash-table :test 'eq)))) 'eq)
+    ((eq x (load-time-value (hash-table-test (make-hash-table :test 'eql)))) 'eql)
+    ((eq x (load-time-value (hash-table-test (make-hash-table :test 'equal)))) 'equal)
+    ((eq x (load-time-value (hash-table-test (make-hash-table :test 'equalp)))) 'equalp)))
 
 (defun same-eq-function-p (x y)
   (let ((x (normalize-eq-function x))
