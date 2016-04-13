@@ -3,6 +3,7 @@
 * fare:
 
 * Unassigned:
+* add documentation: a manual, a tutorial, etc. (see github issue #3)
 * Check that all generic functions are implemented for a concrete class
 ** Some bootstrapped datastructure from Okasaki
 ** More from
@@ -12,6 +13,10 @@
 ** The above seem slightly better than Finger trees
   http://www.soi.city.ac.uk/~ross/papers/FingerTree.html
   http://andrew.gibiansky.com/blog/haskell/finger-trees/
+** also implement stateful vectors
+** implement pure and stateful abstract sequences, single-linked lists, etc.
+** implement stateful sets (see github issue #8)
+** implement Fibonacci heaps
 ** implement red-black trees
 ** Import functionality from cl-containers?
 ** Add "Minimal Viable Snippet" for the library and each of its major features.
