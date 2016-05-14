@@ -1,7 +1,7 @@
 ;;;;; Pure Iterators (implementation)
 
 (uiop:define-package :lil/pure/iterator-implementation
-  (:use :closer-common-lisp :lil/interface/definition)
+  (:use :closer-common-lisp :lil/core/definition)
   (:use-reexport :lil/pure/iterator))
 (in-package :lil/pure/iterator-implementation)
 

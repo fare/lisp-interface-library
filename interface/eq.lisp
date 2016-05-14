@@ -1,7 +1,7 @@
 ;;;;; Equality
 
 (uiop:define-package :lil/interface/eq
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use :closer-common-lisp :lil/core/definition :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<eq> #:== #:eq-function

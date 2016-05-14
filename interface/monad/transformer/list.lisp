@@ -1,7 +1,7 @@
 ;;; Interface Passing Style : Monad : Transformer : List
 (defpackage :lil/interface/monad/transformer/list
   (:use :cl
-        :lil/interface/definition
+        :lil/core/definition
         :lil/interface/monad
 	:lil/interface/monad/list
 	:lil/interface/monad/transformer

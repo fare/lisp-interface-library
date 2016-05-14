@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/empty
   (:use :closer-common-lisp
-        :lil/interface/definition)
+        :lil/core/definition)
   (:use-reexport
    :lil/interface/empty)
   (:export

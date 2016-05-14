@@ -1,7 +1,7 @@
 ;;;;; Interfaces from elementary group theory: magma, monoid, semi-group, group, ring, etc.
 
 (uiop:define-package :lil/interface/group
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use :closer-common-lisp :lil/core/definition :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    ;;; Algebra

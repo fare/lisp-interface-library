@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/map
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :lil/core/definition
         :lil/interface/base)
   (:use-reexport
    :lil/interface/map

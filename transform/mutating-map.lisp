@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/transform/mutating-map
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :lil/core/definition
         :lil/interface/box
         :lil/transform/mutating)
   (:use-reexport :lil/stateful/map)

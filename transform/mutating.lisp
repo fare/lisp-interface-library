@@ -2,8 +2,8 @@
 
 (uiop:define-package :lil/transform/mutating
   (:use :closer-common-lisp
-        :lil/interface/utility
-        :lil/interface/definition
+        :lil/core/utility
+        :lil/core/definition
         :lil/interface/base
         :lil/interface/box)
   (:mix :fare-utils :uiop :alexandria)

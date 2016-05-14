@@ -1,7 +1,7 @@
 ;;;;; Basic Interfaces
 
 (uiop:define-package :lil/interface/base
-  (:use :closer-common-lisp :lil/interface/definition)
+  (:use :closer-common-lisp :lil/core/definition)
   (:export
    ;; Base
    #:<type> #:check-invariant #:convert

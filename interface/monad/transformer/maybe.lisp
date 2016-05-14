@@ -1,6 +1,6 @@
 ;;; Interface Passing Style : Monad : Transformer : Maybe
 (defpackage :lil/interface/monad/transformer/maybe
-  (:use :cl :lil/interface/monad :lil/interface/definition)
+  (:use :cl :lil/interface/monad :lil/core/definition)
   (:import-from :lil/interface/monad/identity
 		#:<identity>)
   (:import-from :lil/interface/group
