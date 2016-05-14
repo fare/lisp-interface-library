@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; "Fast Mergable Integer Maps"
 ;;; See article of same name by Chris Okasaki & Andrew Gill, 1998
 ;;; http://www.eecs.usma.edu/webs/people/okasaki/ml98maps.ps
@@ -7,7 +6,7 @@
 
 (uiop:define-package :lil/pure/fmim-implementation
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/base
         :lil/interface/box
         :lil/pure/tree)

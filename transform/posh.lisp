@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Interfaces to Classes: "Posh" examples of pure classes.
 
 (uiop:define-package :lil/transform/posh

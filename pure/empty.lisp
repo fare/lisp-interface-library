@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure types with empty objects
 
 (uiop:define-package :lil/pure/empty
   (:use :closer-common-lisp
-        :lil/interface/definition)
+        :core)
   (:use-reexport
    :lil/interface/empty)
   (:export

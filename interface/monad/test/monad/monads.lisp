@@ -1,6 +1,6 @@
 (defpackage :lil/interface/monad/test/monad/monads
   (:use :cl
-        :lil/interface/definition
+        :core
         :lil/interface/base
         :lil/interface/monad
         :lil/interface/monad/identity

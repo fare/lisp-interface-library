@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful types with empty objects
 
 (uiop:define-package :lil/stateful/empty
   (:use :closer-common-lisp
-        :lil/interface/definition)
+        :core)
   (:use-reexport
    :lil/interface/empty)
   (:export

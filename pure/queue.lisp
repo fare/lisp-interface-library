@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional queues
 (uiop:define-package :lil/pure/queue
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/base)
   (:use-reexport
    :lil/pure/iterator

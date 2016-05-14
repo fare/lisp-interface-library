@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Sets and Multisets -- part common to pure and stateful
 
 (uiop:define-package :lil/interface/set
-  (:use :closer-common-lisp :lil/interface/utility :lil/interface/definition
+  (:use :closer-common-lisp :core
         :lil/interface/base :lil/interface/order :lil/interface/fold
         :lil/interface/collection :lil/interface/map)
   (:mix :fare-utils :uiop :alexandria)

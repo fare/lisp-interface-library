@@ -1,10 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Pure to Stateful: Macros
 
 (uiop:define-package :lil/transform/mutating
   (:use :closer-common-lisp
-        :lil/interface/utility
-        :lil/interface/definition
+        :core
         :lil/interface/base
         :lil/interface/box)
   (:mix :fare-utils :uiop :alexandria)

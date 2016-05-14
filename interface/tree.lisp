@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; trees -- interfaces common between pure and stateful trees
 
 (uiop:define-package :lil/interface/tree
   (:use :closer-common-lisp
-   :lil/interface/definition :lil/interface/base
+   :core :lil/interface/base
    :lil/interface/map :lil/interface/fold :lil/interface/order)
   (:mix :fare-utils :uiop :alexandria)
   (:export

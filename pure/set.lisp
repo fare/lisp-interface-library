@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure Sets and Multisets
 
 (uiop:define-package :lil/pure/set
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/base)
   (:use-reexport
    :lil/interface/set

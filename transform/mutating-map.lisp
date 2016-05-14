@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Pure to Stateful by Boxification: map interfaces
 
 (uiop:define-package :lil/transform/mutating-map
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/box
         :lil/transform/mutating)
   (:use-reexport :lil/stateful/map)

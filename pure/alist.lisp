@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; Trivial functional map interface: alists.
 
 (uiop:define-package :lil/pure/alist
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/base
         :lil/interface/eq
         :lil/interface/group)

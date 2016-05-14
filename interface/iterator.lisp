@@ -1,9 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Iterator
 
 (uiop:define-package :lil/interface/iterator
-  (:use :closer-common-lisp :lil/interface/definition
-        :lil/interface/utility :lil/interface/base)
+  (:use :closer-common-lisp :core :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:make-number-iterator

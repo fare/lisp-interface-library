@@ -1,10 +1,9 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Read-only interfaces common to pure and stateful collections
 
 (uiop:define-package :lil/interface/collection
   (:use
    :closer-common-lisp
-   :lil/interface/definition
+   :core
    :lil/interface/base)
   (:use-reexport
    :lil/interface/empty

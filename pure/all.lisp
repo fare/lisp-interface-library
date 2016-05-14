@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; All pure interfaces and data structures
 
 (uiop:define-package :lil/pure/all

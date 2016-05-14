@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful (mutable) mapping where key is encoded.
 (uiop:define-package :lil/stateful/encoded-key-map
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/base)
   (:use-reexport
    :lil/stateful/map)

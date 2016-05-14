@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful Iterator (implementation)
 
 (uiop:define-package :lil/stateful/iterator-implementation
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/box)
+  (:use :closer-common-lisp :core :lil/interface/box)
   (:use-reexport :lil/stateful/iterator))
 (in-package :lil/stateful/iterator-implementation)
 

@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Folding a data structure
 
 (uiop:define-package :lil/interface/fold
   (:use :closer-common-lisp :uiop
-   :lil/interface/definition
+   :core
    :lil/interface/base
    :lil/interface/size
    :lil/interface/group

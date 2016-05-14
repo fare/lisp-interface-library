@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure Iterators
 
 (uiop:define-package :lil/pure/iterator
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use :closer-common-lisp :core :lil/interface/base)
   (:use-reexport :lil/interface/iterator)
   (:export
    #:<fount> #:<sink>

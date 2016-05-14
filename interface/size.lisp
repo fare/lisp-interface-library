@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Size
 (uiop:define-package :lil/interface/size
   (:use :closer-common-lisp :uiop
-        :lil/interface/definition :lil/interface/base)
+        :core :lil/interface/base)
   (:export
    #:<sizable> #:size #:size<=n-p
    #:<sizable-size<=n-p-from-size>))

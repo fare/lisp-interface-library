@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure hash-tables
 
 (uiop:define-package :lil/pure/hash-table
   (:use :closer-common-lisp
-        :lil/interface/definition
+        :core
         :lil/interface/base
         :lil/pure/tree
         :lil/pure/alist

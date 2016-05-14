@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Interfaces to Classes: "Classy" examples of stateful classes.
 
 (uiop:define-package :lil/transform/classy

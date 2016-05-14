@@ -1,7 +1,7 @@
 ;;; Interface Passing Style : Monad : State
 
 (defpackage :lil/interface/monad/state
-  (:use :cl :lil/interface/monad :lil/interface/definition)
+  (:use :cl :lil/interface/monad :core)
   (:import-from :lil/interface/run
 		#:<run>
 		#:run)

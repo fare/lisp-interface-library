@@ -1,5 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-
 #-asdf3.1 (error "LIL requires ASDF 3.1 or later. Please upgrade your ASDF.")
 
 (defsystem "lil"
@@ -13,7 +11,8 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
   :license "MIT"
   :version (:read-file-form "version.text")
   :class :package-inferred-system
-  :depends-on ("lil/interface/all"
+  :depends-on ("lil/core/all"
+               "lil/interface/all"
                "lil/pure/all"
                "lil/stateful/all"
                "lil/transform/all")
@@ -23,6 +22,7 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
   :perform (test-op (o c) (symbol-call :lil/test/all :test-suite)))
 
 
+(register-system-packages "lil/core/all" '(:core))
 (register-system-packages "lil/interface/all" '(:interface))
 (register-system-packages "lil/pure/all" '(:pure))
 (register-system-packages "lil/stateful/all" '(:stateful))

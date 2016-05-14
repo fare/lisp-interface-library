@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Order
 
 (uiop:define-package :lil/pure/lexicographic
   (:use :closer-common-lisp
-   :lil/interface/definition :lil/interface/base
+   :core :lil/interface/base
    :lil/interface/eq :lil/pure/sequence :lil/interface/order)
   (:mix :fare-utils :uiop :alexandria)
   (:export

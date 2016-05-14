@@ -1,8 +1,7 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Equality
 
 (uiop:define-package :lil/interface/eq
-  (:use :closer-common-lisp :lil/interface/definition :lil/interface/base)
+  (:use :closer-common-lisp :core :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:<eq> #:== #:eq-function

@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; All tests
 (defpackage :lil/test/all
   (:nicknames :lil/test)

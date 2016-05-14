@@ -1,9 +1,8 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Empty
 
 (uiop:define-package :lil/interface/empty
   (:use :closer-common-lisp
-   :lil/interface/definition :lil/interface/base)
+   :core :lil/interface/base)
   (:export
    #:<emptyable> #:empty #:empty-p
    #:empty-object #:make-empty-object #:empty-object-p
