@@ -1,5 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
-
 #-asdf3.1 (error "LIL requires ASDF 3.1 or later. Please upgrade your ASDF.")
 
 (defsystem "lil"

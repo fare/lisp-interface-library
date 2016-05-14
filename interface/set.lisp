@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Sets and Multisets -- part common to pure and stateful
 
 (uiop:define-package :lil/interface/set

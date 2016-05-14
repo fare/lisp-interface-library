@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; stateful iterator
 
 (uiop:define-package :lil/stateful/iterator

@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Pure Sets and Multisets — implementation
 
 (uiop:define-package :lil/pure/set-implementation

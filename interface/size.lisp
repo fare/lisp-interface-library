@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Size
 (uiop:define-package :lil/interface/size
   (:use :closer-common-lisp :uiop

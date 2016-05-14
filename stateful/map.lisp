@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful (mutable) mapping of keys to values
 
 (uiop:define-package :lil/stateful/map

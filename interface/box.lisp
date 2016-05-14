@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 
 (uiop:define-package :lil/interface/box
   (:use :closer-common-lisp :lil/interface/definition :lil/interface/base :lil/interface/empty)

@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Functional mapping where key is encoded.
 (uiop:define-package :lil/pure/encoded-key-map
   (:use :closer-common-lisp

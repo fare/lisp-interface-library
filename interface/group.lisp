@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Interfaces from elementary group theory: magma, monoid, semi-group, group, ring, etc.
 
 (uiop:define-package :lil/interface/group

@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Stateful to Pure by Linearization: map interfaces
 
 (uiop:define-package :lil/transform/linearized-map

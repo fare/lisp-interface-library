@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;; Trivial functional map implementation: alists.
 
 (uiop:define-package :lil/pure/alist-implementation

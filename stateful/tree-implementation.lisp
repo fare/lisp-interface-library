@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful trees (implementation)
 
 (uiop:define-package :lil/stateful/tree-implementation

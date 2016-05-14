@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful hash-tables (implementation)
 
 (uiop:define-package :lil/stateful/hash-table-implementation

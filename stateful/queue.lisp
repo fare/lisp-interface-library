@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Stateful queues
 (uiop:define-package :lil/stateful/queue
   (:use :closer-common-lisp

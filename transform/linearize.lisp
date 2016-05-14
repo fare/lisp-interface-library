@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; From Stateful to Pure via linearization: Macros
 
 (uiop:define-package :lil/transform/linearize

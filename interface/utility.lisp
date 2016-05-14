@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Plumbing to Define Interfaces
 
 ;; TODO: move all of these to some utility library, e.g. — fare-utils?

@@ -1,4 +1,3 @@
-;;; -*- Mode: Lisp ; Base: 10 ; Syntax: ANSI-Common-Lisp -*-
 ;;;;; Plumbing to Define Interfaces
 
 (uiop:define-package :lil/interface/definition
