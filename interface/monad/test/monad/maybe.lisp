@@ -1,6 +1,6 @@
 (defpackage :lil/interface/monad/test/monad/maybe
   (:use :cl
-        :lil/core/definition
+        :lil/core
         :lil/interface/base
         :lil/interface/monad
         :lil/interface/monad/maybe

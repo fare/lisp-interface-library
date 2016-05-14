@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/alist-implementation
   (:use :closer-common-lisp
-        :lil/core/definition
+        :lil/core
         :lil/interface/base
         :lil/interface/eq
         :lil/interface/group)

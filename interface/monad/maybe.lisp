@@ -1,6 +1,6 @@
 ;;; Interface Passing Style : Monad : Maybe
 (defpackage :lil/interface/monad/maybe
-  (:use :cl :lil/interface/monad :lil/core/definition :lil/interface/empty)
+  (:use :cl :lil/interface/monad :lil/core :lil/interface/empty)
   (:import-from :lil/interface/group
 		#:<zero-plus> #:zero #:plus)
   (:export #:<maybe>

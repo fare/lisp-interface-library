@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/interface/empty
   (:use :closer-common-lisp
-   :lil/core/definition :lil/interface/base)
+   :lil/core :lil/interface/base)
   (:export
    #:<emptyable> #:empty #:empty-p
    #:empty-object #:make-empty-object #:empty-object-p

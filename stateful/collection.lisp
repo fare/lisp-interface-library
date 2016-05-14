@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/stateful/collection
   (:use :closer-common-lisp
-        :lil/core/definition
+        :lil/core
         :lil/interface/base)
   (:use-reexport
    :lil/stateful/empty

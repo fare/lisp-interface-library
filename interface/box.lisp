@@ -1,6 +1,6 @@
 
 (uiop:define-package :lil/interface/box
-  (:use :closer-common-lisp :lil/core/definition :lil/interface/base :lil/interface/empty)
+  (:use :closer-common-lisp :lil/core :lil/interface/base :lil/interface/empty)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    ;;; Boxes!

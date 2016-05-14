@@ -1,7 +1,7 @@
 ;;;;; Functional queues
 (uiop:define-package :lil/pure/queue
   (:use :closer-common-lisp
-        :lil/core/definition
+        :lil/core
         :lil/interface/base)
   (:use-reexport
    :lil/pure/iterator

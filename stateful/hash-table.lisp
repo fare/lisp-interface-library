@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/stateful/hash-table
   (:use :closer-common-lisp
-        :lil/core/definition
+        :lil/core
         :lil/interface/base
         :lil/stateful/tree
         :lil/stateful/encoded-key-map)

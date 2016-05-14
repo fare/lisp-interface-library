@@ -1,7 +1,7 @@
 ;;;;; Functional mapping where key is encoded (implementation)
 (uiop:define-package :lil/pure/encoded-key-map-implementation
   (:use :closer-common-lisp
-        :lil/core/definition
+        :lil/core
         :lil/interface/base)
   (:use :alexandria)
   (:use-reexport

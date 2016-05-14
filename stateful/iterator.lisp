@@ -1,7 +1,7 @@
 ;;;;; stateful iterator
 
 (uiop:define-package :lil/stateful/iterator
-  (:use :closer-common-lisp :lil/core/definition :lil/interface/base)
+  (:use :closer-common-lisp :lil/core :lil/interface/base)
   (:use-reexport :lil/interface/iterator)
   (:export
    #:<fount> #:<sink>

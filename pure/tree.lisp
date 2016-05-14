@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/tree
   (:use :closer-common-lisp
-        :lil/core/definition
+        :lil/core
         :lil/interface/base
         :lil/interface/order)
   (:use-reexport
