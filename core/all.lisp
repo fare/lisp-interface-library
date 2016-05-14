@@ -5,5 +5,6 @@
   (:use :closer-common-lisp)
   (:mix :fare-utils :uiop :alexandria)
   (:use-reexport
-   :lil/core/definition
-   :lil/core/utility))
+   :lil/core/core
+   :lil/core/utility
+   :lil/core/interface))
