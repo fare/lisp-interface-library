@@ -1,8 +1,8 @@
 ;;;;; Plumbing to Define Interfaces
 
-(uiop:define-package :lil/core/core
-    (:use :closer-common-lisp :fare-memoization :closer-mop
-          :lil/core/utility)
+(uiop:define-package :lil/core/metaclass
+  (:use :closer-common-lisp :fare-memoization :closer-mop
+        :lil/core/utility)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    ;; The main user interface
@@ -17,15 +17,15 @@
    #:define-interface-generic #:collect-function-names
    #:define-interface-specialized-functions
    #:define-interface-method #:define-interface-methods))
-(in-package :lil/core/core)
+(in-package :lil/core/metaclass)
 
 ;; Definitions used by define-interface and its clients.
 
 (defclass interface-class (standard-class)
-     ((generics :initform (make-hash-table :test 'eql) :accessor interface-generics)
-      ;;(%direct-super-interfaces :accessor %direct-super-interfaces)
-      (%all-super-interfaces :accessor %all-super-interfaces)
-      (abstractp :initform nil :reader interface-abstract-p :type boolean)))
+  ((generics :initform (make-hash-table :test 'eql) :accessor interface-generics)
+   ;;(%direct-super-interfaces :accessor %direct-super-interfaces)
+   (%all-super-interfaces :accessor %all-super-interfaces)
+   (abstractp :initform nil :reader interface-abstract-p :type boolean)))
 
 (defun interface-class-p (class)
   (typep class 'interface-class))
@@ -292,4 +292,3 @@
   `(macrolet ((:method> (gf &rest rest)
                 `(define-interface-method ,',interface ,gf ,@rest)))
      ,@body))
-

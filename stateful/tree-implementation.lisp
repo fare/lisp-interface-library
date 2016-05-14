@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/stateful/tree-implementation
   (:use :closer-common-lisp
-        :core
+        :lil/core
         :lil/interface/base
         :lil/interface/order)
   (:use-reexport

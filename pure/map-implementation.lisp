@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/map-implementation
   (:use :closer-common-lisp
-        :core
+        :lil/core
         :lil/interface/base
         :lil/interface/group
         :lil/interface/fold)

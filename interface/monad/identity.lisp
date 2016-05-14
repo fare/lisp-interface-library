@@ -1,7 +1,7 @@
 ;;; Interface Passing Style : Monad : Identity
 
 (defpackage :lil/interface/monad/identity
-  (:use :cl :lil/interface/monad :core)
+  (:use :cl :lil/interface/monad :lil/core)
   (:export #:<identity>))
 
 (in-package :lil/interface/monad/identity)

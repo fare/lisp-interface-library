@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/interface/tree-implementation
   (:use :closer-common-lisp
-   :core :lil/interface/base
+   :lil/core :lil/interface/base
    :lil/interface/empty :lil/interface/order
    :lil/interface/iterator :lil/interface/fold
    :lil/interface/map :lil/interface/tree)

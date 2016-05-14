@@ -6,7 +6,7 @@
 
 (uiop:define-package :lil/pure/fmim-implementation
   (:use :closer-common-lisp
-        :core
+        :lil/core
         :lil/interface/base
         :lil/interface/box
         :lil/pure/tree)

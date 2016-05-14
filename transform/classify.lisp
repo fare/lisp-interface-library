@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/transform/classify
   (:use :closer-common-lisp
-        :core
+        :lil/core
         :lil/interface/base
         :lil/interface/box)
   (:mix :fare-utils :uiop :alexandria)

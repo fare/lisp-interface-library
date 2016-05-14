@@ -13,7 +13,7 @@ FAIL
 MLET*")
 
   (:use :cl)
-  (:import-from :core #:define-interface #:with-interface)
+  (:import-from :lil/core #:define-interface #:with-interface)
   (:import-from :lil/interface/base #:<type>)
   (:export
    #:<monad>

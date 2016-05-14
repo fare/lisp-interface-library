@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/stateful/hash-table-implementation
   (:use :closer-common-lisp
-        :core
+        :lil/core
         :lil/interface/base
         :lil/stateful/map-implementation)
   (:use-reexport

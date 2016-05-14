@@ -1,7 +1,7 @@
 ;;;;; Stateful (mutable) mapping where key is encoded.
 (uiop:define-package :lil/stateful/encoded-key-map
   (:use :closer-common-lisp
-        :core
+        :lil/core
         :lil/interface/base)
   (:use-reexport
    :lil/stateful/map)
