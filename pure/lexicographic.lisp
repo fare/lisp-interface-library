@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/lexicographic
   (:use :closer-common-lisp
-   :lil/core :lil/interface/base
+   :core :lil/interface/base
    :lil/interface/eq :lil/pure/sequence :lil/interface/order)
   (:mix :fare-utils :uiop :alexandria)
   (:export

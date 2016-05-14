@@ -1,7 +1,7 @@
 ;;;;; Iterator
 
 (uiop:define-package :lil/interface/iterator
-  (:use :closer-common-lisp :lil/core :lil/interface/base)
+  (:use :closer-common-lisp :core :lil/interface/base)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:make-number-iterator

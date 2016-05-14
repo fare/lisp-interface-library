@@ -1,7 +1,7 @@
 ;;;;; Size
 (uiop:define-package :lil/interface/size
   (:use :closer-common-lisp :uiop
-        :lil/core :lil/interface/base)
+        :core :lil/interface/base)
   (:export
    #:<sizable> #:size #:size<=n-p
    #:<sizable-size<=n-p-from-size>))

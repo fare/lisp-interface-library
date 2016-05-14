@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/interface/map
   (:use :closer-common-lisp
-   :lil/core :lil/interface/base :lil/interface/group
+   :core :lil/interface/base :lil/interface/group
    :lil/interface/collection :lil/interface/fold)
   (:mix :fare-utils :uiop :alexandria)
   (:export

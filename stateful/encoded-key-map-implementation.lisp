@@ -1,7 +1,7 @@
 ;;;;; Stateful mapping where key is encoded (implementation)
 (uiop:define-package :lil/stateful/encoded-key-map-implementation
   (:use :closer-common-lisp
-        :lil/core
+        :core
         :lil/interface/base)
   (:use :alexandria)
   (:use-reexport

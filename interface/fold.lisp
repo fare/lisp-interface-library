@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/interface/fold
   (:use :closer-common-lisp :uiop
-   :lil/core
+   :core
    :lil/interface/base
    :lil/interface/size
    :lil/interface/group

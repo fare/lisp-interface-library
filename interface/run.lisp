@@ -1,7 +1,7 @@
 ;;; Interface Passing Style : Run
 (defpackage :lil/interface/run
   (:use :cl)
-  (:import-from :lil/core #:define-interface #:with-interface)
+  (:import-from :core #:define-interface #:with-interface)
   (:import-from :lil/interface/base #:<type>)
   (:export #:<run>
 	   #:run))

@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/pure/hash-table-implementation
   (:use :closer-common-lisp
-        :lil/core
+        :core
         :lil/interface/base)
   (:use-reexport
    :lil/pure/hash-table))

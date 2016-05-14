@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/transform/linearized-map
   (:use :closer-common-lisp
-        :lil/core
+        :core
         :lil/interface/box
         :lil/transform/linearize)
   (:use-reexport :lil/pure/map)

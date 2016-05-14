@@ -1,7 +1,7 @@
 ;;;;; Sets and Multisets -- part common to pure and stateful
 
 (uiop:define-package :lil/interface/set
-  (:use :closer-common-lisp :lil/core
+  (:use :closer-common-lisp :core
         :lil/interface/base :lil/interface/order :lil/interface/fold
         :lil/interface/collection :lil/interface/map)
   (:mix :fare-utils :uiop :alexandria)

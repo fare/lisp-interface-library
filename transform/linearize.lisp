@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/transform/linearize
   (:use :closer-common-lisp
-        :lil/core
+        :core
         :lil/interface/base
         :lil/interface/box)
   (:mix :fare-utils :uiop :alexandria)

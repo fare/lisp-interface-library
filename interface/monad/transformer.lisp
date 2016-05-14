@@ -1,6 +1,6 @@
 ;;; Interface Passing Style : Monad : Transformer
 (defpackage :lil/interface/monad/transformer
-  (:use :cl :lil/interface/monad :lil/core)
+  (:use :cl :lil/interface/monad :core)
   (:import-from :lil/interface/monad/identity
 		#:<identity>)
   (:export 

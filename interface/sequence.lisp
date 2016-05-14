@@ -3,7 +3,7 @@
 (uiop:define-package :lil/interface/sequence
   (:use
    :closer-common-lisp
-   :lil/core
+   :core
    :lil/interface/base
    :lil/interface/collection)
   (:use-reexport

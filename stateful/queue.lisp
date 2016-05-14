@@ -1,7 +1,7 @@
 ;;;;; Stateful queues
 (uiop:define-package :lil/stateful/queue
   (:use :closer-common-lisp
-        :lil/core
+        :core
         :lil/interface/base)
   (:use-reexport
    :lil/stateful/iterator

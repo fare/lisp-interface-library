@@ -2,7 +2,7 @@
 
 (uiop:define-package :lil/stateful/queue-implementation
   (:use :closer-common-lisp
-        :lil/core
+        :core
         :lil/interface/base)
   (:use-reexport
    :lil/stateful/queue))
