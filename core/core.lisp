@@ -164,13 +164,13 @@
                           (with-interface (,interface-var ,interface-class)
                             ,@remaining-forms))))))
 
-(defmacro define-interface-generic> (time interface name lambda-list &rest options)
+(defmacro define-interface-generic> (time interface name lambda-list &body options)
   `(%define-interface-generic ,time ,interface ,interface ,name ,lambda-list ,@options))
 
-(defmacro define-interface-generic (time interface name lambda-list &rest options)
+(defmacro define-interface-generic (time interface name lambda-list &body options)
   `(%define-interface-generic ,time nil ,interface ,name ,lambda-list ,@options))
 
-(defmacro %define-interface-generic (time interface-argument interface name lambda-list &rest options)
+(defmacro %define-interface-generic (time interface-argument interface name lambda-list &body options)
   (let ((full-lambda-list `(,@(when interface-argument `(,interface-argument)) ,@lambda-list)))
     (ecase time
       (:register
@@ -195,7 +195,7 @@
 		    `(:method ,@(apply 'expand-interface-method>
 				 (list interface-argument interface) name spec)))))))))
 
-(defmacro define-interface (interface super-interfaces slots &rest options)
+(defmacro define-interface (interface super-interfaces slots &body options)
   (let ((class-options
          ;;(keep-keyed-clos-options '(:default-initargs :documentation :metaclass) options)
          (remove-keyed-clos-options
@@ -285,7 +285,7 @@
                 (apply ',function-name ,interface-sexp ,arguments)))
          (declaim (inline ,@function-names))))))
 
-(defmacro define-interface-method (interface gf &rest rest)
+(defmacro define-interface-method (interface gf &body rest)
   `(defmethod ,gf ,@(apply 'expand-interface-method> interface gf rest)))
 
 (defmacro define-interface-methods (interface &body body)
