@@ -1,8 +1,8 @@
 ;;;;; Plumbing to Define Interfaces
 
-(uiop:define-package :lil/interface/definition
+(uiop:define-package :lil/core/definition
   (:use :closer-common-lisp :fare-memoization :closer-mop
-        :lil/interface/utility)
+        :lil/core/utility)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    ;; The main user interface
@@ -18,7 +18,7 @@
    #:define-interface-specialized-functions
    #:define-interface-method #:define-interface-methods
    ))
-(in-package :lil/interface/definition)
+(in-package :lil/core/definition)
 
 ;; Definitions used by define-interface and its clients.
 (eval-when (:compile-toplevel :load-toplevel :execute)

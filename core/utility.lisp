@@ -1,7 +1,7 @@
 ;;;;; Plumbing to Define Interfaces
 
 ;; TODO: move all of these to some utility library, e.g. — fare-utils?
-(uiop:define-package :lil/interface/utility
+(uiop:define-package :lil/core/utility
   (:use :closer-common-lisp :fare-memoization :closer-mop)
   (:mix :fare-utils :uiop :alexandria)
   (:export
@@ -11,7 +11,7 @@
    #:find-unique-clos-option #:find-unique-clos-option/0 #:find-unique-clos-option/1*
    #:find-unique-clos-option/1 #:find-multiple-clos-options
    #:boolean-integer))
-(in-package :lil/interface/utility)
+(in-package :lil/core/utility)
 
 ;; Definitions used by define-interface and its clients.
 (eval-when (:compile-toplevel :load-toplevel :execute)

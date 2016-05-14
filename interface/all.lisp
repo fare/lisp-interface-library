@@ -5,8 +5,6 @@
   (:use :closer-common-lisp)
   (:mix :fare-utils :uiop :alexandria)
   (:use-reexport
-   :lil/interface/utility
-   :lil/interface/definition
    :lil/interface/base
    :lil/interface/group
    :lil/interface/empty
