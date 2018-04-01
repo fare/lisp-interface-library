@@ -2,7 +2,7 @@
 
 ;; TODO: move all of these to some utility library, e.g. — fare-utils?
 (uiop:define-package :lil/core/utility
-  (:use :closer-common-lisp :fare-memoization :closer-mop)
+  (:use :closer-common-lisp :closer-mop)
   (:mix :fare-utils :uiop :alexandria)
   (:export
    #:memberp #:number-of-required-arguments #:with-unique-collector

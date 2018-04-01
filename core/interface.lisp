@@ -1,8 +1,7 @@
 
 (uiop:define-package :lil/core/interface
-    (:use :closer-common-lisp :fare-memoization :closer-mop
-          :lil/core/utility :lil/core/metaclass)
-  (:mix :fare-utils :uiop :alexandria))
+  (:use :closer-common-lisp :closer-mop
+        :lil/core/utility :lil/core/metaclass))
 
 (in-package :lil/core/interface)
 

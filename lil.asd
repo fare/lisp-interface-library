@@ -15,7 +15,8 @@ or our ILC'2012 article http://github.com/fare/lil-ilc2012/
                "lil/interface/all"
                "lil/pure/all"
                "lil/stateful/all"
-               "lil/transform/all")
+               "lil/transform/all"
+               (:version "fare-memoization" "1.2.0"))
   :in-order-to ((test-op (test-op "lil/test"))))
 
 (defsystem "lil/test" :depends-on ("lil/test/all")
