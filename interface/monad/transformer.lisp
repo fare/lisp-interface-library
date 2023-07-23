@@ -17,7 +17,7 @@
   (:singleton)
   (:generic> lift (inner-monadic-value))
   (:parametric (&optional (inner <identity>))
-	       (make-instance '<transformer> :inner inner))
+	       (make-interface :inner inner))
   (:method> lift (inner-monadic-value)
 	    inner-monadic-value)
   (:method result ((<m> <transformer>) v)

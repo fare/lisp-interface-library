@@ -25,9 +25,7 @@
   ()
   (:parametric (&optional (inner <identity>)
 			  (empty-interface <maybe-empty>))
-    (make-instance '<maybe-transformer>
-		   :inner inner
-		   :empty-interface empty-interface))
+    (make-interface :inner inner :empty-interface empty-interface))
   (:singleton)
   (:method result ((<m> <maybe-transformer>) value)
 	    (result (inner <m>) value))
