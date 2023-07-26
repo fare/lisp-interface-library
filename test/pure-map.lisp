@@ -94,6 +94,10 @@
                                   #'(lambda (x y)
                                       (format o "~A~A" x y)))))))
 
+  ;; TODO: implement the API on all relevant data structures and enable the test
+  ;;(X 'monoid-fold*)
+  ;;(is (equal 55 (monoid-fold* i <number> (alist-map* i *alist-10-latin*) (lambda (k v) v k))))
+
   t)
 
 (defmethod simple-linear-map-test ((i <map>))

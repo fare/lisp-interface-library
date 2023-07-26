@@ -352,6 +352,20 @@
                             (f 0 (left child))
                             (f 1 (right child))))))))))))))))
 
+(defmethod has-key-p ((i <fmim>) map key) ;; TODO: make that more generic
+  (nth-value 1 (lookup i map key)))
+(defmethod singleton-p ((i <fmim>) map)
+  (etypecase map
+    (null nil)
+    (trie-head (let ((height (node-height map)))
+                 (or (zerop height)
+                     (let ((trie (box-ref map)))
+                       (etypecase trie
+                         (trie-skip (= height (node-prefix-length trie)))
+                         (trie-branch nil)
+                         (full-trie-branch nil))))))))
+;; TODO: implement the rest of the collection API
+
 ;;; The whole point of fmim is that we could do a fast "merge",
 (defmethod join ((i <fmim>) a b)
   (cond

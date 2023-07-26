@@ -5,7 +5,8 @@
         :lil/core
         :lil/interface/base
         :lil/interface/group
-        :lil/interface/fold)
+        :lil/interface/fold
+        :lil/interface/order)
   (:use-reexport :lil/pure/map))
 (in-package :lil/pure/map-implementation)
 
@@ -44,7 +45,7 @@
 	   (funcall fun key value)))
 	(t
 	 (multiple-value-bind (map1 map2) (divide map)
-	   (op (monoid-fold* <monoid> map1) (monoid-fold* <monoid> map2))))))))
+	   (op (monoid-fold* <monoid> map1 fun) (monoid-fold* <monoid> map2 fun))))))))
 
 (defmethod monoid-fold* ((<i> <map-monoid-fold*-from-divide/list>) <monoid> map fun)
   (with-interface (<i> <map>)
@@ -57,7 +58,7 @@
 	   (multiple-value-bind (key value) (first-key-value map)
 	     (funcall fun key value)))
 	  (t
-	   (op/list (mapcar #'(lambda (map) (monoid-fold* <monoid> map)) list))))))))
+	   (op/list (mapcar #'(lambda (map) (monoid-fold* <monoid> map fun)) list))))))))
 
 ;; <map-join-from-fold-left*-insert>
 (defmethod join ((<i> <map-join-from-fold-left*-insert>) map1 map2)
