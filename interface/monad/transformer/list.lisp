@@ -14,7 +14,7 @@
   ()
   (:singleton)
   (:parametric (&optional (inner <identity>))
-    (make-instance '<list-transformer> :inner inner))
+    (make-interface :inner inner))
   (:method result ((m <list-transformer>) value)
 	   (result (inner m)
 		   (list value))))

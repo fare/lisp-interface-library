@@ -18,9 +18,9 @@
        (list
         (one-use-value-box
          (lil/stateful/collection:join/list (stateful-interface <linearized-map>)
-                             (mapcar #'box-ref list))))
+                                            (mapcar #'box-ref list))))
        (t
-        (empty <linearized-map>))))
+        (empty))))
   (:method> divide/list (map)
      (let ((list
             (lil/stateful/collection:divide/list

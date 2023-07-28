@@ -17,7 +17,7 @@
 		    :initform <maybe-empty>
 		    :accessor maybe.empty-interface))
   (:parametric (&optional (empty-interface <maybe-empty>))
-    (make-instance '<maybe> :empty-interface empty-interface))
+    (make-interface :empty-interface empty-interface))
   (:singleton)
   (:generic maybe-or (<maybe> value &rest values))
   (:method> result (value) value)
