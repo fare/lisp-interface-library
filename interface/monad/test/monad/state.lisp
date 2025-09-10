@@ -4,7 +4,7 @@
         :lil/interface/monad
         :lil/interface/monad/state
         :lil/interface/run
-        :lil/interface/monad/test/monad)
+        :lil/interface/monad/test/monad))
 (in-package :lil/interface/monad/test/monad/state)
 
 (defmethod test-for-check-monad-laws ((<s> <state>) smv)
