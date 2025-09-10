@@ -1,7 +1,7 @@
 ;;; Interface Passing Style : Monad : Test : Monad
 
 (defpackage :lil/interface/monad/test/monad
-  (:use :lil/interface/monad)
+  (:use :cl :lil/interface/monad)
   (:import-from :lil/interface/base #:check-invariant)
   (:export
    #:check-monad-left-identity

@@ -111,11 +111,11 @@
            (loop :for (out ()) :in effective-outputs
              :for eior = (nth out interface-results-required)
              :collect `(,(nth out class-results-required)
-			(,@wrap
-			 ,@(when interface-keyword
-			     `(,interface-keyword ,interface-var))
-			 ,@(when value-keyword `(,value-keyword))
-			 ,eior))))
+                        (,@wrap
+                         ,@(when interface-keyword
+                             `(,interface-keyword ,interface-var))
+                         ,@(when value-keyword `(,value-keyword))
+                         ,eior))))
           (ineffective-class-inputs
            (loop :for i :from 1 :below lin
              :for v :in (rest class-required)
@@ -160,7 +160,7 @@
             (when class-results-rest
               `((,class-results-rest ,interface-results-rest)))))))
    `(,(if genericp 'defmethod 'defun) ,class-gf
-      (,@extra-arguments
+     (,@extra-arguments
        ,@(if genericp
              (loop :for x :in (rest class-lambda-list)
                :for i :from 1 :collect
@@ -168,13 +168,13 @@
                    `(,x ,class)
                    x))
              (rest class-lambda-list)))
-      (declare (ignore ,@class-ignorables))
-      (let* (,@interface-argument-bindings)
-        (multiple-value-bind (,@interface-results-lambda-list)
-            (,interface-invoker ',interface-gf ,interface-var ,@(rest interface-arguments))
-          #-clisp (declare (ignore ,@interface-results-ignorables))
-          (let* (,@class-results-bindings)
-            (,class-results-invoker #'values ,@class-results-arguments)))))))
+     (declare (ignore ,@class-ignorables))
+     (let* (,@interface-argument-bindings)
+       (multiple-value-bind (,@interface-results-lambda-list)
+           (,interface-invoker ',interface-gf ,interface-var ,@(rest interface-arguments))
+         #-clisp (declare (ignore ,@interface-results-ignorables))
+         (let* (,@class-results-bindings)
+           (,class-results-invoker #'values ,@class-results-arguments)))))))
 
 (defmacro define-classified-interface-class
     (name superclasses interface &optional slots &rest options)
@@ -199,8 +199,8 @@
                              '(:interface-argument :extract-interface
                                :interface-keyword :value-keyword
                                :wrap :unwrap :genericp :package
-			       :constructor-prefix :constructor-suffix :constructors-only)
-			     options)))
+                               :constructor-prefix :constructor-suffix :constructors-only)
+                             options)))
     `(progn
        (defclass ,name (,@superclasses #|stateful::<mutating>|#)
          ,slots
@@ -212,7 +212,7 @@
              ;; methods that have registered effects as expressible and expressed in our trivial language
              (when effects
                `(,@(when (or (and (not constructorp) (not constructors-only))
-			     (and constructorp (or interface-argument extract-interface)))
+                             (and constructorp (or interface-argument extract-interface)))
                      (let ((class-gf (intern (symbol-name interface-gf) package)))
                        `((define-classified-method
                              ,name ,interface ,class-gf ,interface-gf

@@ -2,6 +2,7 @@
   (:use :cl
         :lil/core
         :lil/interface/base
+        :lil/interface/empty
         :lil/interface/monad
         :lil/interface/monad/maybe
         :lil/interface/monad/test/monad))

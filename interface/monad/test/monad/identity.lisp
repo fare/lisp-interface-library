@@ -3,7 +3,7 @@
         :lil/interface/base
         :lil/interface/monad
         :lil/interface/monad/identity))
-(in-package :interface/monad/test/monad/identity)
+(in-package :lil/interface/monad/test/monad/identity)
 
 (defun test-identity-1 ()
   (eql 2

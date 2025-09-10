@@ -5,4 +5,5 @@
   (:import-from :lil/test/pure-map)
   (:import-from :lil/test/pure-lexicographic)
   (:import-from :lil/test/stateful-map)
+  (:import-from :lil/interface/monad/test/monad/monads)
   (:export #:test-suite))
